@@ -39,7 +39,7 @@ export const removeUser = (userId, token) => {
 };
 
 export const updateUser = (userId, token, user) => {
-    console.log("USER DATE: ", user);
+    //console.log("USER DATE: ", user);
     return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
         method: "PUT",
         headers: {
@@ -52,4 +52,15 @@ export const updateUser = (userId, token, user) => {
             return response.json();
         })
         .catch(err => console.log(err));
+};
+
+export const updateLocalStorUser = (userData, next) => {
+    if (typeof window !== "undefined") {
+        if (localStorage.getItem("jwt")) {
+            let auth = JSON.parse(localStorage.getItem("jwt"));
+            auth.user = userData.user;
+            localStorage.setItem("jwt", JSON.stringify(auth));
+            next();
+        }
+    }
 };
