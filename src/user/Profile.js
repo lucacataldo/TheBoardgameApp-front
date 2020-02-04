@@ -5,13 +5,16 @@ import { getUser } from "./apiUser";
 import { isAuthenticated } from "../auth";
 import DefaultProfileImg from "../images/avatar.png";
 import DeleteUser from "./DeleteUser";
+import FollowProfileButton from "./FollowProfileButton";
 
 class Profile extends Component {
     constructor() {
         super();
         this.state = {
-            user: "",
-            redirectToSignin: false
+            user: { following: [], followers: [] },
+            redirectToSignin: false,
+            following: false,
+            error: ""
         };
     }
 
@@ -21,21 +24,44 @@ class Profile extends Component {
             if (data.error) {
                 this.setState({ redirectToSignin: true });
             } else {
-                this.setState({ user: data });
+                let following = this.isFollowing(data);
+                this.setState({ user: data, following });
             }
         });
     };
 
-
     componentDidMount() {
         const userId = this.props.match.params.userId;
         this.initProfile(userId);
-    }
+    };
 
     componentWillReceiveProps(props) {
         const userId = props.match.params.userId;
         this.initProfile(userId);
-    }
+    };
+
+    // check if user is in the follower's list
+    isFollowing = user => {
+        const jwt = isAuthenticated();
+        const match = user.followers.find(follower => {
+            // one id has many other ids (followers) and vice versa
+            return follower._id === jwt.user._id;
+        });
+        return match;
+    };
+
+    clickFollowButton = callApi => {
+        const userId = isAuthenticated().user._id;
+        const token = isAuthenticated().token;
+        callApi(userId, token, this.state.user._id).then(data => {
+          if (data.error) {
+            this.setState({ error: data.error });
+          } else {
+            this.setState({ user: data, following: !this.state.following });
+          }
+        });
+      };
+    
 
     render() {
         const { redirectToSignin, user } = this.state;
@@ -43,7 +69,7 @@ class Profile extends Component {
 
         // use new Date() to update image right away
         const photoUrl = user._id
-            ? `${process.env.REACT_APP_API_URL}/user/photo/${user._id}?${new Date().getTime()}` 
+            ? `${process.env.REACT_APP_API_URL}/user/photo/${user._id}?${new Date().getTime()}`
             : DefaultProfileImg;
 
         return (
@@ -69,16 +95,21 @@ class Profile extends Component {
                         </div>
 
                         {isAuthenticated().user &&
-                            isAuthenticated().user._id === user._id && (
+                            isAuthenticated().user._id === user._id ? (
                                 <div className="d-inline-block">
                                     <Link
                                         className="btn btn-raised btn-success mr-5"
                                         to={`/user/edit/${user._id}`}
                                     >
                                         Edit Profile
-                                    </Link>
+                                </Link>
                                     <DeleteUser userId={user._id} />
                                 </div>
+                            ) : (
+                                <FollowProfileButton
+                                    following={this.state.following}
+                                    onButtonClick={this.clickFollowButton}
+                                />
                             )}
                     </div>
                 </div>
