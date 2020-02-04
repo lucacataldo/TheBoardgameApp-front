@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
 
-import { readUserAPI } from "./apiUser";
+import { getUser } from "./apiUser";
 import { isAuthenticated } from "../auth";
 import DefaultProfileImg from "../images/avatar.png";
 import DeleteUser from "./DeleteUser";
@@ -17,7 +17,7 @@ class Profile extends Component {
 
     initProfile = userId => {
         const token = isAuthenticated().token;
-        readUserAPI(userId, token).then(data => {
+        getUser(userId, token).then(data => {
             if (data.error) {
                 this.setState({ redirectToSignin: true });
             } else {
@@ -63,7 +63,7 @@ class Profile extends Component {
                             <p>Hello {user.name}</p>
                             <p>Email: {user.email}</p>
                             <p>{`Joined ${new Date(
-                                user.created
+                                user.createdDate
                             ).toDateString()}`}</p>
                         </div>
 

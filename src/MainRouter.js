@@ -3,10 +3,15 @@ import { Route, Switch } from "react-router-dom";
 
 import Home from "./components/Home";
 import Menu from "./components/Menu";
+
 import Signup from "./user/Signup";
 import Signin from "./user/Signin";
+
+import EditProfile from "./user/EditProfile";
 import Profile from "./user/Profile";
+
 import Users from "./user/Users";
+import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
 
 const MainRouter = () => (
     <div>
@@ -16,7 +21,9 @@ const MainRouter = () => (
             <Route exact path="/Users" component={Users} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/signin" component={Signin} />
-            <Route exact path="/user/:userId" component={Profile} />
+            
+            <PrivateRoute exact path="/user/:userId" component={Profile} />
+            <PrivateRoute exact path="/user/edit/:userId" component={EditProfile} />
         </Switch>
     </div>
 );

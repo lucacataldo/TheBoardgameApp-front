@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import { listUsers } from "./apiUser";
+import { getUsers } from "./apiUser";
 import DefaultProfileImg from "../images/avatar.png";
 
 class Users extends Component {
@@ -13,7 +13,7 @@ class Users extends Component {
     }
 
     componentDidMount() {
-        listUsers().then(data => {
+        getUsers().then(data => {
             if (data.error) {
                 console.log(data.error);
             } else {

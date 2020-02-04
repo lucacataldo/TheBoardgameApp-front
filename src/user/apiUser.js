@@ -1,4 +1,4 @@
-export const readUserAPI = (userId, token) => {
+export const getUser = (userId, token) => {
     return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
         method: "GET",
         headers: {
@@ -13,7 +13,7 @@ export const readUserAPI = (userId, token) => {
         .catch(err => console.log(err));
 };
 
-export const listUsers = () => {
+export const getUsers = () => {
     return fetch(`${process.env.REACT_APP_API_URL}/users`, {
         method: "GET"
     })
@@ -31,6 +31,22 @@ export const removeUser = (userId, token) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         }
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const updateUser = (userId, token, user) => {
+    console.log("USER DATE: ", user);
+    return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: user
     })
         .then(response => {
             return response.json();
