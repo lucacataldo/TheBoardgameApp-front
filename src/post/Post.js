@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
-import { getPost } from "./apiPost";
+import { getPost, removePost } from "./apiPost";
 import DefaultPostImg from "../images/defaultPostImg.jpg";
-
+import { isAuthenticated } from "../auth";
 
 class Post extends Component {
     state = {
-        post: ""
+        post: "",
+        redirectToHome: false
     };
 
     componentDidMount = () => {
@@ -19,6 +20,27 @@ class Post extends Component {
                 this.setState({ post: data });
             }
         });
+    };
+
+    deletePost = () => {
+        const postId = this.props.match.params.postId;
+        const token = isAuthenticated().token;
+        removePost(postId, token).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                this.setState({ redirectToHome: true });
+            }
+        });
+    };
+
+    deleteConfirmed = () => {
+        let answer = window.confirm(
+            "Are you sure you want to delete your post?"
+        );
+        if (answer) {
+            this.deletePost();
+        }
     };
 
     renderPost = post => {
@@ -47,14 +69,35 @@ class Post extends Component {
                     Posted by <Link to={`${posterId}`}>{posterName} </Link>
                     on {new Date(post.createdDate).toDateString()}
                 </p>
-                <Link to={`/`} className="btn btn-raised btn-primary btn-sm">
-                    Back to posts
-                </Link>
+                <div className="d-inline-block">
+                    <Link to={`/`} className="btn btn-raised btn-primary btn-sm mr-5">
+                        Back to posts
+                    </Link>
+
+                    {isAuthenticated().user &&
+                        isAuthenticated().user._id === post.postedBy._id && (
+                            <>
+                                <button className="btn btn-raised btn-warning mr-5">
+                                    Update Post
+                                </button>
+                                <button
+                                    onClick={this.deleteConfirmed}
+                                    className="btn btn-raised btn-danger"
+                                >
+                                    Delete Post
+                                </button>
+                            </>
+                        )}
+                </div>
             </div>
         );
     };
 
     render() {
+        if (this.state.redirectToHome) {
+            return <Redirect to={`/`} />;
+        }
+
         const { post } = this.state;
         return (
             <div className="container">
