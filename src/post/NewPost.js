@@ -37,6 +37,10 @@ class NewPost extends Component {
             this.setState({ error: "All fields are required", loading: false });
             return false;
         }
+        if (title.length > 60 ) {
+            this.setState({ error: "Title is limited to 60 characters", loading: false });
+            return false;
+        }
         return true;
     };
 

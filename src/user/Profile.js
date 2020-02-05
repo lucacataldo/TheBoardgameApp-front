@@ -92,7 +92,7 @@ class Profile extends Component {
                                 <p>Hello {user.name}</p>
                                 <p>Email: {user.email}</p>
                                 <p>{`Joined ${new Date(
-                                    user.created
+                                    user.createdDate
                                 ).toDateString()}`}</p>
                             </div>
     

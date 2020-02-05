@@ -55,7 +55,7 @@ class Posts extends Component {
                                     on {new Date(post.createdDate).toDateString()}
                                 </p>
                                 <Link
-                                    to={`/posts/${post._id}`}
+                                    to={`/post/${post._id}`}
                                     className="btn btn-raised btn-primary btn-sm"
                                 >
                                     Read more
@@ -72,7 +72,9 @@ class Posts extends Component {
         const { posts } = this.state;
         return (
             <div className="container">
-                <h2 className="mt-5 mb-5">Recent Posts</h2>
+                <h2 className="mt-5 mb-5">
+                    {!posts.length ? "Loading..." : "Recent Posts"}
+                </h2>
 
                 {this.renderPosts(posts)}
             </div>
