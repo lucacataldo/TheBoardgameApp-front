@@ -6,6 +6,7 @@ import { isAuthenticated } from "../auth";
 import DefaultProfileImg from "../images/avatar.png";
 import DeleteUser from "./DeleteUser";
 import FollowProfileButton from "./FollowProfileButton";
+import ProfileTabs from "./ProfileTabs";
 
 class Profile extends Component {
     constructor() {
@@ -72,29 +73,30 @@ class Profile extends Component {
             ? `${process.env.REACT_APP_API_URL}/user/photo/${user._id}?${new Date().getTime()}`
             : DefaultProfileImg;
 
-        return (
-            <div className="container">
-                <h2 className="mt-5 mb-5">Profile</h2>
-                <div className="row">
-                    <div className="col-md-6">
-                        <img
-                            style={{ height: "200px", width: "auto" }}
-                            className="img-thumbnail"
-                            src={photoUrl}
-                            onError={i => (i.target.src = `${DefaultProfileImg}`)}
-                            alt={user.name}
-                        />
-                    </div>
-                    <div className="col-md-6">
-                        <div className="lead mt-2">
-                            <p>Hello {user.name}</p>
-                            <p>Email: {user.email}</p>
-                            <p>{`Joined ${new Date(
-                                user.createdDate
-                            ).toDateString()}`}</p>
+            return (
+                <div className="container">
+                    <h2 className="mt-5 mb-5">Profile</h2>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <img
+                                style={{ height: "200px", width: "auto" }}
+                                className="img-thumbnail"
+                                src={photoUrl}
+                                onError={i => (i.target.src = `${DefaultProfileImg}`)}
+                                alt={user.name}
+                            />
                         </div>
-
-                        {isAuthenticated().user &&
+    
+                        <div className="col-md-6">
+                            <div className="lead mt-2">
+                                <p>Hello {user.name}</p>
+                                <p>Email: {user.email}</p>
+                                <p>{`Joined ${new Date(
+                                    user.created
+                                ).toDateString()}`}</p>
+                            </div>
+    
+                            {isAuthenticated().user &&
                             isAuthenticated().user._id === user._id ? (
                                 <div className="d-inline-block">
                                     <Link
@@ -102,7 +104,7 @@ class Profile extends Component {
                                         to={`/user/edit/${user._id}`}
                                     >
                                         Edit Profile
-                                </Link>
+                                    </Link>
                                     <DeleteUser userId={user._id} />
                                 </div>
                             ) : (
@@ -111,18 +113,24 @@ class Profile extends Component {
                                     onButtonClick={this.clickFollowButton}
                                 />
                             )}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col md-12 mt-5 mb-5">
+                            <hr />
+                            <p className="lead">{user.about}</p>
+                            <hr />
+    
+                            <ProfileTabs
+                                followers={user.followers}
+                                following={user.following}
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col md-12 mt-5 mb-5">
-                        <hr />
-                        <p className="lead">{user.about}</p>
-                        <hr />
-                    </div>
-                </div>
-            </div>
-        );
+            );
+        }
     }
-}
-
-export default Profile;
+    
+    export default Profile;
+    
