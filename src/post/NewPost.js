@@ -3,7 +3,6 @@ import { Redirect } from "react-router-dom";
 
 import { isAuthenticated } from "../auth";
 import { createPost } from "./apiPost";
-import DefaultProfile from "../images/avatar.png";
 
 class NewPost extends Component {
     constructor() {
@@ -21,7 +20,7 @@ class NewPost extends Component {
     }
 
     componentDidMount() {
-        this.postData = new FormData(); 
+        this.postData = new FormData();
         this.setState({ user: isAuthenticated().user });
     }
 
@@ -117,7 +116,6 @@ class NewPost extends Component {
         const {
             title,
             body,
-            photo,
             user,
             error,
             loading,
