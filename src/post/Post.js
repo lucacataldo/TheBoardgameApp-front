@@ -1,14 +1,17 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 
-import { getPost, removePost } from "./apiPost";
+import { getPost, removePost, likePost, unlikePost } from "./apiPost";
 import DefaultPostImg from "../images/defaultPostImg.jpg";
 import { isAuthenticated } from "../auth";
 
 class Post extends Component {
     state = {
         post: "",
-        redirectToHome: false
+        redirectToHome: false,
+        redirectToSignin: false,
+        like: false,
+        likes: 0 // total likes
     };
 
     componentDidMount = () => {
@@ -17,7 +20,39 @@ class Post extends Component {
             if (data.error) {
                 console.log(data.error);
             } else {
-                this.setState({ post: data });
+                this.setState({
+                    post: data,
+                    likes: data.likes.length,
+                    like: this.isLiked(data.likes)
+                });
+            }
+        });
+    };
+
+    isLiked = likes => {
+        const userId = isAuthenticated().user._id;
+        let match = likes.indexOf(userId) !== -1;
+        return match;
+    };
+
+    likeToggle = () => {
+        if (!isAuthenticated()) {
+            this.setState({ redirectToSignin: true });
+            return false;
+        }
+        let callApi = this.state.like ? unlikePost : likePost;
+        const userId = isAuthenticated().user._id;
+        const postId = this.state.post._id;
+        const token = isAuthenticated().token;
+
+        callApi(userId, token, postId).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                this.setState({
+                    like: !this.state.like, // true = false vice versa for toggle
+                    likes: data.likes.length
+                });
             }
         });
     };
@@ -47,6 +82,8 @@ class Post extends Component {
         const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
         const posterName = post.postedBy ? post.postedBy.name : " Unknown";
 
+        const { like, likes } = this.state;
+
         return (
             <div className="card-body">
                 <img
@@ -57,24 +94,51 @@ class Post extends Component {
                     style={{ height: "300px", width: "100%", objectFit: "cover" }}
                 />
 
+                {like ? (
+                    <h3 onClick={this.likeToggle}>
+                        <i
+                            className="fa fa-thumbs-up text-success bg-dark"
+                            style={{ padding: "10px", borderRadius: "50%" }}
+                        />{" "}
+                        {likes} Like
+                    </h3>
+                ) : (
+                        <h3 onClick={this.likeToggle}>
+                            <i
+                                className="fa fa-thumbs-up text-warning bg-dark"
+                                style={{ padding: "10px", borderRadius: "50%" }}
+                            />{" "}
+                            {likes} Like
+                    </h3>
+                    )}
+
                 <p className="card-text">{post.body}</p>
                 <br />
                 <p className="font-italic mark">
                     Posted by <Link to={`${posterId}`}>{posterName} </Link>
-                    on {new Date(post.createdDate).toDateString()}
+                    on {new Date(post.created).toDateString()}
                 </p>
                 <div className="d-inline-block">
-                    <Link to={`/`} className="btn btn-raised btn-primary btn-sm mr-5">
+                    <Link
+                        to={`/`}
+                        className="btn btn-raised btn-primary btn-sm mr-5"
+                    >
                         Back to posts
                     </Link>
 
                     {isAuthenticated().user &&
                         isAuthenticated().user._id === post.postedBy._id && (
                             <>
-                                <Link to={`/post/edit/${post._id}`} className="btn btn-raised btn-warning btn-sm mr-5">
+                                <Link
+                                    to={`/post/edit/${post._id}`}
+                                    className="btn btn-raised btn-warning btn-sm mr-5"
+                                >
                                     Update Post
                                 </Link>
-                                <button onClick={this.deleteConfirmed} className="btn btn-raised btn-danger">
+                                <button
+                                    onClick={this.deleteConfirmed}
+                                    className="btn btn-raised btn-danger"
+                                >
                                     Delete Post
                                 </button>
                             </>
@@ -85,11 +149,14 @@ class Post extends Component {
     };
 
     render() {
-        if (this.state.redirectToHome) {
+        const { post, redirectToHome, redirectToSignin } = this.state;
+
+        if (redirectToHome) {
             return <Redirect to={`/`} />;
+        } else if (redirectToSignin) {
+            return <Redirect to={`/signin`} />;
         }
 
-        const { post } = this.state;
         return (
             <div className="container">
                 <h2 className="display-2 mt-5 mb-5">{post.title}</h2>
