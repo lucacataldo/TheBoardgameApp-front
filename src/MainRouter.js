@@ -11,8 +11,9 @@ import EditProfile from "./user/EditProfile";
 import Profile from "./user/Profile";
 import FindPeople from "./user/FindPeople";
 
-import NewPost from "./post/NewPost";
 import Post from "./post/Post";
+import EditPost from "./post/EditPost";
+import NewPost from "./post/NewPost";
 
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
@@ -32,7 +33,7 @@ const MainRouter = () => (
             <PrivateRoute exact path="/findpeople" component={FindPeople} />
             <PrivateRoute exact path="/user/:userId" component={Profile} />
             <PrivateRoute exact path="/user/edit/:userId" component={EditProfile} />
-           
+            <PrivateRoute exact path="/post/edit/:postId" component={EditPost} />
            
         </Switch>
     </div>

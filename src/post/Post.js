@@ -50,17 +50,11 @@ class Post extends Component {
         return (
             <div className="card-body">
                 <img
-                    src={`${process.env.REACT_APP_API_URL}/post/photo/${
-                        post._id
-                    }`}
+                    src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
                     alt={post.title}
                     onError={i => (i.target.src = `${DefaultPostImg}`)}
                     className="img-thunbnail mb-3"
-                    style={{
-                        height: "300px",
-                        width: "100%",
-                        objectFit: "cover"
-                    }}
+                    style={{ height: "300px", width: "100%", objectFit: "cover" }}
                 />
 
                 <p className="card-text">{post.body}</p>
@@ -77,13 +71,10 @@ class Post extends Component {
                     {isAuthenticated().user &&
                         isAuthenticated().user._id === post.postedBy._id && (
                             <>
-                                <button className="btn btn-raised btn-warning mr-5">
+                                <Link to={`/post/edit/${post._id}`} className="btn btn-raised btn-warning btn-sm mr-5">
                                     Update Post
-                                </button>
-                                <button
-                                    onClick={this.deleteConfirmed}
-                                    className="btn btn-raised btn-danger"
-                                >
+                                </Link>
+                                <button onClick={this.deleteConfirmed} className="btn btn-raised btn-danger">
                                     Delete Post
                                 </button>
                             </>
@@ -108,8 +99,8 @@ class Post extends Component {
                         <h2>Loading...</h2>
                     </div>
                 ) : (
-                    this.renderPost(post)
-                )}
+                        this.renderPost(post)
+                    )}
             </div>
         );
     }
