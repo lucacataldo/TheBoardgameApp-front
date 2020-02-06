@@ -4,6 +4,7 @@ import { Link, Redirect } from "react-router-dom";
 import { getPost, removePost, likePost, unlikePost } from "./apiPost";
 import DefaultPostImg from "../images/defaultPostImg.jpg";
 import { isAuthenticated } from "../auth";
+import PostComments from "./PostComments";
 
 class Post extends Component {
     state = {
@@ -11,7 +12,8 @@ class Post extends Component {
         redirectToHome: false,
         redirectToSignin: false,
         like: false,
-        likes: 0 // total likes
+        likes: 0, // total likes
+        comments: []
     };
 
     componentDidMount = () => {
@@ -23,7 +25,8 @@ class Post extends Component {
                 this.setState({
                     post: data,
                     likes: data.likes.length,
-                    like: this.isLiked(data.likes)
+                    like: this.isLiked(data.likes),
+                    comments: data.comments
                 });
             }
         });
@@ -78,6 +81,10 @@ class Post extends Component {
         }
     };
 
+    updateComments = comments => {
+        this.setState({ comments });
+    };
+
     renderPost = post => {
         const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
         const posterName = post.postedBy ? post.postedBy.name : " Unknown";
@@ -116,7 +123,7 @@ class Post extends Component {
                 <br />
                 <p className="font-italic mark">
                     Posted by <Link to={`${posterId}`}>{posterName} </Link>
-                    on {new Date(post.created).toDateString()}
+                    on {new Date(post.createdDate).toDateString()}
                 </p>
                 <div className="d-inline-block">
                     <Link
@@ -149,7 +156,7 @@ class Post extends Component {
     };
 
     render() {
-        const { post, redirectToHome, redirectToSignin } = this.state;
+        const { post, redirectToHome, redirectToSignin, comments } = this.state;
 
         if (redirectToHome) {
             return <Redirect to={`/`} />;
@@ -166,8 +173,14 @@ class Post extends Component {
                         <h2>Loading...</h2>
                     </div>
                 ) : (
-                        this.renderPost(post)
-                    )}
+                    this.renderPost(post)
+                )}
+
+                <PostComments
+                    postId={post._id}
+                    comments={comments.reverse()}
+                    updateComments={this.updateComments}
+                />
             </div>
         );
     }

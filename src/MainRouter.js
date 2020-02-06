@@ -34,7 +34,6 @@ const MainRouter = () => (
             <PrivateRoute exact path="/user/:userId" component={Profile} />
             <PrivateRoute exact path="/user/edit/:userId" component={EditProfile} />
             <PrivateRoute exact path="/post/edit/:postId" component={EditPost} />
-           
         </Switch>
     </div>
 );
