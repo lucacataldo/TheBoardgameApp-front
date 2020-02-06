@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 import { signin, authenticate } from "../auth";
 
@@ -60,9 +60,10 @@ class Signin extends Component {
                     value={password}
                 />
             </div>
-            <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-                Submit
-            </button>
+            <div>
+                <button onClick={this.clickSubmit} className="btn btn-raised btn-primary float-left">Submit</button>
+                <Link to="/forgot-password" className="btn btn-raised btn-danger float-right">{" "}Forgot Password </Link>
+            </div>
         </form>
     );
 

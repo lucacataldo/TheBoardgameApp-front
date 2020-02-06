@@ -6,6 +6,8 @@ import Menu from "./components/Menu";
 
 import Signup from "./user/Signup";
 import Signin from "./user/Signin";
+import ForgotPassword from "./user/ForgotPassword";
+import ResetPassword from "./user/ResetPassword";
 
 import EditProfile from "./user/EditProfile";
 import Profile from "./user/Profile";
@@ -23,6 +25,9 @@ const MainRouter = () => (
         <Menu />
         <Switch>
             <Route exact path="/" component={Home} />
+            <Route exact path="/forgot-password" component={ForgotPassword} />
+            <Route exact path="/reset-password/:resetPasswordToken" component={ResetPassword} />
+
             <PrivateRoute exact path="/post/create" component={NewPost} />
             <Route exact path="/post/:postId" component={Post} />
 
