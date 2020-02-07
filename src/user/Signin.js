@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
 
 import { signin, authenticate } from "../auth";
-import SocialLogin from "./SocialLogin";
+import SocialLogins from "./SocialLogins";
 
 class Signin extends Component {
     constructor() {
@@ -79,8 +79,11 @@ class Signin extends Component {
             <div className="container">
                 <h2 className="mt-5 mb-5">Sign In</h2>
                 <hr />
-                <SocialLogin />
-                <hr />
+                <SocialLogins />
+
+                <div class="socialLoginDiv">
+                    <p class="orSocialLogin">OR</p>
+                </div>
                 <div className="alert alert-danger" style={{ display: error ? "" : "none" }}>
                     {error}
                 </div>
