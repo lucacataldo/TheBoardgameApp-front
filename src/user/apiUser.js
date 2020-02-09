@@ -20,7 +20,7 @@ export const getUsers = () => {
         .then(response => {
             return response.json();
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err)); 
 };
 
 export const removeUser = (userId, token) => {
