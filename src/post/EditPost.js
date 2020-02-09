@@ -25,7 +25,7 @@ class EditPost extends Component {
                 this.setState({ redirectToProfile: true });
             } else {
                 this.setState({
-                    id: data._id,
+                    id: data.postedBy._id,
                     title: data.title,
                     body: data.body,
                     error: ""
@@ -53,7 +53,7 @@ class EditPost extends Component {
             this.setState({ error: "All fields are required", loading: false });
             return false;
         }
-        if (title.length > 60 ) {
+        if (title.length > 60) {
             this.setState({ error: "Title is limited to 60 characters", loading: false });
             return false;
         }
@@ -162,7 +162,7 @@ class EditPost extends Component {
                 <img
                     style={{ height: "200px", width: "auto" }}
                     className="img-thumbnail"
-                    src={`${process.env.REACT_APP_API_URL }/post/photo/${id}?${new Date().getTime()}`}
+                    src={`${process.env.REACT_APP_API_URL}/post/photo/${id}?${new Date().getTime()}`}
                     onError={i => (i.target.src = `${DefaultPostImg}`)}
                     alt={title}
                 />
