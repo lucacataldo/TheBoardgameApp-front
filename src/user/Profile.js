@@ -103,7 +103,7 @@ class Profile extends Component {
                         />
                     </div>
 
-                    <div className="col-md-6">
+                    <div className="col-md-8">
                         <div className="lead mt-2">
                             <p>Hello {user.name}</p>
                             <p>Email: {user.email}</p>
@@ -113,29 +113,52 @@ class Profile extends Component {
                         </div>
 
                         {isAuthenticated().user &&
-                            isAuthenticated().user._id === user._id ? (
-                                <div className="d-inline-block">
-                                    <Link
-                                        className="btn btn-raised btn-info mr-5"
-                                        to={`/post/create`}
-                                    >
-                                        Create Post
+                        isAuthenticated().user._id === user._id ? (
+                            <div className="d-inline-block">
+                                <Link
+                                    className="btn btn-raised btn-info mr-5"
+                                    to={`/post/create`}
+                                >
+                                    Create Post
                                 </Link>
 
-                                    <Link
-                                        className="btn btn-raised btn-success mr-5"
-                                        to={`/user/edit/${user._id}`}
-                                    >
-                                        Edit Profile
+                                <Link
+                                    className="btn btn-raised btn-success mr-5"
+                                    to={`/user/edit/${user._id}`}
+                                >
+                                    Edit Profile
                                 </Link>
-                                    <DeleteUser userId={user._id} />
-                                </div>
-                            ) : (
-                                <FollowProfileButton
-                                    following={this.state.following}
-                                    onButtonClick={this.clickFollowButton}
-                                />
-                            )}
+                                <DeleteUser userId={user._id} />
+                            </div>
+                        ) : (
+                            <FollowProfileButton
+                                following={this.state.following}
+                                onButtonClick={this.clickFollowButton}
+                            />
+                        )}
+
+                        <div>
+                            {isAuthenticated().user &&
+                                isAuthenticated().user.role === "admin" && (
+                                    <div class="card mt-5">
+                                        <div className="card-body">
+                                            <h5 className="card-title">
+                                                Admin
+                                            </h5>
+                                            <p className="mb-2 text-danger">
+                                                Edit/Delete as an Admin
+                                            </p>
+                                            <Link
+                                                className="btn btn-raised btn-success mr-5"
+                                                to={`/user/edit/${user._id}`}
+                                            >
+                                                Edit Profile
+                                            </Link>
+                                            <DeleteUser userId={user._id} />
+                                        </div>
+                                    </div>
+                                )}
+                        </div>
                     </div>
                 </div>
                 <div className="row">

@@ -20,11 +20,15 @@ import NewPost from "./post/NewPost";
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
 
+import Admin from './admin/Admin'
+
 const MainRouter = () => (
     <div>
         <Menu />
         <Switch>
             <Route exact path="/" component={Home} />
+            <PrivateRoute exact path="/admin" component={Admin} />
+
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route exact path="/reset-password/:resetPasswordToken" component={ResetPassword} />
 
