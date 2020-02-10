@@ -36,13 +36,17 @@ class SocialLogins extends Component {
 
     responseGoogle = response => {
         //console.log(response);
-        const { googleId, name, email, imageUrl } = response.profileObj;
+        const tokenId = response.tokenId;
         const user = {
-            password: googleId,
-            name: name,
-            email: email,
-            imageUrl: imageUrl
+            tokenId: tokenId
         };
+        // const { googleId, name, email, imageUrl } = response.profileObj;
+        // const user = {
+        //     password: googleId,
+        //     name: name,
+        //     email: email,
+        //     imageUrl: imageUrl
+        // };
         socialLogin(user).then(data => {
             if (data.error) {
                 console.log("Error Login. Please try again..");
