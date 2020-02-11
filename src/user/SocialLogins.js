@@ -88,8 +88,8 @@ class SocialLogins extends Component {
 
         return (
 
-            <div class="btn-toolbar" role="toolbar">
-                <div class="btn-group mr-2" role="group" >
+            <div className="btn-toolbar" role="toolbar">
+                <div className="btn-group mr-2" role="group" >
                     <GoogleLogin
                         clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                         onSuccess={this.responseGoogle}
@@ -104,7 +104,7 @@ class SocialLogins extends Component {
                         )}
                     />
                 </div>
-                <div class="btn-group" role="group" >
+                <div className="btn-group" role="group" >
                     <FacebookLogin
                         appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                         fields="id,name,email,picture"

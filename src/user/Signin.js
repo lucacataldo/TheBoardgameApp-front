@@ -81,8 +81,8 @@ class Signin extends Component {
                 <hr />
                 <SocialLogins />
 
-                <div class="socialLoginDiv">
-                    <p class="orSocialLogin">OR</p>
+                <div className="socialLoginDiv">
+                    <p className="orSocialLogin">OR</p>
                 </div>
                 <div className="alert alert-danger" style={{ display: error ? "" : "none" }}>
                     {error}

@@ -9,7 +9,7 @@ import PostComments from "./PostComments";
 class Post extends Component {
     state = {
         post: "",
-        redirectToHome: false,
+        redirectToPosts: false,
         redirectToSignin: false,
         like: false,
         likes: 0, // total likes
@@ -67,7 +67,7 @@ class Post extends Component {
             if (data.error) {
                 console.log(data.error);
             } else {
-                this.setState({ redirectToHome: true });
+                this.setState({ redirectToPosts: true });
             }
         });
     };
@@ -127,7 +127,7 @@ class Post extends Component {
                 </p>
                 <div className="d-inline-block">
                     <Link
-                        to={`/`}
+                        to={`/posts`}
                         className="btn btn-raised btn-primary btn-sm mr-5"
                     >
                         Back to posts
@@ -153,7 +153,7 @@ class Post extends Component {
                     <div>
                         {isAuthenticated().user &&
                             isAuthenticated().user.role === "admin" && (
-                                <div class="card mt-5">
+                                <div className="card mt-5">
                                     <div className="card-body">
                                         <h5 className="card-title">Admin</h5>
                                         <p className="mb-2 text-danger">
@@ -181,10 +181,10 @@ class Post extends Component {
     };
 
     render() {
-        const { post, redirectToHome, redirectToSignin, comments } = this.state;
+        const { post, redirectToPosts, redirectToSignin, comments } = this.state;
 
-        if (redirectToHome) {
-            return <Redirect to={`/`} />;
+        if (redirectToPosts) {
+            return <Redirect to={`/posts`} />;
         } else if (redirectToSignin) {
             return <Redirect to={`/signin`} />;
         }

@@ -99,7 +99,7 @@ class Posts extends Component {
                         Previous
                     </button>
                 ) : (
-                    <button className="btn btn-raised btn-warning mr-5 mt-5 mb-5" disabled="true" onClick={() => this.loadLess(1)}>
+                    <button className="btn btn-raised btn-warning mr-5 mt-5 mb-5" disabled={true} onClick={() => this.loadLess(1)}>
                         Previous
                     </button>
                 )}
@@ -109,7 +109,7 @@ class Posts extends Component {
                         Next 
                     </button>
                 ) : (
-                    <button className="btn btn-raised btn-success mt-5 mb-5" disabled="true" onClick={() => this.loadMore(1)} >
+                    <button className="btn btn-raised btn-success mt-5 mb-5" disabled={true}  onClick={() => this.loadMore(1)} >
                         Next 
                     </button>
                 )}
