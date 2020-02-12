@@ -25,7 +25,7 @@ class EditPost extends Component {
                 this.setState({ redirectToProfile: true });
             } else {
                 this.setState({
-                    id: data.postedBy._id,
+                    id: data._id,
                     title: data.title,
                     body: data.body,
                     error: ""
@@ -75,7 +75,7 @@ class EditPost extends Component {
         this.setState({ loading: true });
 
         if (this.isValid()) {
-            const postId = this.state.id;
+            const postId = this.props.match.params.postId;
             const token = isAuthenticated().token;
 
             updatePost(postId, token, this.postData).then(data => {
@@ -140,7 +140,7 @@ class EditPost extends Component {
         } = this.state;
 
         if (redirectToProfile) {
-            return <Redirect to={`/user/${isAuthenticated().user._id}`} />;
+            return <Redirect to={`/user/${isAuthenticated().user._id}`} />
         }
 
         return (
@@ -157,12 +157,11 @@ class EditPost extends Component {
                     </div>
                 ) : (
                         ""
-                    )};
-
+                    )}
                 <img
                     style={{ height: "200px", width: "auto" }}
                     className="img-thumbnail"
-                    src={`${process.env.REACT_APP_API_URL}/post/photo/${id}?${new Date().getTime()}`}
+                    src={`${process.env.REACT_APP_API_URL}/post/photo/${id}?${new Date().getTime()}`}            
                     onError={i => (i.target.src = `${DefaultPostImg}`)}
                     alt={title}
                 />

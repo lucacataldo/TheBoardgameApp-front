@@ -28,7 +28,6 @@ class MainRouter extends React.Component {
         return (
             <>
                 <NavBar />
-                <div className="container-fluid">
                     <Switch>
                         <Route exact path="/" render={() => (<Home />)} />
                         <Route exact path="/posts" component={Posts} />
@@ -49,7 +48,6 @@ class MainRouter extends React.Component {
                         <PrivateRoute exact path="/user/edit/:userId" component={EditProfile} />
                         <PrivateRoute exact path="/post/edit/:postId" component={EditPost} />
                     </Switch>
-                </div>
             </>
         );
     }

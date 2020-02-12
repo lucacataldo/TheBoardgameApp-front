@@ -64,7 +64,6 @@ export const removePost = (postId, token) => {
 };
 
 export const updatePost = (postId, token, post) => {
-    console.log(postId, token, post);
     return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
         method: "PUT",
         headers: {

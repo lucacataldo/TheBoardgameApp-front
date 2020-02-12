@@ -47,3 +47,14 @@
     background-size: cover;
     }
 
+
+
+    /* posts */
+    .postRow{
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    #root{
+      background-color: rgb(231, 231, 231);
+    }

@@ -1,121 +1,108 @@
-import React, { Component } from "react";
-import { getPosts } from "./apiPost";
-import DefaultPostImg from "../images/defaultPostImg.jpg";
 import { Link } from "react-router-dom";
+import React, { useState, useRef, useCallback } from 'react';
 
-class Posts extends Component {
-    constructor() {
-        super();
-        this.state = {
-            posts: [],
-            page: 1,
-            noMorePosts: false
-        };
-    }
+import useFetchMorePosts from './useFetchMorePosts';
+import DefaultPostImg from "../images/defaultPostImg.jpg";
 
-    loadPosts = page => {
-        getPosts(page).then(data => {
-            if (data.error) {
-                console.log(data.error);
-            } else {
-                this.setState({ posts: data });
+
+const Posts = () => {
+    const [pageNumber, setPageNumber] = useState(1);
+
+    const {
+        posts,
+        hasMore,
+        loading,
+        error
+    } = useFetchMorePosts(pageNumber);
+
+
+    const refObserver = useRef();
+
+    // whenever the <div ref={lastPostElementRef} key={i}> is created, 
+    // it will call this fxn when it's the last element
+    const lastPostElementRef = useCallback(node => {
+        if (loading) return;
+        // disconnect previous ref so we can reset it
+        if (refObserver.current) refObserver.current.disconnect();
+        // take all entries available 
+        refObserver.current = new IntersectionObserver(entries => {
+            // if the entry is on the page and there's more to load
+            // wont keep calling api if the api provided all the items 
+            if (entries[0].isIntersecting && hasMore) {
+                setPageNumber(prevPageNumber => prevPageNumber + 1);
             }
-        });
-    };
+        })
+        // observe the node if its last
+        if (node) refObserver.current.observe(node);
 
-    componentDidMount() {
-        this.loadPosts(this.state.page);
-    }
+    }, [loading, hasMore])
 
-    loadMore = number => {
-        this.setState({ page: this.state.page + number });
-        this.loadPosts(this.state.page + number);
-    };
+    function renderPost(post) {
+        const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
+        const posterName = post.postedBy ? post.postedBy.name : " Unknown";
 
-    loadLess = number => {
-        this.setState({ page: this.state.page - number });
-        this.loadPosts(this.state.page - number);
-    };
-
-    renderPosts = posts => {
         return (
-            <div className="row">
-                {posts.map((post, i) => {
-                    const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
-                    const posterName = post.postedBy ? post.postedBy.name : " Unknown";
-
-                    return (
-                        <div className="card col-md-4" key={i}>
-                            <div className="card-body">
-                                <img
-                                    src={`${
-                                        process.env.REACT_APP_API_URL
-                                        }/post/photo/${post._id}`}
-                                    alt={post.title}
-                                    onError={i =>
-                                        (i.target.src = `${DefaultPostImg}`)
-                                    }
-                                    className="img-thunbnail card-img-top "
-
-                                />
-                                <h5 className="card-title">{post.title}</h5>
-                                <p className="card-text">
-                                    {post.body.substring(0, 100)}
-                                </p>
-                                <br />
-                                <p className="font-italic mark">
-                                    Posted by{" "}
-                                    <Link to={`${posterId}`}>
-                                        {posterName}{" "}
-                                    </Link>
-                                    on {new Date(post.createdDate).toDateString()}
-                                </p>
-                                <Link
-                                    to={`/post/${post._id}`}
-                                    className="btn btn-raised btn-primary btn-sm"
-                                >
-                                    Read more
-                                </Link>
+            <div className="col-5">
+                <div className="card " >
+                    <img src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+                        alt={post.title}
+                        onError={i => (i.target.src = `${DefaultPostImg}`)}
+                        height="200px"
+                        className="img-thunbnail card-img-top "
+                    />
+                    <div className="card-body">
+                        <h5 className="card-title">{post.title}</h5>
+                        <p className="card-text">{post.body.substring(0, 100)}</p>
+                    </div>
+                    <div className="card-footer text-muted">
+                        <div className="row justify-content-between">
+                            <div className="col-9">
+                                Posted by{" "}<Link to={`${posterId}`}>{posterName}{" "}</Link>on {new Date(post.createdDate).toDateString()}
+                            </div>
+                            <div className="col-3 text-right">
+                                <Link to={`/post/${post._id}`} className="btn btn-raised btn-primary btn-sm" >Read more</Link>
                             </div>
                         </div>
-                    );
-                })}
+                    </div>
+                </div>
             </div>
-        );
-    };
-
-    render() {
-        const { posts, page } = this.state;
-        return (
-            <div className="container">
-                <h2 className="mt-5 mb-5">
-                    {!posts.length ? "No more posts!" : "Recent Posts"}
-                </h2>
-
-                {this.renderPosts(posts)}
-
-                {page > 1 ? (
-                    <button className="btn btn-raised btn-warning mr-5 mt-5 mb-5" onClick={() => this.loadLess(1)}>
-                        Previous
-                    </button>
-                ) : (
-                    <button className="btn btn-raised btn-warning mr-5 mt-5 mb-5" disabled={true} onClick={() => this.loadLess(1)}>
-                        Previous
-                    </button>
-                )}
-
-                {posts.length　? (
-                    <button className="btn btn-raised btn-success mt-5 mb-5" onClick={() => this.loadMore(1)} >
-                        Next 
-                    </button>
-                ) : (
-                    <button className="btn btn-raised btn-success mt-5 mb-5" disabled={true}  onClick={() => this.loadMore(1)} >
-                        Next 
-                    </button>
-                )}
-            </div>
-        );
+        )
     }
-}
+
+    return (
+        <>
+            {posts.map((post, i) => {
+                if (posts.length === i + 1) {
+                    return (
+
+                        <div className="row justify-content-md-center postRow" ref={lastPostElementRef} key={i}>
+                            {renderPost(post)}
+
+                        </div>
+
+                    );
+                } else {
+                    return (
+                        <div className="row justify-content-md-center postRow" key={i}>
+                            {renderPost(post)}
+                        </div>
+                    );
+                }
+            })}
+            {!hasMore &&
+                <div className="row justify-content-md-center postRow" >
+                    No More Post
+                </div>
+            }
+            <div className="row justify-content-md-center postRow" >
+                {loading && 'Loading...'}
+            </div>
+            <div className="row justify-content-md-center postRow" >
+                {error && 'Error'}
+            </div>
+        </>
+    )
+
+};
 
 export default Posts;
