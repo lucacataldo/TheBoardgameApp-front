@@ -25,21 +25,21 @@ class Users extends Component {
     renderUsers = users => (
         <div className="row">
             {users.map((user, i) => (
-                <div className="card col-md-4" key={i}>
+            <Link to={`/user/${user._id}`} >
+                <div className="card col-md-12" key={i}>
                     <div className="card-body">
                         <img
-                            className="img-thunbnail card-img-top "
+                            className="img-thunbnail card-img-top"
+                            style={{height:"225px",width:"225px"}}
                             src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
                             onError={i => (i.target.src = `${DefaultProfileImg}`)}
                             alt={user.name}
                         />
                         <h5 className="card-title">{user.name}</h5>
                         <p className="card-text">{user.email}</p>
-                        <Link to={`/user/${user._id}`} className="btn btn-raised btn-primary btn-sm">
-                            View Profile
-                        </Link>
                     </div>
                 </div>
+            </Link>
             ))}
         </div>
     );
