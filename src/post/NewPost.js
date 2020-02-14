@@ -78,38 +78,52 @@ class NewPost extends Component {
 
     newPostForm = (title, body) => (
         <form>
-            <div className="form-group">
-                <label className="text-muted">Profile Photo</label>
-                <input
-                    onChange={this.handleChange("photo")}
-                    type="file"
-                    accept="image/*"
-                    className="form-control"
-                />
-            </div>
-            <div className="form-group">
-                <label className="text-muted">Title</label>
+           
+                <label className="text-muted">Title</label><br/>
                 <input
                     onChange={this.handleChange("title")}
                     type="text"
                     className="form-control"
                     value={title}
                 />
-            </div>
+         
 
-            <div className="form-group">
+            <div className="form-group mt-2">
                 <label className="text-muted">Body</label>
                 <textarea
+                    rows="4"
                     onChange={this.handleChange("body")}
                     type="text"
                     className="form-control"
                     value={body}
+                    style={{resize:"none"}}
                 />
             </div>
-
+            <div className="input-group">
+  <div className="input-group-prepend">
+    <span className="input-group-text" id="inputGroupFileAddon01">
+      Upload
+    </span>
+  </div>
+  <div className="custom-file">
+    <input
+      type="file"
+      accept="image/*"
+      data-max-file-size="4M" 
+      className="custom-file-input"
+      id="inputGroupFile01"
+      onChange={this.handleChange("photo")}
+      aria-describedby="inputGroupFileAddon01"
+    />
+    <label className="custom-file-label" htmlFor="inputGroupFile01">
+      Choose file
+    </label>
+  </div>
+</div>
+        
             <button
                 onClick={this.clickSubmit}
-                className="btn btn-raised btn-primary"
+                className="btn btn-raised btn-primary mt-3"
             >
                 Create Post
             </button>
@@ -132,7 +146,7 @@ class NewPost extends Component {
 
         return (
             <div className="container">
-                <h2 className="mt-5 mb-5">Create a new post</h2>
+                <h1 className="mt-5 mb-4"><b>Create a new post</b></h1>
                 <div
                     className="alert alert-danger"
                     style={{ display: error ? "" : "none" }}

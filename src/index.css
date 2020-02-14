@@ -82,6 +82,9 @@ Login & Logout CSS
   margin: 4px 15px 0 5px;
   min-width: 15px;
 }
+.container{
+  font-family: 'Montserrat', sans-serif;
+}
 
 /* .orSocialLogin {
   text-align: center;
