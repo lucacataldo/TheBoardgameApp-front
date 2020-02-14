@@ -29,7 +29,7 @@ class Users extends Component {
                 <div className="card col-md-12" key={i}>
                     <div className="card-body">
                         <img
-                            className="img-thunbnail card-img-top"
+                            className="img-thumbnail card-img-top"
                             style={{height:"225px",width:"225px"}}
                             src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
                             onError={i => (i.target.src = `${DefaultProfileImg}`)}
