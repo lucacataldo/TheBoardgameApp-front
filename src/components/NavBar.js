@@ -15,9 +15,10 @@ class NavBar extends React.Component {
                         <>
                             <div className="collapse navbar-collapse" >
                                 <ul className="navbar-nav mr-auto">
+                                    <li className="nav-item mr-2"><NavLink className="nav-link" activeClassName="selected" to={`/user/${isAuthenticated().user._id}`}>{`${isAuthenticated().user.name}'s Profile`}</NavLink></li>
                                     <li className="nav-item mr-2"><NavLink className="nav-link" activeClassName="selected" to='/posts'>Posts</NavLink></li>
                                     <li className="nav-item mr-2"><NavLink className="nav-link" activeClassName="selected" to='/users'>Users</NavLink></li>
-                                    <li className="nav-item mr-2"><NavLink className="nav-link" activeClassName="selected" to={`/user/${isAuthenticated().user._id}`}>{`${isAuthenticated().user.name}'s Profile`}</NavLink></li>
+                                    
                                 </ul>
                             </div>
                         </>
@@ -34,7 +35,7 @@ class NavBar extends React.Component {
                                 </>
                             )}
                             {isAuthenticated() && (
-                                <li className="nav-item mr-2"><span className="nav-link" onClick={() => signout(() => this.props.history.push("/"))} style={{ cursor: "pointer", color: "#fff" }}  >Sign Out</span></li>
+                                <li className="nav-item mr-2"><span className="nav-link" onClick={() => signout(() => this.props.history.push("/"))} style={{ cursor: "pointer", color: "#fff" }}  ><i className= "fa fa-sign-out fa-lg"></i></span></li>
                             )}
                         </ul>
                     </div>
