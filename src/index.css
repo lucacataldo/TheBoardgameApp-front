@@ -1,8 +1,6 @@
 /************************************************** 
 Search the following category to find things easier
 Posts CSS
-
-
 Login & Logout CSS
 ***************************************************/
 #root {
@@ -56,8 +54,10 @@ Login & Logout CSS
 }
 
 .signInOutDiv .input-group-text .fa {
-  font-size: 18px;
+  
+  width:18px;
 }
+
 
 .or-seperator {
   margin: 20px 0 10px;
