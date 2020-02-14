@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory, Route } from "react-router-dom";
 import React, { useState, useRef, useCallback } from 'react';
 
 import useFetchMorePosts from './useFetchMorePosts';
 import DefaultPostImg from "../images/defaultPostImg.jpg";
+import { render } from "@testing-library/react";
+
 
 
 const Posts = () => {
@@ -40,15 +42,15 @@ const Posts = () => {
     function renderPost(post) {
         const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
         const posterName = post.postedBy ? post.postedBy.name : " Unknown";
-
+            
         return (
-            <div className="col-5">
-                <div className="card " >
+            <div className="col-md-6">
+                <div className="card" >
                     <img src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
                         alt={post.title}
                         onError={i => (i.target.src = `${DefaultPostImg}`)}
                         height="200px"
-                        className="img-thunbnail card-img-top "
+                        className="img-thumbnail card-img-top "
                     />
                     <div className="card-body">
                         <h5 className="card-title">{post.title}</h5>
@@ -70,7 +72,26 @@ const Posts = () => {
     }
 
     return (
-        <>
+        <>             
+    {/* The select Bar     */}
+    <div className="container-fluid">
+        <div className="row">
+            <div className="offset-3 col-md-6 mt-2">
+            <Route render={({ history}) => (
+                <form>
+                    <input 
+                    className="form-control"
+                    placeholder="Post some Boardgames! :3"
+                    onFocus={()=>{
+                        history.push('/post/create')
+                                }}
+                       
+                    />
+                </form>
+            )}/>
+            </div>
+        </div>
+    </div>
             {posts.map((post, i) => {
                 if (posts.length === i + 1) {
                     return (
