@@ -31,7 +31,7 @@ class NavBar extends React.Component {
                             {!isAuthenticated() && (
                                 <>
                                     <li className="nav-item mr-2"><NavLink className="nav-link" activeClassName="selected" to='/signin'>Sign In</NavLink></li>
-                                    <li className="nav-item mr-2"><NavLink className="nav-link" activeClassName="selected" to='/signup'>Sign Up</NavLink></li>
+                                    {/* <li className="nav-item mr-2"><NavLink className="nav-link d-none d-sm-block" activeClassName="selected" to='/signup'>Sign Up</NavLink></li> */}
                                 </>
                             )}
                             {isAuthenticated() && (

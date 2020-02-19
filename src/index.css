@@ -31,7 +31,7 @@ Login & Logout CSS
 /* Login & Logout CSS*/
 /**************************************************/
 .signInOutDiv {
-  margin: 30px auto;
+  margin: 20px;
   background: #f7f7f7;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
   padding: 30px;
@@ -41,6 +41,11 @@ Login & Logout CSS
 .signInOutDiv h2 {
   margin: 0 0 15px;
 }
+
+.stickyAlert .alert {
+  margin: 0;
+}
+
 .signInOutDiv .hint-text {
   color: #777;
   padding-bottom: 0px;
@@ -54,16 +59,15 @@ Login & Logout CSS
 }
 
 .signInOutDiv .input-group-text .fa {
-  
-  width:18px;
+  width: 18px;
 }
-
 
 .or-seperator {
   margin: 20px 0 10px;
   text-align: center;
   border-top: 1px solid #ccc;
 }
+
 .or-seperator i {
   padding: 0 10px;
   background: #f7f7f7;
@@ -71,19 +75,22 @@ Login & Logout CSS
   top: -11px;
   z-index: 1;
 }
+
 .social-btn .btn {
   margin: 10px 0;
   font-size: 15px;
   text-align: left;
   line-height: 24px;
 }
+
 .social-btn .btn i {
   float: left;
   margin: 4px 15px 0 5px;
   min-width: 15px;
 }
-.container{
-  font-family: 'Montserrat', sans-serif;
+
+.container {
+  font-family: "Montserrat", sans-serif;
 }
 
 /* .orSocialLogin {

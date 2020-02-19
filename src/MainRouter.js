@@ -30,7 +30,7 @@ class MainRouter extends React.Component {
                 <NavBar />
                     <Switch>
                         <Route exact path="/" render={() => (<Home />)} />
-                        <Route exact path="/posts" component={Posts} />
+=                       <Route exact path="/posts" component={Posts} />
                         <PrivateRoute exact path="/admin" component={Admin} />
 
                         <Route exact path="/forgot-password" component={ForgotPassword} />

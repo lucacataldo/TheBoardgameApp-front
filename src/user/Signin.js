@@ -120,8 +120,8 @@ class Signin extends Component {
     }
 
     return (
-      <div className="bgImage mx-auto my-auto d-flex justify-content-center">
-        <div className="mx-auto my-auto text-center col-lg-5 col-md-5 col-sm-12 signInOutDiv">
+      <div className="bgImage my-auto d-flex justify-content-center">
+        <div className="my-auto text-center col-lg-5 col-md-5 col-sm-12 signInOutDiv">
           <Alert
             type={alertStatus}
             message={alertMessage}
