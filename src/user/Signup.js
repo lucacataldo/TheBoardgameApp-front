@@ -1,178 +1,140 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import useForm from "./useForm";
+import validation from "./validateLogin";
 import { signup } from "../auth";
-import SocialLogins from "./SocialLogins";
 import Alert from "../components/Alert";
-class Signup extends Component {
-  constructor() {
-    super();
-    this.state = {
-      name: "",
-      email: "",
-      password: "",
-      matchPassword: "",
-      alertStatus: "",
-      alertMessage: "",
-      alertVisible: false,
-      alertSignupDone: false
-    };
-  }
+import SocialLogins from "./SocialLogins";
+const SignUp = () => {
+  const { handleChange, handleSubmit, handleBlur, values, errors } = useForm(
+    submit,
+    { name: "", password: "", matchPassword: "", email: "" },
+    validation
+  );
+  const [alertStatus, setAlertStatus] = useState("");
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertVisible, setAlertVible] = useState(false);
+  const [alertType, setAlertType] = useState("");
 
-  handleChange = name => event => {
-    this.setState({
-      alertVisible: false,
-      alertSignupDone: false
-    });
-    this.setState({ [name]: event.target.value });
-  };
-
-  clickSubmit = event => {
-    event.preventDefault();
-    const { name, email, password, matchPassword } = this.state;
-    const user = {
-      name,
-      email,
-      password,
-      matchPassword
-    };
-    // console.log(user);
-    signup(user)
+  function submit() {
+    signup(values)
       .then(data => {
         if (data.error) {
-          this.setState({
-            alertMessage: data.error,
-            alertStatus: "danger",
-            alertVisible: true
-          });
+          setAlertStatus("danger");
+          setAlertMsg(data.error);
+          setAlertVible(true);
         } else {
-          this.setState({
-            name: "",
-            email: "",
-            password: "",
-            matchPassword: "",
-            alertMessage: "",
-            alertStatus: "info",
-            alertSignupDone: true,
-            alertVisible: false
-          });
+          setAlertStatus("info");
+          setAlertMsg(data.error);
+          setAlertVible(true);
+          setAlertType("Redirect");
         }
       })
       .catch(err => {
-        this.setState({
-          alertMessage: "Could not save data. Please try again later.",
-          alertStatus: "danger",
-          alertVisible: true
-        });
+        setAlertStatus("danger");
+        setAlertMsg("Could not save data. Please try again later.");
+        setAlertVible(true);
       });
-  };
+  }
 
-  signupForm = (name, email, password, matchPassword) => (
-    <form>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span className="input-group-text">
-            <i className="fa fa-user"></i>
-          </span>
-        </div>
-        <input
-          onChange={this.handleChange("name")}
-          type="text"
-          className="form-control"
-          name="name"
-          value={name}
-          placeholder="Name"
-          required="required"
-        />
-      </div>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span className="input-group-text">
-            <i className="fa fa-envelope"></i>
-          </span>
-        </div>
-        <input
-          onChange={this.handleChange("email")}
-          type="email"
-          className="form-control"
-          name="email"
-          value={email}
-          placeholder="Email"
-          required="required"
-        />
-      </div>
-      <div className="form-group">
-        <div className="input-group">
-          <span className="input-group-text">
-            <i className="fa fa-lock"></i>
-          </span>
-          <input
-            onChange={this.handleChange("password")}
-            type="password"
-            className="form-control"
-            name="password"
-            value={password}
-            placeholder="Password"
-            required="required"
-          />
-        </div>
-      </div>
-      <div className="form-group">
-        <div className="input-group">
-          <span className="input-group-text">
-            <i className="fa fa-lock"></i>
-          </span>
-          <input
-            onChange={this.handleChange("matchPassword")}
-            type="password"
-            className="form-control"
-            name="matchPassword"
-            value={matchPassword}
-            placeholder="Retype Password"
-            required="required"
-          />
-        </div>
-      </div>
-      <button
-        onClick={this.clickSubmit}
-        className="btn btn-raised btn-primary btn-block"
-      >
-        Submit
-      </button>
-    </form>
-  );
-
-  render() {
-    const {
-      name,
-      email,
-      password,
-      matchPassword,
-      alertMessage,
-      alertVisible,
-      alertStatus,
-      alertSignupDone
-    } = this.state;
-    return (
-      <div className="bgImage mx-auto my-auto d-flex justify-content-center">
-        <div className="mx-auto my-auto text-center col-lg-5 col-md-5 col-sm-12 signInOutDiv">
+  return (
+    <>
+      <Alert type={alertStatus} message={alertMsg} visible={alertVisible} />
+      <div className="bgImage my-auto d-flex justify-content-center">
+        <div className="my-auto col-lg-5 col-md-5 col-sm-12 signInOutDiv">
           <h2 className="text-center">Sign Up</h2>
           <SocialLogins title="Sign up" />
-          <div class="or-seperator">
+          <div className="or-seperator">
             <i>or</i>
           </div>
-          {alertSignupDone && (
-            <div className="alert alert-info">
-              New account is successfully created. Please{" "}
-              <Link to="/signin">Sign In</Link>.
-            </div>
-          )}
-          <Alert type={alertStatus} message={alertMessage} visible={alertVisible} />
          
-          {this.signupForm(name, email, password, matchPassword)}
+          <form onSubmit={handleSubmit} className="needs-validation" noValidate>
+            <div className="input-group mb-3 ">
+              <div className="input-group-prepend">
+                <span className="input-group-text">
+                  <i className="fa fa-user"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="form-control"
+                placeholder="Name"
+              />
+              {errors.name && (
+                <div className="invalid-feedback">{errors.name}</div>
+              )}
+            </div>
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <span className="input-group-text">
+                  <i className="fa fa-envelope"></i>
+                </span>
+              </div>
+              <input
+                className="form-control"
+                name="email"
+                type="email"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Email"
+              />
+              {errors.email && (
+                <div className="invalid-feedback">{errors.email}</div>
+              )}
+            </div>
+            <div className="form-group">
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <input
+                  className="form-control"
+                  name="password"
+                  type="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Password"
+                />
+                {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <input
+                  className="form-control"
+                  name="matchPassword"
+                  type="password"
+                  value={values.matchPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Retype Password"
+                />
+                {errors.matchPassword && (
+                  <div className="invalid-feedback">{errors.matchPassword}</div>
+                )}
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="btn btn-raised btn-primary btn-block"
+            >
+              Submit
+            </button>
+          </form>
         </div>
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
-export default Signup;
+export default SignUp;
