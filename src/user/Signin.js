@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
+import Form from 'react-bootstrap/Form'
 
 import { signin, authenticate } from "../auth";
 import SocialLogins from "./SocialLogins";
