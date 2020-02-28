@@ -1,44 +1,47 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
 import * as Yup from "yup";
 
 import { signup } from "../auth";
 import Alert from "../components/Alert";
 import SocialLogins from "./SocialLogins";
-const SignupValidation = Yup.object().shape({
-  name: Yup.string()
-    .required("Name is required")
-    .min(2, "Name must to be more than 1 characters.")
-    .max(75, "Name must be under 75 characters.")
-    .matches(/^([a-zA-Z ])+$/, "Name can only contain letters"),
-  email: Yup.string()
-    .email("Invalid email address format")
-    .max(254, "Email must be under 254 characters.")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(8, "Password must be 8 characters at minimum")
-    .max(64, "Password must be under 64 characters.")
 
-    .matches(
-      /(?=.*[A-Z])/,
-      "Password must contain at least 1 uppercase alphabetical character"
-    )
-    .matches(
-      /(?=.*[a-z])/,
-      "Password must contain at least 1 lowercase alphabetical character"
-    )
-    .required("Password is required"),
-  matchPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "password doesnt match")
-    .required("Please retype password")
+const SignupValidation = Yup.object().shape({
+  user: Yup.object().shape({
+    name: Yup.string()
+      .required("Name is required")
+      .min(2, "Name must to be more than 1 characters.")
+      .max(75, "Name must be under 75 characters.")
+      .matches(/^([a-zA-Z ])+$/, "Name can only contain letters"),
+    email: Yup.string()
+      .email("Invalid email address format")
+      .max(254, "Email must be under 254 characters.")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(8, "Password must be 8 characters at minimum")
+      .max(64, "Password must be under 64 characters.")
+      .matches(
+        /(?=.*[A-Z])/,
+        "Password must contain at least 1 uppercase alphabetical character"
+      )
+      .matches(
+        /(?=.*[a-z])/,
+        "Password must contain at least 1 lowercase alphabetical character"
+      )
+      .required("Password is required"),
+    matchPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "password doesnt match")
+      .required("Please retype password")
+  })
 });
+
+
 const SignUp = () => {
   const [alertStatus, setAlertStatus] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
   const [alertVisible, setAlertVible] = useState(false);
   const [alertRedirect, setAlertRedirect] = useState("");
 
-  
   return (
     <>
       <Alert
@@ -56,33 +59,36 @@ const SignUp = () => {
           </div>
           <Formik
             initialValues={{
-              name: "",
-              email: "",
-              password: "",
-              matchPassword: ""
+              user: {
+                name: "",
+                email: "",
+                password: "",
+                matchPassword: ""
+              }
             }}
             validationSchema={SignupValidation}
-            onSubmit={({ values, setSubmitting }) => {
-              // signup(initialValues)
-              //   .then(data => {
-              //     if (data.error) {
-              //       setAlertStatus("danger");
-              //       setAlertMsg(data.error);
-              //       setAlertVible(true);
-              //     } else {
-              //       setAlertStatus("info");
-              //       setAlertMsg(data.error);
-              //       setAlertVible(true);
-              //       setAlertRedirect("/signin");
-              //     }
-              //   })
-              //   .catch(err => {
-              //     setAlertStatus("danger");
-              //     setAlertMsg("Could not save data. Please try again later.");
-              //     setAlertVible(true);
-              //   });
-              alert("Form is validated! Submitting the form...", values);
-              setSubmitting(false);
+            onSubmit={(values, { setSubmitting }) => {
+              setTimeout(() => {
+                signup(values.user)
+                  .then(data => {
+                    if (data.error) {
+                      setAlertStatus("danger");
+                      setAlertMsg(data.error);
+                      setAlertVible(true);
+                    } else {
+                      setAlertStatus("success");
+                      setAlertMsg(data.message);
+                      setAlertVible(true);
+                      setAlertRedirect("/signin");
+                    }
+                  })
+                  .catch(err => {
+                    setAlertStatus("danger");
+                    setAlertMsg("Could not save data. Please try again later.");
+                    setAlertVible(true);
+                  });
+                  setSubmitting(false);
+              }, 2000);
             }}
           >
             {({ touched, errors, isSubmitting }) => (
@@ -94,19 +100,23 @@ const SignUp = () => {
                     </span>
                   </div>
                   <Field
-                    type="name"
-                    name="name"
+                    type="text"
+                    name="user.name"
                     placeholder="Name"
-                    className={`form-control ${
-                      touched.name && errors.name ? "is-invalid" : ""
-                    }`}
+                    autoComplete="username"
+                    className={
+                      getIn(errors, "user.name") && getIn(touched, "user.name")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
                   />
                   <ErrorMessage
                     component="div"
-                    name="name"
+                    name="user.name"
                     className="invalid-feedback"
                   />
                 </div>
+
                 <div className="input-group mb-3">
                   <div className="input-group-prepend">
                     <span className="input-group-text">
@@ -115,15 +125,19 @@ const SignUp = () => {
                   </div>
                   <Field
                     type="email"
-                    name="email"
+                    name="user.email"
+                    autoComplete="username"
                     placeholder="Email"
-                    className={`form-control ${
-                      touched.email && errors.email ? "is-invalid" : ""
-                    }`}
+                    className={
+                      getIn(errors, "user.email") &&
+                      getIn(touched, "user.email")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
                   />
                   <ErrorMessage
                     component="div"
-                    name="email"
+                    name="user.email"
                     className="invalid-feedback"
                   />
                 </div>
@@ -136,18 +150,23 @@ const SignUp = () => {
                   </div>
                   <Field
                     type="password"
-                    name="password"
+                    name="user.password"
                     placeholder="Password"
-                    className={`form-control ${
-                      touched.password && errors.password ? "is-invalid" : ""
-                    }`}
+                    autoComplete="new-password"
+                    className={
+                      getIn(errors, "user.password") &&
+                      getIn(touched, "user.password")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
                   />
                   <ErrorMessage
                     component="div"
-                    name="password"
+                    name="user.password"
                     className="invalid-feedback"
                   />
                 </div>
+
                 <div className="input-group mb-3">
                   <div className="input-group-prepend">
                     <span className="input-group-text">
@@ -156,17 +175,19 @@ const SignUp = () => {
                   </div>
                   <Field
                     type="password"
-                    name="matchPassword"
+                    name="user.matchPassword"
                     placeholder="Retype Password"
-                    className={`form-control ${
-                      touched.matchPassword && errors.matchPassword
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    autoComplete="new-password"
+                    className={
+                      getIn(errors, "user.matchPassword") &&
+                      getIn(touched, "user.matchPassword")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
                   />
                   <ErrorMessage
                     component="div"
-                    name="matchPassword"
+                    name="user.matchPassword"
                     className="invalid-feedback"
                   />
                 </div>
@@ -188,4 +209,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
