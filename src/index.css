@@ -3,9 +3,15 @@ Search the following category to find things easier
 Posts CSS
 Login & Logout CSS
 ***************************************************/
-#root {
-  height: 100vh;
+html, body{
+  height: 100%;
 }
+
+body{
+  background-color: rgb(231, 231, 231);
+  background-repeat: repeat;
+}
+
 
 .bgImage {
   background-image: url("./images/bgBackground.png");
@@ -23,9 +29,6 @@ Login & Logout CSS
   padding-bottom: 5px;
 }
 
-#root {
-  background-color: rgb(231, 231, 231);
-}
 
 /**************************************************/
 /* Login & Logout CSS*/

@@ -1,44 +1,55 @@
 import React, { useState } from "react";
-import useForm from "./useForm";
-import validation from "./validateLogin";
+import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
+import * as Yup from "yup";
+
 import { signup } from "../auth";
 import Alert from "../components/Alert";
 import SocialLogins from "./SocialLogins";
+
+const SignupValidation = Yup.object().shape({
+  user: Yup.object().shape({
+    name: Yup.string()
+      .required("Name is required")
+      .min(2, "Name must to be more than 1 characters.")
+      .max(75, "Name must be under 75 characters.")
+      .matches(/^([a-zA-Z ])+$/, "Name can only contain letters"),
+    email: Yup.string()
+      .email("Invalid email address format")
+      .max(254, "Email must be under 254 characters.")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(8, "Password must be 8 characters at minimum")
+      .max(64, "Password must be under 64 characters.")
+      .matches(
+        /(?=.*[A-Z])/,
+        "Password must contain at least 1 uppercase alphabetical character"
+      )
+      .matches(
+        /(?=.*[a-z])/,
+        "Password must contain at least 1 lowercase alphabetical character"
+      )
+      .required("Password is required"),
+    matchPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "password doesnt match")
+      .required("Please retype password")
+  })
+});
+
+
 const SignUp = () => {
-  const { handleChange, handleSubmit, handleBlur, values, errors } = useForm(
-    submit,
-    { name: "", password: "", matchPassword: "", email: "" },
-    validation
-  );
   const [alertStatus, setAlertStatus] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
   const [alertVisible, setAlertVible] = useState(false);
-  const [alertType, setAlertType] = useState("");
-
-  function submit() {
-    signup(values)
-      .then(data => {
-        if (data.error) {
-          setAlertStatus("danger");
-          setAlertMsg(data.error);
-          setAlertVible(true);
-        } else {
-          setAlertStatus("info");
-          setAlertMsg(data.error);
-          setAlertVible(true);
-          setAlertType("Redirect");
-        }
-      })
-      .catch(err => {
-        setAlertStatus("danger");
-        setAlertMsg("Could not save data. Please try again later.");
-        setAlertVible(true);
-      });
-  }
+  const [alertRedirect, setAlertRedirect] = useState("");
 
   return (
     <>
-      <Alert type={alertStatus} message={alertMsg} visible={alertVisible} />
+      <Alert
+        type={alertStatus}
+        message={alertMsg}
+        visible={alertVisible}
+        redirect={alertRedirect}
+      />
       <div className="bgImage my-auto d-flex justify-content-center">
         <div className="my-auto col-lg-5 col-md-5 col-sm-12 signInOutDiv">
           <h2 className="text-center">Sign Up</h2>
@@ -46,91 +57,151 @@ const SignUp = () => {
           <div className="or-seperator">
             <i>or</i>
           </div>
-         
-          <form onSubmit={handleSubmit} className="needs-validation" noValidate>
-            <div className="input-group mb-3 ">
-              <div className="input-group-prepend">
-                <span className="input-group-text">
-                  <i className="fa fa-user"></i>
-                </span>
-              </div>
-              <input
-                type="text"
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="form-control"
-                placeholder="Name"
-              />
-              {errors.name && (
-                <div className="invalid-feedback">{errors.name}</div>
-              )}
-            </div>
-            <div className="input-group mb-3">
-              <div className="input-group-prepend">
-                <span className="input-group-text">
-                  <i className="fa fa-envelope"></i>
-                </span>
-              </div>
-              <input
-                className="form-control"
-                name="email"
-                type="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                placeholder="Email"
-              />
-              {errors.email && (
-                <div className="invalid-feedback">{errors.email}</div>
-              )}
-            </div>
-            <div className="form-group">
-              <div className="input-group">
-                <span className="input-group-text">
-                  <i className="fa fa-lock"></i>
-                </span>
-                <input
-                  className="form-control"
-                  name="password"
-                  type="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Password"
-                />
-                {errors.password && (
-                  <div className="invalid-feedback">{errors.password}</div>
-                )}
-              </div>
-            </div>
-            <div className="form-group">
-              <div className="input-group">
-                <span className="input-group-text">
-                  <i className="fa fa-lock"></i>
-                </span>
-                <input
-                  className="form-control"
-                  name="matchPassword"
-                  type="password"
-                  value={values.matchPassword}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Retype Password"
-                />
-                {errors.matchPassword && (
-                  <div className="invalid-feedback">{errors.matchPassword}</div>
-                )}
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="btn btn-raised btn-primary btn-block"
-            >
-              Submit
-            </button>
-          </form>
+          <Formik
+            initialValues={{
+              user: {
+                name: "",
+                email: "",
+                password: "",
+                matchPassword: ""
+              }
+            }}
+            validationSchema={SignupValidation}
+            onSubmit={(values, { setSubmitting }) => {
+              setTimeout(() => {
+                signup(values.user)
+                  .then(data => {
+                    if (data.error) {
+                      setAlertStatus("danger");
+                      setAlertMsg(data.error);
+                      setAlertVible(true);
+                    } else {
+                      setAlertStatus("success");
+                      setAlertMsg(data.message);
+                      setAlertVible(true);
+                      setAlertRedirect("/signin");
+                    }
+                  })
+                  .catch(err => {
+                    setAlertStatus("danger");
+                    setAlertMsg("Could not save data. Please try again later.");
+                    setAlertVible(true);
+                  });
+                  setSubmitting(false);
+              }, 2000);
+            }}
+          >
+            {({ touched, errors, isSubmitting }) => (
+              <Form>
+                <div className="input-group mb-3 ">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">
+                      <i className="fa fa-user"></i>
+                    </span>
+                  </div>
+                  <Field
+                    type="text"
+                    name="user.name"
+                    placeholder="Name"
+                    autoComplete="username"
+                    className={
+                      getIn(errors, "user.name") && getIn(touched, "user.name")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
+                  />
+                  <ErrorMessage
+                    component="div"
+                    name="user.name"
+                    className="invalid-feedback"
+                  />
+                </div>
+
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">
+                      <i className="fa fa-envelope"></i>
+                    </span>
+                  </div>
+                  <Field
+                    type="email"
+                    name="user.email"
+                    autoComplete="username"
+                    placeholder="Email"
+                    className={
+                      getIn(errors, "user.email") &&
+                      getIn(touched, "user.email")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
+                  />
+                  <ErrorMessage
+                    component="div"
+                    name="user.email"
+                    className="invalid-feedback"
+                  />
+                </div>
+
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">
+                      <i className="fa fa-lock"></i>
+                    </span>
+                  </div>
+                  <Field
+                    type="password"
+                    name="user.password"
+                    placeholder="Password"
+                    autoComplete="new-password"
+                    className={
+                      getIn(errors, "user.password") &&
+                      getIn(touched, "user.password")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
+                  />
+                  <ErrorMessage
+                    component="div"
+                    name="user.password"
+                    className="invalid-feedback"
+                  />
+                </div>
+
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">
+                      <i className="fa fa-lock"></i>
+                    </span>
+                  </div>
+                  <Field
+                    type="password"
+                    name="user.matchPassword"
+                    placeholder="Retype Password"
+                    autoComplete="new-password"
+                    className={
+                      getIn(errors, "user.matchPassword") &&
+                      getIn(touched, "user.matchPassword")
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
+                  />
+                  <ErrorMessage
+                    component="div"
+                    name="user.matchPassword"
+                    className="invalid-feedback"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-block"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Please wait..." : "Submit"}
+                </button>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </>

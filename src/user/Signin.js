@@ -52,8 +52,8 @@ class Signin extends Component {
 
   signinForm = (email, password) => (
     <form>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
+      <div className="input-group mb-3">
+        <div className="input-group-prepend">
           <span className="input-group-text">
             <i className="fa fa-user"></i>
           </span>
@@ -138,13 +138,13 @@ class Signin extends Component {
 
           <SocialLogins title="Sign in" />
 
-          <div class="or-seperator">
+          <div className="or-seperator">
             <i>or</i>
           </div>
 
           {this.signinForm(email, password)}
           <hr />
-          <div class="hint-text small">
+          <div className="hint-text small">
             Don't have an account?{" "}
             <Link to="/signup" className="text-primary">
               Register Now!
