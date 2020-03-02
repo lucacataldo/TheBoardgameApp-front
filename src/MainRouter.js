@@ -21,36 +21,44 @@ import NewPost from "./post/NewPost";
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
 
-import Admin from './admin/Admin'
+import Admin from "./admin/Admin";
 
 class MainRouter extends React.Component {
-    render() {
-        return (
-            <>
-                <NavBar />
-                    <Switch>
-                        <Route exact path="/" render={() => (<Home />)} />
-=                       <Route exact path="/posts" component={Posts} />
-                        <PrivateRoute exact path="/admin" component={Admin} />
+  render() {
+    return (
+      <>
+        <NavBar />
+        <Switch>
+          <Route exact path="/" render={() => <Home />} />
+          <Route exact path="/posts" component={Posts} />
+          <PrivateRoute exact path="/admin" component={Admin} />
 
-                        <Route exact path="/forgot-password" component={ForgotPassword} />
-                        <Route exact path="/reset-password/:resetPasswordToken" component={ResetPassword} />
+          <Route exact path="/forgot-password" component={ForgotPassword} />
+          <Route
+            exact
+            path="/reset-password/:resetPasswordToken"
+            component={ResetPassword}
+          />
 
-                        <PrivateRoute exact path="/post/create" component={NewPost} />
-                        <Route exact path="/post/:postId" component={Post} />
+          <PrivateRoute exact path="/post/create" component={NewPost} />
+          <Route exact path="/post/:postId" component={Post} />
 
-                        <Route exact path="/Users" component={Users} />
-                        <Route exact path="/signup" component={Signup} />
-                        <Route exact path="/signin" component={Signin} />
+          <Route exact path="/Users" component={Users} />
+          <Route exact path="/signup" component={Signup} />
+          <Route exact path="/signin" component={Signin} />
 
-                        <PrivateRoute exact path="/findpeople" component={FindPeople} />
-                        <PrivateRoute exact path="/user/:userId" component={Profile} />
-                        <PrivateRoute exact path="/user/edit/:userId" component={EditProfile} />
-                        <PrivateRoute exact path="/post/edit/:postId" component={EditPost} />
-                    </Switch>
-            </>
-        );
-    }
+          <PrivateRoute exact path="/findpeople" component={FindPeople} />
+          <PrivateRoute exact path="/user/:userId" component={Profile} />
+          <PrivateRoute
+            exact
+            path="/user/edit/:userId"
+            component={EditProfile}
+          />
+          <PrivateRoute exact path="/post/edit/:postId" component={EditPost} />
+        </Switch>
+      </>
+    );
+  }
 }
 
 export default MainRouter;

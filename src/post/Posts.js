@@ -71,7 +71,7 @@ const Posts = () => {
       <div className="row justify-content-center postRow">
         <div className="card">
           <h5 className="card-header">Create Post</h5>
-          <div class="card-body">
+          <div className="card-body">
             <Route
               render={({ history }) => (
                 <form>
