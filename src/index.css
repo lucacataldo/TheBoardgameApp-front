@@ -29,6 +29,15 @@ body{
   padding-bottom: 5px;
 }
 
+.postRow .card, .postRow .postsCreateDiv{
+  max-width: 600px;
+  width: 100%;
+}
+
+
+.postRow .card .postsImg{
+  max-height: 550px;
+}
 /**************************************************/
 /* Login & Logout CSS*/
 /**************************************************/
