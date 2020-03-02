@@ -12,15 +12,15 @@ body{
   background-repeat: repeat;
 }
 
-
 .bgImage {
-  background-image: url("./images/bgBackground.png");
+  background-image: url("./images/bgBackground.jpg");
   height: 100vh;
   width: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
+
 /**************************************************/
 /* Posts CSS */
 /**************************************************/
@@ -29,12 +29,11 @@ body{
   padding-bottom: 5px;
 }
 
-
 /**************************************************/
 /* Login & Logout CSS*/
 /**************************************************/
 .signInOutDiv {
-  margin: 20px;
+  max-width: 425px;
   background: #f7f7f7;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
   padding: 30px;
@@ -47,16 +46,16 @@ body{
 
 .stickyAlert .alert {
   margin: 0;
+  
 }
+
 
 .signInOutDiv .hint-text {
   color: #777;
   padding-bottom: 0px;
   text-align: center;
 }
-.alert {
-  text-align: left;
-}
+
 .signInOutDiv .fgotPass-text {
   padding-top: 8px;
 }
@@ -95,38 +94,3 @@ body{
 .container {
   font-family: "Montserrat", sans-serif;
 }
-
-/* .orSocialLogin {
-  text-align: center;
-  font-size: 20px;
-  background-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
-  background-size: 40% 1px;
-  background-position: center left, center right;
-  background-repeat: no-repeat;
-}
-
-.btnFacebook {
-  height: 45px;
-  border-radius: 4px;
-  background: #3b5998;
-  color: white;
-  border: 0px transparent;
-  text-align: center;
-  display: inline-block;
-}
-.btnGoogle {
-  height: 45px;
-  border-radius: 4px;
-  background: #db3236;
-  color: white;
-  border: 0px transparent;
-  text-align: center;
-}
-.btnFacebook:hover {
-  background: #3b5998;
-  opacity: 0.6;
-}
-.btnGoogle:hover {
-  background: #db3236;
-  opacity: 0.6;
-} */

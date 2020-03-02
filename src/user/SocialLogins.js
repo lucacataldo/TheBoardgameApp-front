@@ -94,7 +94,7 @@ class SocialLogins extends Component {
               disabled={renderProps.disabled}
             >
               <i className="fa fa-google" style={{ marginLeft: "5px" }} />
-              <span>&nbsp;&nbsp;{this.props.title} with Google</span>
+              <span>{this.props.title} with Google</span>
             </button>
           )}
         />
