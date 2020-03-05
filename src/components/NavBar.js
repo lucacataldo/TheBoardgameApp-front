@@ -7,7 +7,7 @@ class NavBar extends React.Component {
   render() {
     return (
       <nav className="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
-        <div className="bgNavbarContainer container-fluid">
+        <div className="maxDivWidth container-fluid">
           <NavLink className="navbar-brand" to="/posts">
             <img src={BgLogo} width="20" height="20" alt="" /> Boardgame Guru
           </NavLink>
