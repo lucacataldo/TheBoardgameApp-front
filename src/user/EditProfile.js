@@ -13,6 +13,7 @@ class EditProfile extends Component {
       name: "",
       email: "",
       password: "",
+      bbgUsername: "",
       redirectToProfile: false,
       error: "",
       fileSize: 0,
@@ -31,6 +32,7 @@ class EditProfile extends Component {
           id: data._id,
           name: data.name,
           email: data.email,
+          bbgUsername: data.bbgUsername,
           error: "",
           about: data.about
         });
@@ -106,7 +108,7 @@ class EditProfile extends Component {
     }
   };
 
-  signupForm = (name, email, password, about) => (
+  signupForm = (name, email, password, bbgUsername, about) => (
     <form>
       <div className="form-group row">
         <label htmlFor="photo" className="text-muted col-3 col-form-label">
@@ -157,7 +159,24 @@ class EditProfile extends Component {
             className="form-control"
             value={email}
             name="email"
-          />{" "}
+          />
+        </div>
+      </div>
+      <div className="form-group row">
+        <label
+          className="text-muted col-3 col-form-label"
+          htmlFor="bbgUsername"
+        >
+          BBG Username
+        </label>
+        <div className="col-9">
+          <input
+            onChange={this.handleChange("bbgUsername")}
+            type="text"
+            className="form-control"
+            value={bbgUsername}
+            name="bbgUsername"
+          />
         </div>
       </div>
       <div className="form-group row">
@@ -189,16 +208,15 @@ class EditProfile extends Component {
         </div>
       </div>
       <div className="form-group row">
-          <div className="offset-3 col-9">
-               <button
-        onClick={this.clickSubmit}
-        className="btn btn-raised btn-primary "
-      >
-        Update
-      </button>
-          </div>
+        <div className="offset-3 col-9">
+          <button
+            onClick={this.clickSubmit}
+            className="btn btn-raised btn-primary "
+          >
+            Update
+          </button>
+        </div>
       </div>
-     
     </form>
   );
 
@@ -208,6 +226,7 @@ class EditProfile extends Component {
       name,
       email,
       password,
+      bbgUsername,
       redirectToProfile,
       //   error,
       //   loading,
@@ -249,7 +268,7 @@ class EditProfile extends Component {
               <div className="col-md-12">
                 {(isAuthenticated().user.role === "admin" ||
                   isAuthenticated().user._id === id) &&
-                  this.signupForm(name, email, password, about)}
+                  this.signupForm(name, email, password, bbgUsername, about)}
               </div>
             </div>
           </div>

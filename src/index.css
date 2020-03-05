@@ -2,12 +2,14 @@
 Search the following category to find things easier
 Posts CSS
 Login & Logout CSS
+Navbar CSS
 ***************************************************/
-html, body{
+html,
+body {
   height: 100%;
 }
 
-body{
+body {
   background-color: rgb(231, 231, 231);
   background-repeat: repeat;
 }
@@ -29,14 +31,33 @@ body{
   padding-bottom: 5px;
 }
 
-.postRow .card, .postRow .postsCreateDiv{
+.postRow .card,
+.postRow .postsCreateDiv {
   max-width: 600px;
   width: 100%;
 }
 
-
-.postRow .card .postsImg{
+.postRow .card .postsImg {
   max-height: 550px;
+}
+
+/**************************************************/
+/* Navbar CSS*/
+/**************************************************/
+.profileInitalCircle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+}
+
+.dropdown-menu {
+  right: 0;
+  left: auto;
+}
+.maxDivWidth {
+  max-width: 1200px;
 }
 /**************************************************/
 /* Login & Logout CSS*/
@@ -55,9 +76,7 @@ body{
 
 .stickyAlert .alert {
   margin: 0;
-  
 }
-
 
 .signInOutDiv .hint-text {
   color: #777;
