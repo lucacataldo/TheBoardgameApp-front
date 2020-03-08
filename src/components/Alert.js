@@ -22,8 +22,8 @@ class Alert extends React.Component {
   render() {
     if (this.props.visible === true) {
       return (
-        <div className="row stickyAlert">
-          <div className="container-fluid">
+        <div className="row  stickyAlert">
+          <div className="container-fluid maxDivWidth">
             <div
               className={
                 "col-12 alert alert-dismissible fade show alert-" +
