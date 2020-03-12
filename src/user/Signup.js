@@ -198,17 +198,19 @@ const SignUp = () => {
                     />
                   </div>
                   <div className="input-group mb-3">
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-block"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Please wait..." : "Submit"}
-                  </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-block"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Please wait..." : "Submit"}
+                    </button>
                   </div>
                   <div className="form-group text-center mb-0">
-                   <span className="text-black-50">Have an account? &nbsp;</span> 
-                  <Link to="/signin" className="text-primary ">
+                    <span className="text-black-50">
+                      Have an account? &nbsp;
+                    </span>
+                    <Link to="/signin" className="text-primary ">
                       Sign In
                     </Link>
                   </div>

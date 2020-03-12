@@ -22,11 +22,11 @@ class Alert extends React.Component {
   render() {
     if (this.props.visible === true) {
       return (
-        <div className="row  stickyAlert">
-          <div className="container-fluid maxDivWidth">
+        <div className="row stickyAlert">
+          <div className="container-fluid">
             <div
               className={
-                "col-12 alert alert-dismissible fade show alert-" +
+                "col-12 alert alert-" +
                 this.props.type +
                 (this.props.className ? " " + this.props.className : "")
               }
@@ -39,14 +39,7 @@ class Alert extends React.Component {
                     {this.props.redirectTxt}.
                   </Link>
                 )}
-              <button
-                type="button"
-                className="close"
-                data-dismiss="alert"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
+            
             </div>
           </div>
         </div>

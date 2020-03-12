@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
 import * as Yup from "yup";
@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { isAuthenticated } from "../auth";
 import { getUser, updateUser, updateLocalStorUser } from "./apiUser";
 import SettingContainer from "./SettingContainer";
-import DefaultProfileImg from "../images/avatar.png";
+
 
 import LoadingOverlay from "react-loading-overlay";
 import Alert from "../components/Alert";
@@ -21,33 +21,24 @@ const UserInfoValidation = Yup.object().shape({
     .email("Invalid email address format")
     .max(254, "Email must be under 254 characters.")
     .required("Email is required"),
- 
-    // .test(
-    //   "fileSize",
-    //   "File too large",
-    //   value => value && value.size <= FILE_SIZE
-    // )
-    // .test(
-    //   "fileFormat",
-    //   "Unsupported Format",
-    //   value => value && SUPPORTED_FORMATS.includes(value.type)
-    // )
-
-  // password: Yup.string()
-  //   .min(8, "Password must be 8 characters at minimum")
-  //   .max(64, "Password must be under 64 characters.")
-  //   .matches(
-  //     /(?=.*[A-Z])/,
-  //     "Password must contain at least 1 uppercase alphabetical character"
-  //   )
-  //   .matches(
-  //     /(?=.*[a-z])/,
-  //     "Password must contain at least 1 lowercase alphabetical character"
-  //   )
-  //   .required("Password is required"),
-  // matchPassword: Yup.string()
-  //   .oneOf([Yup.ref("password"), null], "password doesnt match")
-  //   .required("Please retype password"),
+  password: Yup.string()
+    .min(8, "Password must be 8 characters at minimum")
+    .max(64, "Password must be under 64 characters.")
+    .matches(
+      /(?=.*[A-Z])/,
+      "Password must contain at least 1 uppercase alphabetical character"
+    )
+    .matches(
+      /(?=.*[a-z])/,
+      "Password must contain at least 1 lowercase alphabetical character"
+    ),
+    matchPassword: Yup.string()
+    .when("password", {
+      is: password => password !== undefined && password.length > 0,
+      then: Yup.string()
+        .required("Please retype password")
+    })
+    .oneOf([Yup.ref("password"), null], "password doesnt match")
 });
 
 class SettingProfile extends Component {
@@ -59,6 +50,7 @@ class SettingProfile extends Component {
         name: "",
         email: "",
         password: "",
+        matchPassword: "",
         about: ""
       },
       redirectToProfile: false,
@@ -80,7 +72,9 @@ class SettingProfile extends Component {
             id: data._id,
             name: data.name,
             email: data.email,
-            about: data.about
+            about: data.about,
+            password: "",
+            matchPassword: ""
           },
           error: ""
         });
@@ -100,9 +94,15 @@ class SettingProfile extends Component {
       initialValues={this.state.user}
       validationSchema={UserInfoValidation}
       onSubmit={(values, { setSubmitting }) => {
+        this.setState({ loading: true });
+        
         this.userData.append("name", values.name);
         this.userData.append("email", values.email);
         this.userData.append("about", values.about);
+        if(values.password){
+          this.userData.append("password", values.password);
+        }
+        
         setTimeout(() => {
           const userId = this.props.match.params.userId;
           const token = isAuthenticated().token;
@@ -112,7 +112,7 @@ class SettingProfile extends Component {
               this.setState({
                 loading: false,
                 alertStatus: "danger",
-                alertMsg: data.error,
+                alertMsg: "Unable to update information. Please try again later.",
                 alertVisible: true
               });
             } else if (isAuthenticated().user.role === "admin") {
@@ -137,7 +137,11 @@ class SettingProfile extends Component {
         });
       }}
     >
-      {({ values, touched, errors, isSubmitting, setFieldValue, setFieldError }) => (
+      {({
+        touched,
+        errors,
+        isSubmitting,
+      }) => (
         <Form>
           <div className="row">
             <div className="col-md-12 my-2">
@@ -214,6 +218,11 @@ class SettingProfile extends Component {
               />
             </div>
           </div>
+          <div className="row">
+            <div className="col-md-12 my-2">
+              <h4 className="text-muted">Change Password</h4>
+            </div>
+          </div>
           <div className="form-group row">
             <label
               className="text-muted col-3 col-form-label"
@@ -224,25 +233,51 @@ class SettingProfile extends Component {
             <div className="col-9">
               <Field
                 type="password"
-                name="user.password"
+                name="password"
                 placeholder="Password"
                 autoComplete="new-password"
                 className={
-                  getIn(errors, "user.password") &&
-                  getIn(touched, "user.password")
+                  getIn(errors, "password") && getIn(touched, "password")
                     ? "form-control is-invalid"
                     : "form-control"
                 }
               />
               <ErrorMessage
                 component="div"
-                name="user.password"
+                name="password"
                 className="invalid-feedback"
               />
             </div>
           </div>
           <div className="form-group row">
-            <div className="offset-3 col-9">
+            <label
+              className="text-muted col-3 col-form-label"
+              htmlFor="matchPassword"
+            >
+              Confirm Password
+            </label>
+            <div className="col-9">
+              <Field
+                type="password"
+                name="matchPassword"
+                placeholder="Password"
+                autoComplete="new-password"
+                className={
+                  getIn(errors, "matchPassword") &&
+                  getIn(touched, "matchPassword")
+                    ? "form-control is-invalid"
+                    : "form-control"
+                }
+              />
+              <ErrorMessage
+                component="div"
+                name="matchPassword"
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+          <div className="form-group row">
+            <div className="col-sm-3">
               <button
                 type="submit"
                 className="btn btn-primary btn-block"

@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "../auth";
-import React, { Component, useState } from "react";
-import { Redirect } from "react-router-dom";
+import React from "react";
 
 import { getUser, updateUser, updateLocalStorUser } from "./apiUser";
-import SettingContainer from "./SettingContainer";
 import DefaultProfileImg from "../images/avatar.png";
 
-import LoadingOverlay from "react-loading-overlay";
+
 import Alert from "../components/Alert";
 class SettingSideBar extends React.Component {
   constructor() {
@@ -48,8 +46,10 @@ class SettingSideBar extends React.Component {
   }
   handleChange = name => event => {
     this.setState({ alertVisible: false });
-
-    if (event.target.files[0] !== undefined && event.target.files[0].size < 1000000) {
+    if (
+      event.target.files[0] !== undefined &&
+      event.target.files[0].size < 1000000
+    ) {
       this.setState({ file: URL.createObjectURL(event.target.files[0]) });
       this.userData.set("photo", event.target.files[0]);
     } else {
@@ -65,52 +65,45 @@ class SettingSideBar extends React.Component {
     event.preventDefault();
     this.setState({ loading: true });
 
-   
-      const userId = this.props.userId;
-      const token = isAuthenticated().token;
+    const userId = this.props.userId;
+    const token = isAuthenticated().token;
 
-      updateUser(userId, token, this.userData).then(data => {
-        if (data.error) {
-          this.setState({
-            loading: false,
-            alertStatus: "danger",
-            alertMsg: data.error,
-            alertVisible: true
-          });
-        } else if (isAuthenticated().user.role === "admin") {
+    updateUser(userId, token, this.userData).then(data => {
+      if (data.error) {
+        this.setState({
+          loading: false,
+          alertStatus: "danger",
+          alertMsg: data.error,
+          alertVisible: true
+        });
+      } else if (isAuthenticated().user.role === "admin") {
+        this.setState({
+          loading: false,
+          alertStatus: "success",
+          alertMsg: "User information updated.",
+          alertVisible: true
+        });
+      } else {
+        updateLocalStorUser(data, () => {
           this.setState({
             loading: false,
             alertStatus: "success",
             alertMsg: "User information updated.",
             alertVisible: true
           });
-        } else {
-          updateLocalStorUser(data, () => {
-            this.setState({
-              loading: false,
-              alertStatus: "success",
-              alertMsg: "User information updated.",
-              alertVisible: true
-            });
-          });
-        }
-      });
-    }
- 
+        });
+      }
+    });
+  };
+
   render() {
-    const {
-      id,
-      file,
-      alertMsg,
-      alertStatus,
-      alertVisible
-    } = this.state;
+    const { id, file, alertMsg, alertStatus, alertVisible } = this.state;
     return (
       <>
         <div
           className="modal fade"
           id="updateProfileImgModal"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
           aria-labelledby="profileImgUploadModal"
           aria-hidden="true"
@@ -133,7 +126,7 @@ class SettingSideBar extends React.Component {
               <div className="modal-body py-0 px-0">
                 <form>
                   <div className="col-12">
-                   <Alert
+                    <Alert
                       type={alertStatus}
                       message={alertMsg}
                       visible={alertVisible}
@@ -149,7 +142,6 @@ class SettingSideBar extends React.Component {
                       alt={this.state.name}
                     />
                   </div>
-
                   <div className="row justify-content-center my-2">
                     <label
                       className="btn btn-info btn-rounded my-auto"
@@ -179,7 +171,12 @@ class SettingSideBar extends React.Component {
                 >
                   Close
                 </button>
-                <button type="button" className="btn btn-primary" disabled={alertVisible && file !== null} onClick={this.clickSubmitImg}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={alertVisible && file !== null}
+                  onClick={this.clickSubmitImg}
+                >
                   Save changes
                 </button>
               </div>
@@ -187,53 +184,49 @@ class SettingSideBar extends React.Component {
           </div>
         </div>
 
-        <div className="col-sm-3 col-md-2" highlight={this.props.highlight}>
-          <div className="row mb-2">
-            <div className="col-12">
-              <img
-              style={{  maxHeight: "170px", maxWidth: "170px" }}
-              className="img-thumbnail"
+        <div className="col-sm-3 " highlight={this.props.highlight}>
+          <div className="text-center mb-4">
+            <img
+              style={{ maxHeight: "200px", maxWidth: "200px" }}
+              className="avatar img-circle img-thumbnail rounded-circle"
               src={id
-                ? `${process.env.REACT_APP_API_URL}/user/photo/${
-                    id
-                  }?${new Date().getTime()}`
-                : DefaultProfileImg}
+                  ? `${ process.env.REACT_APP_API_URL
+                    }/user/photo/${id}?${new Date().getTime()}`
+                  : DefaultProfileImg
+              }
               onError={i => (i.target.src = `${DefaultProfileImg}`)}
               alt={this.state.name}
             />
             <button
               type="button"
-              className="btn btn-outline-info col-12"
+              className="btn btn-outline-info col-sm-8 my-2"
               data-toggle="modal"
               data-target="#updateProfileImgModal"
             >
               Update Photo
             </button>
-            </div>
-            
           </div>
-          <div className="row">
-            <div className="col-12">
-               <div className="list-group">
-              <Link
-                className={`list-group-item list-group-item-action ${
-                  this.props.highlight === "UserSetting" ? "active" : ""
-                }`}
-                to={`/user/edit/${isAuthenticated().user._id}`}
-              >
-                User Setting <span className="sr-only">(current)</span>
-              </Link>
-              <Link
-                className={`list-group-item list-group-item-action ${
-                  this.props.highlight === "Boardgame" ? "active" : ""
-                }`}
-                to={`/user/edit/bbg/${isAuthenticated().user._id}`}
-              >
-                Boardgames
-              </Link>
-            </div>
-            </div>
-           
+
+          <div className="list-group ">
+            <span className="list-group-item list-group-item-dark font-weight-bold">
+              Settings
+            </span>
+            <Link
+              className={`list-group-item list-group-item-action ${
+                this.props.highlight === "UserSetting" ? "active" : ""
+              }`}
+              to={`/user/edit/${isAuthenticated().user._id}`}
+            >
+              User Setting <span className="sr-only">(current)</span>
+            </Link>
+            <Link
+              className={`list-group-item list-group-item-action ${
+                this.props.highlight === "Boardgame" ? "active" : ""
+              }`}
+              to={`/user/edit/bbg/${isAuthenticated().user._id}`}
+            >
+              Boardgames
+            </Link>
           </div>
         </div>
       </>
