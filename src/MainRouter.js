@@ -19,7 +19,7 @@ import Posts from "./post/Posts";
 import EditPost from "./post/EditPost";
 import NewPost from "./post/NewPost";
 
-import Boardgames from './boardgame/Boardgames'
+import Boardgames from './boardgame/BoardgameTable'
 
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use

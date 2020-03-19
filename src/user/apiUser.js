@@ -39,7 +39,6 @@ export const removeUser = (userId, token) => {
 };
 
 export const updateUser = (userId, token, user) => {
-    console.log("USER DATE: ", user);
     return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
         method: "PUT",
         headers: {
