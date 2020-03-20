@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useCallback } from "react";
+import LoadingOverlay from "react-loading-overlay";
 import { useTable, useFilters, usePagination } from "react-table";
-// A great library for fuzzy filtering/sorting items
 import matchSorter from "match-sorter";
 import { getBGCollection } from "./apiBoardgame";
 import Alert from "../components/Alert";
 // Define a default UI for filtering
-function DefaultColumnFilter({
+const DefaultColumnFilter = ({
   column: { filterValue, preFilteredRows, setFilter }
-}) {
+}) => {
   const count = preFilteredRows.length;
 
   return (
@@ -21,9 +20,9 @@ function DefaultColumnFilter({
       placeholder={`Search ${count} records...`}
     />
   );
-}
+};
 
-function NumberSelectFilter({ column: { filterValue, setFilter } }) {
+const NumberSelectFilter = ({ column: { filterValue, setFilter } }) => {
   return (
     <select
       className="form-control"
@@ -43,8 +42,8 @@ function NumberSelectFilter({ column: { filterValue, setFilter } }) {
       <option value="8">8+</option>
     </select>
   );
-}
-function PlayTimeSelectFilter({ column: { filterValue, setFilter } }) {
+};
+const PlayTimeSelectFilter = ({ column: { filterValue, setFilter } }) => {
   return (
     <select
       className="form-control"
@@ -61,17 +60,17 @@ function PlayTimeSelectFilter({ column: { filterValue, setFilter } }) {
       <option value="180">180+mins</option>
     </select>
   );
-}
+};
 
-function fuzzyTextFilterFn(rows, id, filterValue) {
+const fuzzyTextFilterFn = (rows, id, filterValue) => {
   return matchSorter(rows, filterValue, { keys: [row => row.values[id]] });
-}
+};
 
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val;
 
 // Our table component
-function Table({ columns, data }) {
+const Table = ({ columns, data }) => {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -214,36 +213,36 @@ function Table({ columns, data }) {
       </div>
     </>
   );
-}
+};
 
 // Define a custom filter filter function!
 
-function filterCheck(rows, id, filterValue) {
+const filterCheck = (rows, id, filterValue) => {
   return rows.filter(row => {
     const rowValue = row.values[id];
     return rowValue >= filterValue;
   });
-}
+};
 
-function filterGreaterThan(rows, id, filterValue) {
+const filterGreaterThan = (rows, id, filterValue) => {
   return rows.filter(row => {
     const rowValue = row.values[id];
     return rowValue >= filterValue;
   });
-}
+};
 
-function filterLessThan(rows, id, filterValue) {
+const filterLessThan = (rows, id, filterValue) => {
   return rows.filter(row => {
     const rowValue = row.values[id];
     return filterValue <= rowValue;
   });
-}
-function filterLessThanMax(rows, id, filterValue) {
+};
+const filterLessThanMax = (rows, id, filterValue) => {
   return rows.filter(row => {
     const rowValue = row.values[id];
     return rowValue <= filterValue;
   });
-}
+};
 
 // This is an autoRemove method on the filter function that
 // when given the new filter value and returns true, the filter
@@ -251,11 +250,10 @@ function filterLessThanMax(rows, id, filterValue) {
 // check, but here, we want to remove the filter if it's not a number
 filterCheck.autoRemove = val => typeof val !== "number";
 
-function App() {
+const App = () => {
   const columns = React.useMemo(
     () => [
       {
-
         accessor: "imgThumbnail",
         Cell: ({ cell: { value } }) => (
           <img
@@ -325,89 +323,117 @@ function App() {
     ],
     []
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
   const [alertStatus, setAlertStatus] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
   const [alertVisible, setAlertVible] = useState(false);
 
-  function handleChange({ target }){
+  const handleChange = ({ target }) => {
     console.log("here");
     setAlertVible(false);
     setUsername(target.value);
-  }
+  };
 
   useEffect(() => {
     (async () => {
       await getBGCollection(username).then(data => {
-        if (data !== undefined && !data.error ) {
+        
+        if (data !== undefined && !data.error) {
           setData(data);
         }
       });
     })();
   }, []);
 
-  async function submitClick(event){
-    
-   await getBGCollection(username).then(data => {
-      if ( data !== undefined && !data.error ) {
+  async function submitClick(event) {
+    if (isLoading) return;
+    setIsLoading(true);
+    setAlertVible(false);
+    await getBGCollection(username).then(data => {
+      
+      if (data !== undefined && !data.error) {
         setData(data);
-      }else{
+      } else {
         setData([]);
         setAlertStatus("danger");
-        setAlertMsg("Unable to get user information, please check if username is valid");
+        setAlertMsg(
+          "Unable to get user information, please check if username is valid"
+        );
         setAlertVible(true);
       }
-    })
+      setIsLoading(false);
+    });
   }
-
 
   return (
     <>
-    <Alert
-    type={alertStatus}
-    message={alertMsg}
-    visible={alertVisible}
-  />
-    <div className="container-fluid">
-    
-      <div className="row justify-content-center my-3">
-        <div className="col-lg-10">
-           <div className="input-group mb-3">
-          <div className="input-group-prepend">
-            <span className="input-group-text">Enter Your Boardgamegeek Username</span>
+      <Alert type={alertStatus} message={alertMsg} visible={alertVisible} />
+      <LoadingOverlay
+        active={isLoading}
+        spinner
+        styles={{
+          spinner: base => ({
+            ...base,
+            width: "100px",
+            "& svg circle": {
+              stroke: "rgba(0,98,204,1)"
+            }
+          }),
+          wrapper: {
+            height: "100%"
+          }
+        }}
+        text="Fetching Collection....."
+      >
+        <div className="container-fluid">
+          <div className="row justify-content-center my-3">
+            <div className="col-lg-10 text-center">
+              <h2 className="header-font">BBG Collection Viewer</h2>
+            </div>
+            <div className="col-lg-10 text-center">
+              <h6 className="header-font">*Please note that collection over 1000 will not work</h6>
+            </div>
           </div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="BBG Username"
-            aria-label="Boardgamegeek Username"
-            aria-describedby="bbgNameBtn"
-            value={ username }
-            onChange={ handleChange} 
-          />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              id="bbgNameBtn"
-              onClick={submitClick}
-            >
-              Enter
-            </button>
+          <div className="row justify-content-center my-3">
+            <div className="col-lg-5 col-md-6">
+              <div className="form-group row">
+                <div className="col-12">
+                  <div className="input-group ">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="BBG Username"
+                      aria-label="Boardgamegeek Username"
+                      aria-describedby="bbgNameBtn"
+                      value={username}
+                      onChange={handleChange}
+                    />
+                    <div className="input-group-append">
+                      <button
+                        className="btn btn-outline-info"
+                        type="button"
+                        id="bbgNameBtn"
+                        onClick={submitClick}
+                      >
+                        Enter
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="row justify-content-center">
+            <div className="col-lg-10">
+              <Table columns={columns} data={data} />
+            </div>
           </div>
         </div>
-        </div>
-       
-      </div>
-      <div className="row justify-content-center">
-        <div className="col-lg-10">
-          <Table columns={columns} data={data} />
-        </div>
-      </div>
-    </div>
+      </LoadingOverlay>
     </>
   );
-}
+};
 
 export default App;
