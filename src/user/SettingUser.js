@@ -75,8 +75,7 @@ class SettingProfile extends Component {
             about: data.about,
             password: "",
             matchPassword: ""
-          },
-          error: ""
+          }
         });
       }
     });
