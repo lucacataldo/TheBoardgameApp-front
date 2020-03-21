@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import DefaultProfileImg from "../images/avatar.png";
+import Table from 'react-bootstrap/Table'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faDice } from "@fortawesome/free-solid-svg-icons"
 
 class ProfileTabs extends Component {
     render() {
         const { following, followers, posts } = this.props;
         return (
-            <div>
+            <div className="">
                 <div className="row">
                     <div className="col-md-4">
-                        <h3 className="text-primary">Followers</h3>
+                        <h4 className="text-dark"><strong>Followers</strong><FontAwesomeIcon icon ={faDice} /></h4>
                         <hr />
                         {followers.map((person, i) => (
                             <div key={i}>
@@ -38,15 +41,21 @@ class ProfileTabs extends Component {
                     </div>
 
                     <div className="col-md-4">
-                        <h3 className="text-primary">Following</h3>
+                        <h4 className="text-dark"><strong>Following</strong><FontAwesomeIcon icon ={faDice} /></h4>
                         <hr />
+                        <Table striped hover>
+
                         {following.map((person, i) => (
-                            <div key={i}>
-                                <div>
+                            <tr key={i}>
+                       
+             
                                     <Link to={`/user/${person._id}`}>
+                                        <td>
                                         <img
                                             className="float-left mr-2"
+                                            style={{borderRadius: "50%"}}
                                             height="30px"
+                                            width="30px"
                                             onError={i =>
                                                 (i.target.src = `${DefaultProfileImg}`)
                                             }
@@ -55,19 +64,23 @@ class ProfileTabs extends Component {
                                             }/user/photo/${person._id}`}
                                             alt={person.name}
                                         />
-                                        <div>
+                                        </td>
+                                        <td>
                                             <p className="lead">
                                                 {person.name}
                                             </p>
-                                        </div>
+                                        </td>
+                                  
                                     </Link>
-                                </div>
-                            </div>
-                        ))}
+                               
+                              
+                            </tr>
+                        ))} 
+                        </Table>
                     </div>
 
                     <div className="col-md-4">
-                        <h3 className="text-primary">Posts</h3>
+                        <h4 className="text-dark"><strong>Posts</strong><FontAwesomeIcon icon ={faDice} /></h4>
                         <hr />
                         {posts.map((post, i) => (
                             <div key={i}>
