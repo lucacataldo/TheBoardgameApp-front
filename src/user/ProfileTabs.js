@@ -14,9 +14,11 @@ class ProfileTabs extends Component {
                     <div className="col-md-4">
                         <h4 className="text-dark"><strong>Followers</strong><FontAwesomeIcon icon ={faDice} /></h4>
                         <hr />
+                        <Table hover>
+                            <tbody>
                         {followers.map((person, i) => (
-                            <div key={i}>
-                                <div>
+                            <tr key={i}>
+                                <td>
                                     <Link to={`/user/${person._id}`}>
                                         <img
                                             className="float-left mr-2"
@@ -35,22 +37,24 @@ class ProfileTabs extends Component {
                                             </p>
                                         </div>
                                     </Link>
-                                </div>
-                            </div>
+                                </td>
+                            </tr>
                         ))}
+                        </tbody>
+                        </Table>
                     </div>
 
                     <div className="col-md-4">
                         <h4 className="text-dark"><strong>Following</strong><FontAwesomeIcon icon ={faDice} /></h4>
                         <hr />
-                        <Table striped hover>
-
+                        <Table hover bordered>
+                                            <tbody>
                         {following.map((person, i) => (
                             <tr key={i}>
                        
-             
+              <td>
                                     <Link to={`/user/${person._id}`}>
-                                        <td>
+                                       
                                         <img
                                             className="float-left mr-2"
                                             style={{borderRadius: "50%"}}
@@ -64,35 +68,41 @@ class ProfileTabs extends Component {
                                             }/user/photo/${person._id}`}
                                             alt={person.name}
                                         />
-                                        </td>
-                                        <td>
+                           
                                             <p className="lead">
                                                 {person.name}
                                             </p>
-                                        </td>
+                                   
                                   
-                                    </Link>
+                                    </Link>     
+                                    </td>
                                
                               
                             </tr>
                         ))} 
+                        </tbody>
                         </Table>
                     </div>
 
                     <div className="col-md-4">
                         <h4 className="text-dark"><strong>Posts</strong><FontAwesomeIcon icon ={faDice} /></h4>
                         <hr />
+                        <Table hover>
+                            <tbody>
+
                         {posts.map((post, i) => (
-                            <div key={i}>
-                                <div>
+                            <tr key={i}>
+                                <td>
                                     <Link to={`/post/${post._id}`}>
                                         <div>
                                             <p className="lead">{post.title}</p>
                                         </div>
                                     </Link>
-                                </div>
-                            </div>
+                                </td>
+                            </tr>
                         ))}
+                               </tbody>
+                        </Table>
                     </div>
                 </div>
             </div>

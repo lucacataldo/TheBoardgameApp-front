@@ -3,6 +3,7 @@ import { NavLink, withRouter } from "react-router-dom"; // withRouter to access 
 import { signout, isAuthenticated } from "../auth";
 import BgLogo from "../images/BgLogo.png";
 
+
 class NavBar extends React.Component {
   render() {
     return (
@@ -88,8 +89,8 @@ class NavBar extends React.Component {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <div className=" profileInitalCircle text-center">
-                        {`${isAuthenticated().user.name.substring(0, 1)}`}
+                      <div className=" profileInitalCircle text-center" style={{ fontSize: "32px"}}>
+                        <strong>{`${isAuthenticated().user.name.substring(0, 1)}`}</strong>
                       </div>
                     </a>
                     <div
