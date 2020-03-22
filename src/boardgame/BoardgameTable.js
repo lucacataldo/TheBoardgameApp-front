@@ -162,7 +162,8 @@ const Table = ({ columns, data }) => {
                     return (
                       <td
                         className={
-                          "align-middle py-1 " + cell.column.render("className")
+                          "align-middle py-1 table-light " +
+                          cell.column.render("className")
                         }
                         {...cell.getCellProps()}
                       >
@@ -176,50 +177,70 @@ const Table = ({ columns, data }) => {
           )}
         </tbody>
       </table>
-      <br />
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
+
+      <div className="row justify-content-between mx-2">
+        <div>
+          <span>
+            Page{" "}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{" "}
+          </span>
+          <select
+            value={pageSize}
             onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
+              setPageSize(Number(e.target.value));
             }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+          >
+            {[10, 20, 30, 40, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <nav aria-label="Page navigation">
+          <ul className="pagination">
+            <li className="page-item">
+              <button
+                onClick={() => gotoPage(0)}
+                disabled={!canPreviousPage}
+                className="page-link"
+              >
+                First
+              </button>
+            </li>
+            <li className="page-item">
+              <button
+                onClick={() => previousPage()}
+                disabled={!canPreviousPage}
+                className="page-link"
+              >
+                Previous
+              </button>
+            </li>
+
+            <li className="page-item">
+              <button
+                onClick={() => nextPage()}
+                disabled={!canNextPage}
+                className="page-link"
+              >
+                Next
+              </button>
+            </li>
+            <li className="page-item">
+              <button
+                onClick={() => gotoPage(pageCount - 1)}
+                disabled={!canNextPage}
+                className="page-link"
+              >
+                Last
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </>
   );
@@ -271,7 +292,7 @@ const App = () => {
           <img
             src={String(value) === "" ? `${NoImg}` : String(value)}
             alt={String(value)}
-            style={{ maxWidth: "55px", maxHeight: "55px" }}
+            style={{ maxWidth: "50px", maxHeight: "50px" }}
           />
         ),
 
@@ -357,7 +378,6 @@ const App = () => {
       if (data.error === undefined && data.bbgUsername) {
         setUsername(data.bbgUsername);
         getBGCollection(data.bbgUsername).then(bbgdata => {
-          console.log("got data:", bbgdata);
           if (bbgdata !== undefined && !bbgdata.error) {
             setData(bbgdata);
           }
