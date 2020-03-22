@@ -145,5 +145,6 @@ body {
 
 
 
-
-
+@media (max-width: 576px) {
+  html { font-size: .75rem; }
+}

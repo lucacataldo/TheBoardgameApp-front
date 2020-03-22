@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { useTable, useFilters, usePagination } from "react-table";
 import matchSorter from "match-sorter";
+
 import { getBGCollection } from "./apiBoardgame";
 import Alert from "../components/Alert";
-// Define a default UI for filtering
+import NoImg from "../images/noImageAvailable.jpg";
+import { isAuthenticated } from "../auth";
+import { getUser } from "../user/apiUser";
 const DefaultColumnFilter = ({
   column: { filterValue, preFilteredRows, setFilter }
 }) => {
@@ -69,14 +72,10 @@ const fuzzyTextFilterFn = (rows, id, filterValue) => {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val;
 
-// Our table component
 const Table = ({ columns, data }) => {
   const filterTypes = React.useMemo(
     () => ({
-      // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, override the default text filter to use
-      // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter(row => {
           const rowValue = row.values[id];
@@ -93,7 +92,6 @@ const Table = ({ columns, data }) => {
 
   const defaultColumn = React.useMemo(
     () => ({
-      // Let's set up our default Filter UI
       Filter: DefaultColumnFilter
     }),
     []
@@ -129,20 +127,19 @@ const Table = ({ columns, data }) => {
     usePagination
   );
 
-  // We don't want to render all of the rows for this example, so cap
-  // it for this use case
-  //const firstPageRows = rows.slice(0, 10);
-
   return (
     <>
       <table className="table table-bordered" {...getTableProps()}>
         <thead className="thead-dark ">
           {headerGroups.map(headerGroup => (
-            <tr className="align-top" {...headerGroup.getHeaderGroupProps()}>
+            <tr className="align-bottom" {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th className="align-top" {...column.getHeaderProps()}>
+                <th
+                  scope="col"
+                  className={"align-bottom " + column.render("className")}
+                  {...column.getHeaderProps()}
+                >
                   {column.render("Header")}
-                  {/* Render the columns filter UI */}
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
               ))}
@@ -150,72 +147,108 @@ const Table = ({ columns, data }) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <td className="align-middle" {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+          {page.length === 0 ? (
+            <tr>
+              <td colSpan="5" className="align-middle">
+                No data
+              </td>
+            </tr>
+          ) : (
+            page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td
+                        className={
+                          "align-middle py-1 table-light " +
+                          cell.column.render("className")
+                        }
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
-      <br />
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
+
+      <div className="row justify-content-between mx-2">
+        <div>
+          <span>
+            Page{" "}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{" "}
+          </span>
+          <select
+            value={pageSize}
             onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
+              setPageSize(Number(e.target.value));
             }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+          >
+            {[10, 20, 30, 40, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <nav aria-label="Page navigation">
+          <ul className="pagination">
+            <li className="page-item">
+              <button
+                onClick={() => gotoPage(0)}
+                disabled={!canPreviousPage}
+                className="page-link"
+              >
+                First
+              </button>
+            </li>
+            <li className="page-item">
+              <button
+                onClick={() => previousPage()}
+                disabled={!canPreviousPage}
+                className="page-link"
+              >
+                Previous
+              </button>
+            </li>
+
+            <li className="page-item">
+              <button
+                onClick={() => nextPage()}
+                disabled={!canNextPage}
+                className="page-link"
+              >
+                Next
+              </button>
+            </li>
+            <li className="page-item">
+              <button
+                onClick={() => gotoPage(pageCount - 1)}
+                disabled={!canNextPage}
+                className="page-link"
+              >
+                Last
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </>
   );
 };
 
-// Define a custom filter filter function!
+/****************************************************/
+/*************** Custom filter fxns *****************/
+/****************************************************/
 
 const filterCheck = (rows, id, filterValue) => {
   return rows.filter(row => {
@@ -257,21 +290,21 @@ const App = () => {
         accessor: "imgThumbnail",
         Cell: ({ cell: { value } }) => (
           <img
-            className="img-thumbnail"
-            src={String(value)}
+            src={String(value) === "" ? `${NoImg}` : String(value)}
             alt={String(value)}
-            style={{ maxWidth: "60px", maxHeight: "60px" }}
+            style={{ maxWidth: "50px", maxHeight: "50px" }}
           />
         ),
+
+        className: "text-center d-none d-sm-table-cell",
         disableFilters: true
       },
       {
         Header: "Title",
+        className: "",
         accessor: d => `${d.title} ${d.yearPublished}`,
-        // Use our custom `fuzzyText` filter on this column
         filter: "fuzzyText",
         Cell: ({ row: { original } }) => {
-          //console.log(original);
           return (
             <span>
               {String(original.title)} ({String(original.yearPublished)})
@@ -281,6 +314,7 @@ const App = () => {
       },
       {
         Header: "Rating",
+        className: "d-none d-sm-table-cell",
         accessor: "avgRating",
         Cell: ({ cell: { value } }) => (
           <span>{Math.round(10 * String(value)) / 10}</span>
@@ -290,9 +324,9 @@ const App = () => {
       },
       {
         Header: "Players",
+        className: "",
         accessor: "maxPlayers",
         Cell: ({ row: { original } }) => {
-          //console.log(original);
           return (
             <span>
               {String(original.minPlayers)}-{String(original.maxPlayers)}
@@ -304,9 +338,9 @@ const App = () => {
       },
       {
         Header: "Play Time",
+        className: "",
         accessor: "maxPlayTime",
         Cell: ({ row: { original } }) => {
-          //console.log(original);
           return (
             <span>
               {original.minPlayTime === original.maxPlayTime
@@ -331,20 +365,26 @@ const App = () => {
   const [alertVisible, setAlertVible] = useState(false);
 
   const handleChange = ({ target }) => {
-    console.log("here");
     setAlertVible(false);
     setUsername(target.value);
   };
 
+  // on load get the username if there's any
+  // then grab the collection
   useEffect(() => {
-    (async () => {
-      await getBGCollection(username).then(data => {
-        
-        if (data !== undefined && !data.error) {
-          setData(data);
-        }
-      });
-    })();
+    setIsLoading(true);
+    const token = isAuthenticated().token;
+    getUser(isAuthenticated().user._id, token).then(data => {
+      if (data.error === undefined && data.bbgUsername) {
+        setUsername(data.bbgUsername);
+        getBGCollection(data.bbgUsername).then(bbgdata => {
+          if (bbgdata !== undefined && !bbgdata.error) {
+            setData(bbgdata);
+          }
+        });
+      }
+    });
+    setIsLoading(false);
   }, []);
 
   async function submitClick(event) {
@@ -352,7 +392,6 @@ const App = () => {
     setIsLoading(true);
     setAlertVible(false);
     await getBGCollection(username).then(data => {
-      
       if (data !== undefined && !data.error) {
         setData(data);
       } else {
@@ -393,7 +432,9 @@ const App = () => {
               <h2 className="header-font">BBG Collection Viewer</h2>
             </div>
             <div className="col-lg-10 text-center">
-              <h6 className="header-font">*Please note that collection over 1000 will not work</h6>
+              <h6 className="header-font">
+                *Please note that collection over 1000 will not work
+              </h6>
             </div>
           </div>
           <div className="row justify-content-center my-3">
@@ -425,7 +466,7 @@ const App = () => {
               </div>
             </div>
           </div>
-          <div className="row justify-content-center">
+          <div className="row justify-content-center bgTable">
             <div className="col-lg-10">
               <Table columns={columns} data={data} />
             </div>
