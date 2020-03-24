@@ -50,6 +50,15 @@ class NavBar extends React.Component {
                     Users
                   </NavLink>
                 </li>
+                <li className="nav-item ">
+                  <NavLink
+                    className="nav-link"
+                    activeClassName="selected"
+                    to="/boardgames"
+                  >
+                    Collection
+                  </NavLink>
+                </li>
               </ul>
             )}
 

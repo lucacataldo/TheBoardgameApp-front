@@ -329,7 +329,8 @@ const App = () => {
         Cell: ({ row: { original } }) => {
           return (
             <span>
-              {String(original.minPlayers)}-{String(original.maxPlayers)}
+              {String(original.minPlayers)}-
+              {original.maxPlayers === -1 ? "" : String(original.maxPlayers)}
             </span>
           );
         },
@@ -344,7 +345,9 @@ const App = () => {
           return (
             <span>
               {original.minPlayTime === original.maxPlayTime
-                ? original.minPlayTime
+                ? original.minPlayTime === -1
+                  ? "--"
+                  : original.minPlayTime
                 : String(original.minPlayTime) +
                   "-" +
                   String(original.maxPlayTime)}
