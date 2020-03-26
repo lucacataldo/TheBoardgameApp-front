@@ -91,21 +91,21 @@ class Profile extends Component {
 
         return (
             <div className="container">
-                <h2 className="mt-5 mb-5">Profile</h2>
-                <div className="row">
-                    <div className="col-md-6">
+                <div className=" pl-3 py-4 mt-3 bg-dark text-light"><h3>Profile</h3></div>
+                <div className="row mx-auto py-3" style={{backgroundColor: '#ffffff', backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)'}}>
+                    <div className="offset-2 col-md-3">
                         <img
-                            style={{ height: "200px", width: "auto" }}
-                            className="img-thumbnail"
+                            style={{ height: "200px", width: "auto", borderRadius: "50%" }}
+                            className="img-thumbnail shadow"
                             src={photoUrl}
                             onError={i => (i.target.src = `${DefaultProfileImg}`)}
                             alt={user.name}
                         />
                     </div>
 
-                    <div className="col-md-8">
+                    <div className="col-md-6">
                         <div className="lead mt-2">
-                            <p>Hello {user.name}</p>
+                            <h2>{user.name}</h2>
                             <p>Email: {user.email}</p>
                             <p>{`Joined ${new Date(
                                 user.createdDate
@@ -162,7 +162,7 @@ class Profile extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col md-12 mt-5 mb-5">
+                    <div className="col md-12 my-4 text-center">
                         <hr />
                         <p className="lead">{user.about}</p>
                         <hr />
