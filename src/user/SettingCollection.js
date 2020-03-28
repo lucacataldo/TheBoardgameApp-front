@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
 import * as Yup from "yup";
 import { isAuthenticated } from "../auth";
-import { getBBGCounts } from "../boardgame/apiBoardgame";
+
 import {
   getUser,
   updateBbgBoardgamesByUsername,
@@ -65,17 +65,7 @@ class SettingCollection extends Component {
         setTimeout(() => {
           const userId = this.props.match.params.userId;
           const token = isAuthenticated().token;
-          getBBGCounts(values.bbgUsername).then(data => {
-            this.setState({
-              loading: false,
-              alertVisible: true
-            });
-            if (data.error) {
-              this.setState({
-                alertStatus: "danger",
-                alertMsg: "Username not found. Please try again later."
-              });
-            } else {
+          
               updateBbgBoardgamesByUsername(
                 userId,
                 token,
@@ -100,8 +90,8 @@ class SettingCollection extends Component {
                     });
                   });
                 }
-              });
-            }
+              
+            
             setSubmitting(false);
           }, 5000);
         });

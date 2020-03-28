@@ -3,7 +3,6 @@ import { NavLink, withRouter } from "react-router-dom"; // withRouter to access 
 import { signout, isAuthenticated } from "../auth";
 import BgLogo from "../images/BgLogo.png";
 
-
 class NavBar extends React.Component {
   render() {
     return (
@@ -55,7 +54,7 @@ class NavBar extends React.Component {
                   <NavLink
                     className="nav-link"
                     activeClassName="selected"
-                    to="/boardgames"
+                    to="/collection/bgguru"
                   >
                     Collection
                   </NavLink>
@@ -98,27 +97,38 @@ class NavBar extends React.Component {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <div className=" profileInitalCircle text-center" style={{ fontSize: "32px"}}>
-                        <strong>{`${isAuthenticated().user.name.substring(0, 1)}`}</strong>
+                      <div
+                        className=" profileInitalCircle text-center"
+                        style={{ fontSize: "32px" }}
+                      >
+                        <strong>{`${isAuthenticated().user.name.substring(
+                          0,
+                          1
+                        )}`}</strong>
                       </div>
                     </a>
                     <div
                       className="dropdown-menu"
                       aria-labelledby="navbarDropdown"
                     >
-                    
+                      {isAuthenticated().user && (
+                        <NavLink
+                          className="dropdown-item"
+                          activeClassName="selected"
+                          to={`/user/edit/${isAuthenticated().user._id}`}
+                        >
+                          Settings
+                        </NavLink>
+                      )}
                       {isAuthenticated() &&
                         isAuthenticated().user.role === "admin" && (
-                          <>
-                            <div className="dropdown-divider"></div>
-                            <NavLink
-                              className="dropdown-item"
-                              activeClassName="selected"
-                              to="/admin"
-                            >
-                              Admin
-                            </NavLink>
-                          </>
+                          <NavLink
+                            className="dropdown-item"
+                            activeClassName="selected"
+                            to="/admin"
+                          >
+                            Admin
+                          </NavLink>
                         )}
                       <div className="dropdown-divider"></div>
                       <span

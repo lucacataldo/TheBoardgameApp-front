@@ -19,7 +19,8 @@ import Posts from "./post/Posts";
 import EditPost from "./post/EditPost";
 import NewPost from "./post/NewPost";
 
-import Boardgames from './boardgame/BoardgameTable'
+import BbgCollection from "./boardgame/BbgCollection";
+import UserBgCollection from "./boardgame/UserBgCollection";
 
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
@@ -34,24 +35,25 @@ class MainRouter extends React.Component {
         <Switch>
           <Route exact path="/" render={() => <Home />} />
           <Route exact path="/posts" component={Posts} />
-          <Route exact path="/boardgames" component={Boardgames} />
+          <Route exact path="/collection/bbg" component={BbgCollection} />
+          <PrivateRoute
+            exact
+            path="/collection/bgguru"
+            component={UserBgCollection}
+          />
           <PrivateRoute exact path="/admin" component={Admin} />
-
           <Route exact path="/forgot-password" component={ForgotPassword} />
           <Route
             exact
             path="/reset-password/:resetPasswordToken"
             component={ResetPassword}
           />
-
           <PrivateRoute exact path="/post/create" component={NewPost} />
           <PrivateRoute exact path="/post/edit/:postId" component={EditPost} />
           <Route exact path="/post/:postId" component={Post} />
-
           <Route exact path="/Users" component={Users} />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/signin" component={Signin} />
-
           <PrivateRoute exact path="/findpeople" component={FindPeople} />
           <PrivateRoute exact path="/user/:userId" component={Profile} />
           <PrivateRoute
@@ -64,9 +66,8 @@ class MainRouter extends React.Component {
             path="/user/edit/bbg/:userId"
             component={SettingCollection}
           />
-           <Route path="*" component={NotFound} />
-           
-           />
+          <Route path="*" component={NotFound} />
+          />
         </Switch>
       </>
     );
@@ -74,4 +75,3 @@ class MainRouter extends React.Component {
 }
 
 export default MainRouter;
-
