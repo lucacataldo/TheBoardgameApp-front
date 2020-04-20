@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDice } from "@fortawesome/free-solid-svg-icons";
 
 class ProfileTabs extends Component {
+  
   render() {
     const { following, followers, posts } = this.props;
     return (
@@ -16,13 +17,13 @@ class ProfileTabs extends Component {
               <strong>Followers</strong>
               <FontAwesomeIcon icon={faDice} />
             </h4>
-            <hr />
-            <Table hover>
+            <hr />{followers < 1 ? "You have no followers yet :(" :
+            <Table hover className="bg-white">
               <tbody>
                 {followers.map((person, i) => (
                   <tr key={i}>
                     <td>
-                      <Link to={`/user/${person._id}`}>
+                      <Link to={`/user/${person._id}`} className="text-dark">
                         <img
                           className="float-left mr-2"
                           height="30px"
@@ -31,14 +32,14 @@ class ProfileTabs extends Component {
                           alt={person.name}
                         />
                         <div>
-                          <p className="lead">{person.name}</p>
+                          <p className="lead my-0">{person.name}</p>
                         </div>
                       </Link>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </Table>
+            </Table>}
           </div>
 
           <div className="col-md-4">
@@ -47,12 +48,13 @@ class ProfileTabs extends Component {
               <FontAwesomeIcon icon={faDice} />
             </h4>
             <hr />
-            <Table hover bordered>
+            {following < 1 ? "You are not currently following anyone." :
+            <Table hover bordered className="bg-white">
               <tbody>
                 {following.map((person, i) => (
                   <tr key={i}>
                     <td>
-                      <Link to={`/user/${person._id}`}>
+                      <Link to={`/user/${person._id}`} className="text-dark">
                         <img
                           className="float-left mr-2"
                           style={{ borderRadius: "50%" }}
@@ -63,13 +65,13 @@ class ProfileTabs extends Component {
                           alt={person.name}
                         />
 
-                        <p className="lead">{person.name}</p>
+                        <p className="lead my-0">{person.name}</p>
                       </Link>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </Table>
+            </Table>}
           </div>
 
           <div className="col-md-4">
@@ -78,21 +80,27 @@ class ProfileTabs extends Component {
               <FontAwesomeIcon icon={faDice} />
             </h4>
             <hr />
-            <Table hover>
+            {posts < 1 ? "You have no posts yet :(" :
+            <Table hover className="bg-white">
               <tbody>
                 {posts.map((post, i) => (
                   <tr key={i}>
                     <td>
-                      <Link to={`/post/${post._id}`}>
-                        <div>
-                          <p className="lead">{post.title}</p>
+                      <Link to={`/post/${post._id}`} className="text-dark">
+                   
+                        {post.title.length > 24 ? <div>
+                          <p className="lead my-0">{post.title.substring(0,23)}...</p>
                         </div>
+                        :
+                        <div>
+                          <p className="lead my-0">{post.title}</p>
+                        </div>}
                       </Link>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </Table>
+            </Table>}
           </div>
         </div>
       </div>
