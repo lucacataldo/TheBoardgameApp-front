@@ -284,7 +284,7 @@ const filterLessThanMax = (rows, id, filterValue) => {
 // check, but here, we want to remove the filter if it's not a number
 filterCheck.autoRemove = val => typeof val !== "number";
 
-const BbgCollection = () => {
+const BggCollection = () => {
   const columns = React.useMemo(
     () => [
       {
@@ -379,11 +379,11 @@ const BbgCollection = () => {
     setIsLoading(true);
     const token = isAuthenticated().token;
     getUser(isAuthenticated().user._id, token).then(data => {
-      if (data.error === undefined && data.bbgUsername) {
-        setUsername(data.bbgUsername);
-        getBGCollection(data.bbgUsername).then(bbgdata => {
-          if (bbgdata !== undefined && !bbgdata.error) {
-            setData(bbgdata);
+      if (data.error === undefined && data.bggUsername) {
+        setUsername(data.bggUsername);
+        getBGCollection(data.bggUsername).then(bggdata => {
+          if (bggdata !== undefined && !bggdata.error) {
+            setData(bggdata);
           }
         });
       }
@@ -430,10 +430,10 @@ const BbgCollection = () => {
         }}
         text="Fetching Collection....."
       >
-        <BgContainer sidebar="BbgCollection">
+        <BgContainer sidebar="BggCollection">
           <div className="container-fluid">
             <div className="row justify-content-center text-center my-2">
-              <h2 className="header-font">BBG Collection Viewer</h2>
+              <h2 className="header-font">BGG Collection Viewer</h2>
             </div>
             <div className="row justify-content-center text-center my-2">
               <h6 className="header-font">
@@ -448,9 +448,9 @@ const BbgCollection = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="BBG Username"
+                        placeholder="BGG Username"
                         aria-label="Boardgamegeek Username"
-                        aria-describedby="bbgNameBtn"
+                        aria-describedby="bggNameBtn"
                         value={username}
                         onChange={handleChange}
                       />
@@ -458,7 +458,7 @@ const BbgCollection = () => {
                         <button
                           className="btn btn-outline-info"
                           type="button"
-                          id="bbgNameBtn"
+                          id="bggNameBtn"
                           onClick={submitClick}
                         >
                           Enter
@@ -479,4 +479,4 @@ const BbgCollection = () => {
   );
 };
 
-export default BbgCollection;
+export default BggCollection;

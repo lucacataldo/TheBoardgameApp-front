@@ -379,11 +379,11 @@ const UserCollection = () => {
     setIsLoading(true);
     const token = isAuthenticated().token;
     getUser(isAuthenticated().user._id, token).then(data => {
-      if (data.error === undefined && data.bbgUsername) {
-        setUsername(data.bbgUsername);
-        getBGCollection(data.bbgUsername).then(bbgdata => {
-          if (bbgdata !== undefined && !bbgdata.error) {
-            setData(bbgdata);
+      if (data.error === undefined && data.bggUsername) {
+        setUsername(data.bggUsername);
+        getBGCollection(data.bggUsername).then(bggdata => {
+          if (bggdata !== undefined && !bggdata.error) {
+            setData(bggdata);
           }
         });
       }
@@ -449,9 +449,9 @@ const UserCollection = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="BBG Username"
+                      placeholder="BGG Username"
                       aria-label="Boardgamegeek Username"
-                      aria-describedby="bbgNameBtn"
+                      aria-describedby="bggNameBtn"
                       value={username}
                       onChange={handleChange}
                     />
@@ -459,7 +459,7 @@ const UserCollection = () => {
                       <button
                         className="btn btn-outline-info"
                         type="button"
-                        id="bbgNameBtn"
+                        id="bggNameBtn"
                         onClick={submitClick}
                       >
                         Enter

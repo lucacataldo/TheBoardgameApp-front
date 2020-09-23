@@ -11,7 +11,7 @@ export const getBGCollection = (username) => {
 
 };
 
-export const getBBGCounts = (username) => {
+export const getBGGCounts = (username) => {
     return fetch(`${process.env.REACT_APP_API_URL}/boardgame/count/${username}`, {
         method: "GET"
     })

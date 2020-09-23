@@ -52,16 +52,16 @@ export const updateUser = (userId, token, user) => {
         })
         .catch(err => console.log(err));
 };
-export const updateBbgBoardgamesByUsername = (userId, token, bbgUsername) => {
-    console.log("update api", bbgUsername);
-    return fetch(`${process.env.REACT_APP_API_URL}/user/bbg/${userId}`, {
+export const updateBggBoardgamesByUsername = (userId, token, bggUsername) => {
+    console.log("update api", bggUsername);
+    return fetch(`${process.env.REACT_APP_API_URL}/user/bgg/${userId}`, {
         method: "PUT",
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ bbgUsername })
+        body: JSON.stringify({ bggUsername })
     })
         .then(response => {
             return response.json();

@@ -19,7 +19,7 @@ import Posts from "./post/Posts";
 import EditPost from "./post/EditPost";
 import NewPost from "./post/NewPost";
 
-import BbgCollection from "./boardgame/BbgCollection";
+import BggCollection from "./boardgame/BggCollection";
 import UserBgCollection from "./boardgame/UserBgCollection";
 
 import Users from "./user/Users";
@@ -35,7 +35,7 @@ class MainRouter extends React.Component {
         <Switch>
           <Route exact path="/" render={() => <Home />} />
           <Route exact path="/posts" component={Posts} />
-          <Route exact path="/collection/bbg" component={BbgCollection} />
+          <Route exact path="/collection/bgg" component={BggCollection} />
           <PrivateRoute
             exact
             path="/collection/bgguru"
@@ -63,7 +63,7 @@ class MainRouter extends React.Component {
           />
           <PrivateRoute
             exact
-            path="/user/edit/bbg/:userId"
+            path="/user/edit/bgg/:userId"
             component={SettingCollection}
           />
           <Route path="*" component={NotFound} />
