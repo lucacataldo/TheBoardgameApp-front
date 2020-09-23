@@ -378,11 +378,11 @@ const App = () => {
     setIsLoading(true);
     const token = isAuthenticated().token;
     getUser(isAuthenticated().user._id, token).then(data => {
-      if (data.error === undefined && data.bbgUsername) {
-        setUsername(data.bbgUsername);
-        getBGCollection(data.bbgUsername).then(bbgdata => {
-          if (bbgdata !== undefined && !bbgdata.error) {
-            setData(bbgdata);
+      if (data.error === undefined && data.bggUsername) {
+        setUsername(data.bggUsername);
+        getBGCollection(data.bggUsername).then(bggdata => {
+          if (bggdata !== undefined && !bggdata.error) {
+            setData(bggdata);
           }
         });
       }
@@ -432,7 +432,7 @@ const App = () => {
         <div className="container-fluid">
           <div className="row justify-content-center my-3">
             <div className="col-lg-10 text-center">
-              <h2 className="header-font">BBG Collection Viewer</h2>
+              <h2 className="header-font">BGG Collection Viewer</h2>
             </div>
             <div className="col-lg-10 text-center">
               <h6 className="header-font">
@@ -448,9 +448,9 @@ const App = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="BBG Username"
+                      placeholder="BGG Username"
                       aria-label="Boardgamegeek Username"
-                      aria-describedby="bbgNameBtn"
+                      aria-describedby="bggNameBtn"
                       value={username}
                       onChange={handleChange}
                     />
@@ -458,7 +458,7 @@ const App = () => {
                       <button
                         className="btn btn-outline-info"
                         type="button"
-                        id="bbgNameBtn"
+                        id="bggNameBtn"
                         onClick={submitClick}
                       >
                         Enter

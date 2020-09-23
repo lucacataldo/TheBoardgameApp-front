@@ -6,7 +6,7 @@ import { isAuthenticated } from "../auth";
 
 import {
   getUser,
-  updateBbgBoardgamesByUsername,
+  updateBggBoardgamesByUsername,
   updateLocalStorUser
 } from "./apiUser";
 import SettingContainer from "./SettingContainer";
@@ -20,7 +20,7 @@ class SettingCollection extends Component {
     this.state = {
       user: {
         id: "",
-        bbgUsername: ""
+        bggUsername: ""
       },
       redirectToProfile: false,
       loading: false,
@@ -39,7 +39,7 @@ class SettingCollection extends Component {
         this.setState({
           user: {
             id: data._id,
-            bbgUsername: data.bbgUsername
+            bggUsername: data.bggUsername
           }
         });
       }
@@ -52,24 +52,24 @@ class SettingCollection extends Component {
     this.init(userId);
   }
 
-  bbgForm = bbgUsername => (
+  bggForm = bggUsername => (
     <Formik
       enableReinitialize={true}
       initialValues={this.state.user}
       validationSchema={Yup.object().shape({
-        bbgUsername: Yup.string().required("Name is required")
+        bggUsername: Yup.string().required("Name is required")
       })}
       onSubmit={(values, { setSubmitting }) => {
         this.setState({ loading: true });
-        this.userData.append("bbgUsername", values.bbgUsername);
+        this.userData.append("bggUsername", values.bggUsername);
         setTimeout(() => {
           const userId = this.props.match.params.userId;
           const token = isAuthenticated().token;
           
-              updateBbgBoardgamesByUsername(
+              updateBggBoardgamesByUsername(
                 userId,
                 token,
-                values.bbgUsername
+                values.bggUsername
               ).then(data => {
                 if (data.error) {
                   this.setState({
@@ -101,22 +101,22 @@ class SettingCollection extends Component {
         <Form>
           <div className="form-group row">
             <label htmlFor="name" className="text-muted col-3 col-form-label">
-              BBG UserName
+              BGG UserName
             </label>
             <div className="col-9">
               <Field
                 type="text"
-                name="bbgUsername"
+                name="bggUsername"
                 placeholder="Boardgamegeek username"
                 className={
-                  getIn(errors, "bbgUsername") && getIn(touched, "bbgUsername")
+                  getIn(errors, "bggUsername") && getIn(touched, "bggUsername")
                     ? "form-control is-invalid"
                     : "form-control"
                 }
               />
               <ErrorMessage
                 component="div"
-                name="bbgUsername"
+                name="bggUsername"
                 className="invalid-feedback"
               />
             </div>
@@ -141,7 +141,7 @@ class SettingCollection extends Component {
   render() {
     const {
       id,
-      bbgUsername,
+      bggUsername,
       redirectToProfile,
       loading,
       alertMsg,
@@ -186,7 +186,7 @@ class SettingCollection extends Component {
                   <div className="col-md-12">
                     {(isAuthenticated().user.role === "admin" ||
                       isAuthenticated().user._id === id) &&
-                      this.bbgForm(bbgUsername)}
+                      this.bggForm(bggUsername)}
                   </div>
                 </div>
               </div>
