@@ -1,6 +1,9 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
+import TradeRequest from "./TradeRequest";
+import TradeResponse from "./TradeResponse";
+import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
 class Trades extends React.Component {
   constructor() {
@@ -30,7 +33,16 @@ class Trades extends React.Component {
           <TradesSideBar
             highlight= "Trades"
           />
-          <div className="col-sm-9 col-lg-10">{this.props.children}</div>
+          <div className="col-sm-6 col-lg-6">
+          <h4>My Trades</h4>
+          <TradeRequest/>
+          <br/>
+          <TradeResponse/>
+          <br/>
+          <TradePending/>
+
+          
+          </div>
         </div>
       </div>
     );
