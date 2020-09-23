@@ -71,6 +71,7 @@ class SettingCollection extends Component {
                 token,
                 values.bggUsername
               ).then(data => {
+               
                 if (data.error) {
                   this.setState({
                     alertStatus: "danger",
@@ -91,7 +92,7 @@ class SettingCollection extends Component {
                   });
                 }
               
-            
+                this.setState({ loading: false, alertVisible: true });
             setSubmitting(false);
           }, 5000);
         });
