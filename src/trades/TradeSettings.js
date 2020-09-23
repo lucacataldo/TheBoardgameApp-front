@@ -30,7 +30,11 @@ class TradeSettings extends React.Component {
           <TradesSideBar
             highlight= "TradeSettings"
           />
-          <div className="col-sm-9 col-lg-10">{this.props.children}</div>
+           <div className="col-sm-6 col-lg-6">
+          <h4>Trade Settings</h4>
+
+          
+          </div>
         </div>
       </div>
     );

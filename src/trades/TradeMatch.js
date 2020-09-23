@@ -30,7 +30,12 @@ class TradeMatch extends React.Component {
           <TradesSideBar
             highlight= "TradeMatch"
           />
-          <div className="col-sm-9 col-lg-10">{this.props.children}</div>
+            <div className="col-sm-6 col-lg-6">
+          <h4>Matching Trades</h4>
+
+
+          
+          </div>
         </div>
       </div>
     );
