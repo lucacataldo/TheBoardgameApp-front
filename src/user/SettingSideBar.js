@@ -223,7 +223,7 @@ class SettingSideBar extends React.Component {
               className={`list-group-item list-group-item-action ${
                 this.props.highlight === "Boardgame" ? "active" : ""
               }`}
-              to={`/user/edit/bbg/${isAuthenticated().user._id}`}
+              to={`/user/edit/bgg/${isAuthenticated().user._id}`}
             >
               Boardgames
             </Link>

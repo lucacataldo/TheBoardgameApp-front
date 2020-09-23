@@ -52,11 +52,11 @@ class BgSideBar extends React.Component {
             </Link>
             <Link
               className={`list-group-item list-group-item-action ${
-                this.props.highlight === "BbgCollection" ? "active" : ""
+                this.props.highlight === "BggCollection" ? "active" : ""
               }`}
-              to={`/collection/bbg`}
+              to={`/collection/bgg`}
             >
-              BBG Collection
+              BGG Collection
             </Link>
           </div>
         </div>
