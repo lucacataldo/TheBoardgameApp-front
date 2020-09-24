@@ -7,12 +7,12 @@ import { isAuthenticated } from "../auth";
 import {
   getUser,
   updateBggBoardgamesByUsername,
-  updateLocalStorUser
+  updateLocalStorUser,
 } from "./apiUser";
-import SettingContainer from "./SettingContainer";
 
 import LoadingOverlay from "react-loading-overlay";
 import Alert from "../components/Alert";
+import SettingSidebar from "./SettingSideBar";
 
 class SettingCollection extends Component {
   constructor() {
@@ -20,27 +20,27 @@ class SettingCollection extends Component {
     this.state = {
       user: {
         id: "",
-        bggUsername: ""
+        bggUsername: "",
       },
       redirectToProfile: false,
       loading: false,
       alertStatus: "",
       alertMsg: "",
-      alertVisible: false
+      alertVisible: false,
     };
   }
 
-  init = userId => {
+  init = (userId) => {
     const token = isAuthenticated().token;
-    getUser(userId, token).then(data => {
+    getUser(userId, token).then((data) => {
       if (data.error) {
         this.setState({ redirectToProfile: true });
       } else {
         this.setState({
           user: {
             id: data._id,
-            bggUsername: data.bggUsername
-          }
+            bggUsername: data.bggUsername,
+          },
         });
       }
     });
@@ -52,12 +52,12 @@ class SettingCollection extends Component {
     this.init(userId);
   }
 
-  bggForm = bggUsername => (
+  bggForm = (bggUsername) => (
     <Formik
       enableReinitialize={true}
       initialValues={this.state.user}
       validationSchema={Yup.object().shape({
-        bggUsername: Yup.string().required("Name is required")
+        bggUsername: Yup.string().required("Name is required"),
       })}
       onSubmit={(values, { setSubmitting }) => {
         this.setState({ loading: true });
@@ -65,36 +65,34 @@ class SettingCollection extends Component {
         setTimeout(() => {
           const userId = this.props.match.params.userId;
           const token = isAuthenticated().token;
-          
-              updateBggBoardgamesByUsername(
-                userId,
-                token,
-                values.bggUsername
-              ).then(data => {
-               
-                if (data.error) {
-                  this.setState({
-                    alertStatus: "danger",
-                    alertMsg:
-                      "Unable to update information. Please try again later."
-                  });
-                } else if (isAuthenticated().user.role === "admin") {
+
+          updateBggBoardgamesByUsername(userId, token, values.bggUsername).then(
+            (data) => {
+              if (data.error) {
+                this.setState({
+                  alertStatus: "danger",
+                  alertMsg:
+                    "Unable to update information. Please try again later.",
+                });
+              } else if (isAuthenticated().user.role === "admin") {
+                this.setState({
+                  alertStatus: "success",
+                  alertMsg: "User information updated.",
+                });
+              } else {
+                updateLocalStorUser(data, () => {
                   this.setState({
                     alertStatus: "success",
-                    alertMsg: "User information updated."
+                    alertMsg: "User information updated.",
                   });
-                } else {
-                  updateLocalStorUser(data, () => {
-                    this.setState({
-                      alertStatus: "success",
-                      alertMsg: "User information updated."
-                    });
-                  });
-                }
-              
-                this.setState({ loading: false, alertVisible: true });
-            setSubmitting(false);
-          }, 5000);
+                });
+              }
+
+              this.setState({ loading: false, alertVisible: true });
+              setSubmitting(false);
+            },
+            5000
+          );
         });
       }}
     >
@@ -141,13 +139,13 @@ class SettingCollection extends Component {
 
   render() {
     const {
-      id,
+      user: { id },
       bggUsername,
       redirectToProfile,
       loading,
       alertMsg,
       alertStatus,
-      alertVisible
+      alertVisible,
     } = this.state;
 
     if (redirectToProfile) {
@@ -161,38 +159,44 @@ class SettingCollection extends Component {
           active={loading}
           spinner
           styles={{
-            spinner: base => ({
+            spinner: (base) => ({
               ...base,
               width: "100px",
               "& svg circle": {
-                stroke: "rgba(0,98,204,1)"
-              }
+                stroke: "rgba(0,98,204,1)",
+              },
             }),
             wrapper: {
-              height: "100%"
-            }
+              height: "100%",
+            },
           }}
           text="Updating your profile...."
         >
-          <SettingContainer sidebar="Boardgame" userId={id}>
-            <div className="card">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h2>Boardgamegeek Information</h2>
-                    <hr />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-12">
-                    {(isAuthenticated().user.role === "admin" ||
-                      isAuthenticated().user._id === id) &&
-                      this.bggForm(bggUsername)}
+          <div className="maxDivWidth container-fluid">
+            <div className="row my-3">
+              {/* SettingSidebar is col-sm-3 */}
+              <SettingSidebar highlight="Boardgame" userId={id} />
+              <div className="col-sm-9">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-md-12">
+                        <h2>Boardgamegeek Information</h2>
+                        <hr />
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12">
+                        {(isAuthenticated().user.role === "admin" ||
+                          isAuthenticated().user._id === id) &&
+                          this.bggForm(bggUsername)}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </SettingContainer>
+          </div>
         </LoadingOverlay>
       </>
     );
