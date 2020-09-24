@@ -59,6 +59,15 @@ class NavBar extends React.Component {
                     Collection
                   </NavLink>
                 </li>
+                <li className="nav-item ">
+                  <NavLink
+                    className="nav-link"
+                    activeClassName="selected"
+                    to="/trades"
+                  >
+                    Trades
+                  </NavLink>
+                </li>
               </ul>
             )}
 
