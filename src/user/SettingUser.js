@@ -5,8 +5,7 @@ import * as Yup from "yup";
 
 import { isAuthenticated } from "../auth";
 import { getUser, updateUser, updateLocalStorUser } from "./apiUser";
-import SettingContainer from "./SettingContainer";
-
+import SettingSidebar from "./SettingSideBar";
 
 import LoadingOverlay from "react-loading-overlay";
 import Alert from "../components/Alert";
@@ -32,16 +31,15 @@ const UserInfoValidation = Yup.object().shape({
       /(?=.*[a-z])/,
       "Password must contain at least 1 lowercase alphabetical character"
     ),
-    matchPassword: Yup.string()
+  matchPassword: Yup.string()
     .when("password", {
-      is: password => password !== undefined && password.length > 0,
-      then: Yup.string()
-        .required("Please retype password")
+      is: (password) => password !== undefined && password.length > 0,
+      then: Yup.string().required("Please retype password"),
     })
-    .oneOf([Yup.ref("password"), null], "password doesnt match")
+    .oneOf([Yup.ref("password"), null], "password doesnt match"),
 });
 
-class SettingProfile extends Component {
+class SettingUser extends Component {
   constructor() {
     super();
     this.state = {
@@ -51,19 +49,20 @@ class SettingProfile extends Component {
         email: "",
         password: "",
         matchPassword: "",
-        about: ""
+        about: "",
       },
       redirectToProfile: false,
       loading: false,
       alertStatus: "",
       alertMsg: "",
-      alertVisible: false
+      alertVisible: false,
     };
   }
 
-  init = userId => {
+  init = (userId) => {
     const token = isAuthenticated().token;
-    getUser(userId, token).then(data => {
+    getUser(userId, token).then((data) => {
+      console.log(data);
       if (data.error) {
         this.setState({ redirectToProfile: true });
       } else {
@@ -74,8 +73,8 @@ class SettingProfile extends Component {
             email: data.email,
             about: data.about,
             password: "",
-            matchPassword: ""
-          }
+            matchPassword: "",
+          },
         });
       }
     });
@@ -84,6 +83,13 @@ class SettingProfile extends Component {
   componentDidMount() {
     this.userData = new FormData();
     const userId = this.props.match.params.userId;
+    console.log("userid " + userId);
+    if (
+      isAuthenticated().user._id !== userId &&
+      isAuthenticated().user.role !== "admin"
+    ) {
+      this.setState({ redirectToProfile: true });
+    }
     this.init(userId);
   }
 
@@ -94,32 +100,33 @@ class SettingProfile extends Component {
       validationSchema={UserInfoValidation}
       onSubmit={(values, { setSubmitting }) => {
         this.setState({ loading: true });
-        
+
         this.userData.append("name", values.name);
         this.userData.append("email", values.email);
         this.userData.append("about", values.about);
-        if(values.password){
+        if (values.password) {
           this.userData.append("password", values.password);
         }
-        
+
         setTimeout(() => {
           const userId = this.props.match.params.userId;
           const token = isAuthenticated().token;
 
-          updateUser(userId, token, this.userData).then(data => {
+          updateUser(userId, token, this.userData).then((data) => {
             if (data.error) {
               this.setState({
                 loading: false,
                 alertStatus: "danger",
-                alertMsg: "Unable to update information. Please try again later.",
-                alertVisible: true
+                alertMsg:
+                  "Unable to update information. Please try again later.",
+                alertVisible: true,
               });
             } else if (isAuthenticated().user.role === "admin") {
               this.setState({
                 loading: false,
                 alertStatus: "success",
                 alertMsg: "User information updated.",
-                alertVisible: true
+                alertVisible: true,
               });
             } else {
               updateLocalStorUser(data, () => {
@@ -127,7 +134,7 @@ class SettingProfile extends Component {
                   loading: false,
                   alertStatus: "success",
                   alertMsg: "User information updated.",
-                  alertVisible: true
+                  alertVisible: true,
                 });
               });
             }
@@ -136,11 +143,7 @@ class SettingProfile extends Component {
         });
       }}
     >
-      {({
-        touched,
-        errors,
-        isSubmitting,
-      }) => (
+      {({ touched, errors, isSubmitting }) => (
         <Form>
           <div className="row">
             <div className="col-md-12 my-2">
@@ -298,7 +301,7 @@ class SettingProfile extends Component {
       loading,
       alertMsg,
       alertStatus,
-      alertVisible
+      alertVisible,
     } = this.state;
 
     if (redirectToProfile) {
@@ -312,42 +315,48 @@ class SettingProfile extends Component {
           active={loading}
           spinner
           styles={{
-            spinner: base => ({
+            spinner: (base) => ({
               ...base,
               width: "100px",
               "& svg circle": {
-                stroke: "rgba(0,98,204,1)"
-              }
+                stroke: "rgba(0,98,204,1)",
+              },
             }),
             wrapper: {
-              height: "100%"
-            }
+              height: "100%",
+            },
           }}
           text="Updating your profile...."
         >
-          <SettingContainer sidebar="UserSetting" userId={id}>
-            <div className="card">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h2>Basic Information</h2>
-                    <hr />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-12">
-                    {(isAuthenticated().user.role === "admin" ||
-                      isAuthenticated().user._id === id) &&
-                      this.userProfileForm()}
+          <div className="maxDivWidth container-fluid">
+            <div className="row my-3">
+              {/* SettingSidebar is col-sm-3 */}
+              <SettingSidebar highlight="UserSetting" userId={id} />
+              <div className="col-sm-9">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-md-12">
+                        <h2>Basic Information</h2>
+                        <hr />
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12">
+                        {(isAuthenticated().user.role === "admin" ||
+                          isAuthenticated().user._id === id) &&
+                          this.userProfileForm()}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </SettingContainer>
+          </div>
         </LoadingOverlay>
       </>
     );
   }
 }
 
-export default SettingProfile;
+export default SettingUser;
