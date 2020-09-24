@@ -1,8 +1,7 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
-import { Redirect } from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faEye, faCross, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 class TradeRequest extends React.Component {
 
