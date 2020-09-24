@@ -5,8 +5,38 @@ import React from "react";
 import { getUser, updateUser, updateLocalStorUser } from "./apiUser";
 import DefaultProfileImg from "../images/avatar.png";
 
-
 import Alert from "../components/Alert";
+
+{
+  /* 
+This sidebar is use for all Settings pages
+Use this format to keep consistency
+
+<div className="maxDivWidth container-fluid">
+  <div className="row my-3">
+    <SettingSidebar highlight="TitleToHighLight" />
+    <div className="col-sm-9">
+      <div className="card">
+        <div className="card-body">
+          <div className="row">
+            <div className="col-md-12">
+              <h2>Main Heading</h2>
+              <hr />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-12">
+             any children html
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>; 
+*/
+}
+
 class SettingSideBar extends React.Component {
   constructor() {
     super();
@@ -17,12 +47,12 @@ class SettingSideBar extends React.Component {
       file: null,
       alertStatus: "",
       alertMsg: "",
-      alertVisible: false
+      alertVisible: false,
     };
   }
-  init = userId => {
+  init = (userId) => {
     const token = isAuthenticated().token;
-    getUser(userId, token).then(data => {
+    getUser(userId, token).then((data) => {
       if (data.error) {
         this.setState({ redirectToProfile: true });
       } else {
@@ -33,7 +63,7 @@ class SettingSideBar extends React.Component {
             ? `${process.env.REACT_APP_API_URL}/user/photo/${
                 data._id
               }?${new Date().getTime()}`
-            : DefaultProfileImg
+            : DefaultProfileImg,
         });
       }
     });
@@ -44,7 +74,7 @@ class SettingSideBar extends React.Component {
     let userId = isAuthenticated().user._id;
     this.init(userId);
   }
-  handleChange = name => event => {
+  handleChange = (name) => (event) => {
     this.setState({ alertVisible: false });
     if (
       event.target.files[0] !== undefined &&
@@ -56,32 +86,32 @@ class SettingSideBar extends React.Component {
       this.setState({
         alertMsg: "File size should be less than 1mb",
         alertStatus: "danger",
-        alertVisible: true
+        alertVisible: true,
       });
     }
   };
 
-  clickSubmitImg = event => {
+  clickSubmitImg = (event) => {
     event.preventDefault();
     this.setState({ loading: true });
 
     const userId = this.props.userId;
     const token = isAuthenticated().token;
 
-    updateUser(userId, token, this.userData).then(data => {
+    updateUser(userId, token, this.userData).then((data) => {
       if (data.error) {
         this.setState({
           loading: false,
           alertStatus: "danger",
           alertMsg: data.error,
-          alertVisible: true
+          alertVisible: true,
         });
       } else if (isAuthenticated().user.role === "admin") {
         this.setState({
           loading: false,
           alertStatus: "success",
           alertMsg: "User information updated.",
-          alertVisible: true
+          alertVisible: true,
         });
       } else {
         updateLocalStorUser(data, () => {
@@ -89,7 +119,7 @@ class SettingSideBar extends React.Component {
             loading: false,
             alertStatus: "success",
             alertMsg: "User information updated.",
-            alertVisible: true
+            alertVisible: true,
           });
         });
       }
@@ -138,7 +168,7 @@ class SettingSideBar extends React.Component {
                       style={{ height: "150px", width: "auto" }}
                       className="img-thumbnail"
                       src={this.state.file}
-                      onError={i => (i.target.src = `${DefaultProfileImg}`)}
+                      onError={(i) => (i.target.src = `${DefaultProfileImg}`)}
                       alt={this.state.name}
                     />
                   </div>
@@ -189,12 +219,14 @@ class SettingSideBar extends React.Component {
             <img
               style={{ maxHeight: "200px", maxWidth: "200px" }}
               className="avatar img-circle img-thumbnail rounded-circle"
-              src={id
-                  ? `${ process.env.REACT_APP_API_URL
+              src={
+                id
+                  ? `${
+                      process.env.REACT_APP_API_URL
                     }/user/photo/${id}?${new Date().getTime()}`
                   : DefaultProfileImg
               }
-              onError={i => (i.target.src = `${DefaultProfileImg}`)}
+              onError={(i) => (i.target.src = `${DefaultProfileImg}`)}
               alt={this.state.name}
             />
             <button

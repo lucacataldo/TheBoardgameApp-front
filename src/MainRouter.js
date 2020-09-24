@@ -90,7 +90,6 @@ class MainRouter extends React.Component {
             component={SettingCollection}
           />
           <Route path="*" component={NotFound} />
-          />
         </Switch>
       </>
     );
