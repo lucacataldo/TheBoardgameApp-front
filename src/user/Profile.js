@@ -4,6 +4,7 @@ import { Redirect, Link } from "react-router-dom";
 import { getUser } from "./apiUser";
 import { isAuthenticated } from "../auth";
 import DefaultProfileImg from "../images/avatar.png";
+import ProfileBanner from "../images/ProfileBG.jpeg";
 import DeleteUser from "./DeleteUser";
 import FollowProfileButton from "./FollowProfileButton";
 import ProfileTabs from "./ProfileTabs";
@@ -91,8 +92,8 @@ class Profile extends Component {
 
         return (
             <div className="container">
-                <div className=" pl-3 py-4 mt-3 bg-dark text-light"><h3>Profile</h3></div>
-                <div className="row mx-auto py-3" style={{backgroundColor: '#ffffff', backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)'}}>
+                <div className=" pl-3 py-4 mt-3 bg-dark text-light" style={{backgroundImage: "url(" + ProfileBanner + ")", backgroundSize:"cover"}}><h3>Profile</h3></div>
+                <div className="row mx-auto py-3 bg-white">
                     <div className="offset-2 col-md-3">
                         <img
                             style={{ height: "200px", width: "auto", borderRadius: "50%" }}
@@ -103,7 +104,7 @@ class Profile extends Component {
                         />
                     </div>
 
-                    <div className="col-md-6">
+                    <div className="col-md-6 text-dark">
                         <div className="lead mt-2">
                             <h2>{user.name}</h2>
                             <p>Email: {user.email}</p>
