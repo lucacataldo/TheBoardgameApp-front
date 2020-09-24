@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "../auth";
 import React from "react";
-
+import SearchUser from "./SearchUser";
 import { getUser } from "../user/apiUser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 class TradesSideBar extends React.Component {
   constructor() {
@@ -31,7 +33,10 @@ class TradesSideBar extends React.Component {
     this.init(userId);
   }
 
+
+
   render() {
+    
     return (
       <>
         <div
@@ -42,6 +47,15 @@ class TradesSideBar extends React.Component {
             <span className="list-group-item list-group-item-dark font-weight-bold">
               Trades
             </span>
+
+                <Link
+              className={`btn btn-success text-left my-1 font-weight-bold`}
+              to={`/newTrade`}
+            >
+              <span ><FontAwesomeIcon  icon={faPlusCircle}></FontAwesomeIcon> </span>
+                New Trade <span className="sr-only">(current)</span>
+            </Link>
+
 
             <Link
               className={`list-group-item list-group-item-action ${
@@ -68,6 +82,8 @@ class TradesSideBar extends React.Component {
               Trade Settings
             </Link>
           </div>
+              <SearchUser/>
+         
         </div>
       </>
     );
