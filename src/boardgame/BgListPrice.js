@@ -42,7 +42,7 @@ class BgListPrice extends React.Component {
     return (
         <select multiple size="15" className="form-control h-100" id="availableList">
            {dataList.map((bg,i)=>{
-               return <option id={i}>{bg.title}</option>
+               return <option id={bg.bggId}>{bg.title}</option>
            })}
             
        </select>

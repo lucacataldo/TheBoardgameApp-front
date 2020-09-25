@@ -24,16 +24,27 @@ handleAddBoardgame(event){
 var available = document.getElementById("availableList");
 var tradeBox = document.getElementById("toBeTraded");
 var val = available.options[available.selectedIndex].value;
+var id = available.options[available.selectedIndex].id;
 var element = document.createElement('option');
+element.setAttribute("id",id);
 element.appendChild(document.createTextNode(val));
 tradeBox.appendChild(element);
 available.removeChild(available.options[available.selectedIndex]);
-console.log(val);
 return true;
 }
 
 
 handleRemoveBoardgame(event){
+var tradeBox = document.getElementById("toBeTraded");
+var available = document.getElementById("availableList");
+var val = tradeBox.options[tradeBox.selectedIndex].value;
+var id = tradeBox.options[tradeBox.selectedIndex].id;
+var element = document.createElement('option');
+element.setAttribute("id",id);
+element.appendChild(document.createTextNode(val));
+available.appendChild(element);
+tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
+return true;
 }
 
 
@@ -48,9 +59,7 @@ handleRemoveBoardgame(event){
           />
           <div className="col-sm-6 col-lg-6">
           <h4>Trade Information</h4>
-            <div className="w-100 bg-white">
-               <h4>Your Trade List Items</h4> 
-            </div>
+  
             <div className="row bg-white">
                 <div className="col-md-5">
                     <h6 className="p-2 my-0">Available</h6>
