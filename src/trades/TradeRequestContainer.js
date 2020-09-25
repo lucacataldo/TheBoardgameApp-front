@@ -20,7 +20,21 @@ class TradeRequestContainer extends React.Component {
     }
   }
 
+handleAddBoardgame(event){
+var available = document.getElementById("availableList");
+var tradeBox = document.getElementById("toBeTraded");
+var val = available.options[available.selectedIndex].value;
+var element = document.createElement('option');
+element.appendChild(document.createTextNode(val));
+tradeBox.appendChild(element);
+available.removeChild(available.options[available.selectedIndex]);
+console.log(val);
+return true;
+}
 
+
+handleRemoveBoardgame(event){
+}
 
 
   render() {
@@ -48,8 +62,22 @@ class TradeRequestContainer extends React.Component {
                 </div>
 
                 </div>
-                <div className="col-md-2"></div>
-                <div className="col-md-3"></div>
+                <div className="col-md-2">
+                <input className="p-4" style={{marginTop:'100px'}} type="button" id="left" value="<" onClick={this.handleRemoveBoardgame}/>
+                <br/>
+                <input type="button" className="mt-10 p-4 mt-4" id="right" value=">" onClick={this.handleAddBoardgame}/>
+                </div>
+                <div className="col-md-5">
+
+                <h6 className="p-2 my-0">To Trade </h6>
+                <br/>
+                
+                <div className="form-group">
+                 <label >Select list:</label>
+                    <select multiple size="15" className="form-control h-100 w-100" id="toBeTraded">
+                    </select>
+                </div>
+                </div>
             </div>
           
           </div>

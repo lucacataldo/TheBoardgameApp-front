@@ -19,7 +19,6 @@ class BgListPrice extends React.Component {
     }
     getGuruCollection("ZennaL").then(data => {
     this.setState({ bgData: data });
-    console.log(this.state.bgData);
 })
 
   }
@@ -41,9 +40,9 @@ class BgListPrice extends React.Component {
   render() {
         const dataList = this.state.bgData;
     return (
-        <select multiple className="form-control" id="sel1">
+        <select multiple size="15" className="form-control h-100" id="availableList">
            {dataList.map((bg,i)=>{
-               return <option>{bg.title}</option>
+               return <option id={i}>{bg.title}</option>
            })}
             
        </select>
