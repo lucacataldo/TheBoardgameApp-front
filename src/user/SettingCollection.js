@@ -128,7 +128,7 @@ class SettingCollection extends Component {
                 className="btn btn-primary btn-block"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Please wait..." : "Submit"}
+                {isSubmitting ? "Please wait..." : "Sync"}
               </button>
             </div>
           </div>
@@ -183,6 +183,17 @@ class SettingCollection extends Component {
                       <div className="col-md-12">
                         <h2>Boardgamegeek Information</h2>
                         <hr />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="col-md-12">
+                        <h6 className="lead">
+                          <span className="font-weight-bold">Note: </span>{" "}
+                          Syncing your Boardgamegeek collection will not remove
+                          any boardgame from Boardgameguru. It will add any
+                          boardgame(s) missing and update status from
+                          boardgamegeek to boardgameguru.
+                        </h6>
                       </div>
                     </div>
                     <div className="row">
