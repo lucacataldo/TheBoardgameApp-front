@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
-import { Redirect } from "react-router-dom";
+import  BgListPrice from "../boardgame/BgListPrice";
 
-class TradeListItems extends React.Component {
-  constructor() {
-    super();
+class TradeRequestContainer extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       redirectToHome: false
     };
@@ -20,9 +20,11 @@ class TradeListItems extends React.Component {
     }
   }
 
+
+
+
   render() {
-    const { redirectToHome } = this.state;
-    if (redirectToHome) return <Redirect to="/" />;
+
 
     return (
       <div className="container-fluid">
@@ -36,14 +38,18 @@ class TradeListItems extends React.Component {
                <h4>Your Trade List Items</h4> 
             </div>
             <div className="row bg-white">
-                <div className="col-md-6">
-                    Available
+                <div className="col-md-5">
+                    <h6 className="p-2 my-0">Available</h6>
                 <br/>
-                <div>Status</div>
+                
+                <div className="form-group">
+                 <label >Select list:</label>
+                    <BgListPrice />
+                </div>
 
                 </div>
-                <div className="col-md-1"></div>
-                <div className="col-md-5"></div>
+                <div className="col-md-2"></div>
+                <div className="col-md-3"></div>
             </div>
           
           </div>
@@ -52,4 +58,4 @@ class TradeListItems extends React.Component {
     );
   }
 }
-export default TradeListItems;
+export default TradeRequestContainer;

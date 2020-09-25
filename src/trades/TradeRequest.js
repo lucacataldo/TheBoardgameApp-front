@@ -21,7 +21,7 @@ class TradeRequest extends React.Component {
         }
       }
     render() {
-        return <div className="card" style={{width: "12rem;"}}>
+        return <div className="card" style={{width: "12rem"}}>
             <div className="card-header">Waiting for Response</div>
         <div className="card-body">
             <div className="row justify-content-center align-self-center mt-1">
@@ -36,8 +36,8 @@ class TradeRequest extends React.Component {
                        
                 </div>
                 <div className="col-md-4 mt-4">
-                    <button type="button" class="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
-                <button type="button" class="btn btn-primary float-right mx-2"><FontAwesomeIcon icon={faEye} /> View</button>
+                    <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
+                <button type="button" className="btn btn-primary float-right mx-2"><FontAwesomeIcon icon={faEye} /> View</button>
                 
                 </div>        
             </div>
@@ -52,8 +52,8 @@ class TradeRequest extends React.Component {
                     <small>1 games</small>
                 </div>
                 <div className="col-md-4 mt-4">
-                <button type="button" class="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
-                <button type="button" class="btn btn-primary float-right mx-2"><FontAwesomeIcon icon={faEye} /> View</button>
+                <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
+                <button type="button" className="btn btn-primary float-right mx-2"><FontAwesomeIcon icon={faEye} /> View</button>
                 </div>        
             </div>
             

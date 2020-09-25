@@ -25,7 +25,7 @@ import UserBgCollection from "./boardgame/UserBgCollection";
 import Trades from "./trades/Trades";
 import TradeMatch from "./trades/TradeMatch";
 import TradeSettings from "./trades/TradeSettings"
-import TradeListItems from "./trades/TradeListItems"
+import TradeListItems from "./trades/TradeRequestContainer"
 
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
