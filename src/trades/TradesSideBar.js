@@ -82,8 +82,6 @@ class TradesSideBar extends React.Component {
               Trade Settings
             </Link>
           </div>
-              <SearchUser/>
-         
         </div>
       </>
     );

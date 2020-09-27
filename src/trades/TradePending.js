@@ -1,6 +1,5 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
-import { Redirect } from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faEye, faCheck, faTimes, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 

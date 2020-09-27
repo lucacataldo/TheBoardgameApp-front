@@ -5,7 +5,10 @@ import { getGuruCollection } from "../boardgame/apiBoardgame";
 class BgListPrice extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {bgData: [{}]}
+    this.state = {
+      bgData: [{}],
+      user: ""   
+  }
   }
 
     
@@ -17,31 +20,21 @@ class BgListPrice extends React.Component {
     ) {
       this.setState({ redirectToHome: true });
     }
-    getGuruCollection("ZennaL").then(data => {
-    this.setState({ bgData: data });
-})
+      this.setState({user: this.props.user});
+      console.log("PROPS" + this.state.user);
+     getGuruCollection(this.props.user).then(bgList => {
+    this.setState({ bgData: bgList });
+    })
+
 
   }
 
-//   getUser(isAuthenticated().user._id, token).then(data => {
-//     if (data.error === undefined && data.bggUsername) {
-//       setUsername(data.bggUsername);
-//       getBGCollection(data.bggUsername).then(bggdata => {
-//         if (bggdata !== undefined && !bggdata.error) {
-//           setData(bggdata);
-//         }
-//       });
-//     }
-//   });
-
-
-
 
   render() {
-        const dataList = this.state.bgData;
+ 
     return (
         <select multiple size="15" className="form-control h-100" id="availableList">
-           {dataList.map((bg,i)=>{
+           {this.state.bgData.map((bg,i)=>{
                return <option id={bg.bggId}>{bg.title}</option>
            })}
             

@@ -21,7 +21,7 @@ class TradeRequest extends React.Component {
         }
       }
     render() {
-        return <div className="card" style={{width: "12rem"}}>
+        return <div className="card" >
             <div className="card-header">Waiting for Response</div>
         <div className="card-body">
             <div className="row justify-content-center align-self-center mt-1">
