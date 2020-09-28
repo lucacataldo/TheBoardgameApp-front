@@ -30,7 +30,7 @@ class TradeRequest extends React.Component {
                 </div>
                 <div className="col-md-6 mt-4">
       
-                    <a className="font-weight-bold h5" href="#">Jane Doe</a>
+                    <a className="font-weight-bold h5" href="/">Jane Doe</a>
                     <br/>
                     <small>3 games</small>
                        
@@ -47,7 +47,7 @@ class TradeRequest extends React.Component {
                 <img className="rounded-circle" src="https://via.placeholder.com/100" alt="displaypic"/>
                 </div>
                 <div className="col-md-6 mt-4">
-                    <a className="font-weight-bold h5" href="#">Joe Dae</a>
+                    <a className="font-weight-bold h5" href="/">Joe Dae</a>
                     <br/>
                     <small>1 games</small>
                 </div>
@@ -60,7 +60,7 @@ class TradeRequest extends React.Component {
 
         </div>
  
-          <div className="card-footer text-center"><a href="#" className="btn btn-primary">Show More</a></div>
+          <div className="card-footer text-center"><a href="/" className="btn btn-primary">Show More</a></div>
         </div>;
     }
   }
