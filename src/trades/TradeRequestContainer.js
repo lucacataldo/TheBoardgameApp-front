@@ -2,32 +2,14 @@ import React, { useState, useEffect } from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import  BgListPrice from "../boardgame/BgListPrice";
-import { getUser } from "../user/apiUser";
+
 
 class TradeRequestContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      redirectToHome: false,
-      guruName: ""
-    }
+  state = {
+    redirectToHome: false
   }
 
-  componentDidMount(){
-    getUser(isAuthenticated().user._id, isAuthenticated().token).then(data => {
-      if (data.error) {
-        this.setState({ redirectToProfile: true });
-      }
-      else {
-      this.setState({guruName: data.bggUsername})
-    }
-    
-  })
-  }
 
-  
- 
-    
 handleAddBoardgame(event){
 var available = document.getElementById("availableList");
 var tradeBox = document.getElementById("toBeTraded");
@@ -56,7 +38,15 @@ return true;
 }
 
 
+
+
+
+
+
+
+
   render() { 
+    
     return (
       <div className="container-fluid">
         <div className="row my-3 justify-content-center">
@@ -72,8 +62,8 @@ return true;
                 <br/>
                 
                 <div className="form-group">
-                 <label >Available:</label>
-                    <BgListPrice user={this.state.guruName}  />
+                    <label >Available:</label>
+                    <BgListPrice user=""  />
                 </div>
 
                 </div>

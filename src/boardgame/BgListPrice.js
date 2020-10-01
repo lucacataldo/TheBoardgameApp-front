@@ -1,6 +1,7 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
-import { getGuruCollection } from "../boardgame/apiBoardgame";
+import {  getGuruCollection } from "../boardgame/apiBoardgame";
+
 
 class BgListPrice extends React.Component {
   constructor(props) {
@@ -13,16 +14,24 @@ class BgListPrice extends React.Component {
 
     
 
-  componentDidMount() {
+  componentWillMount() {
     if (
       isAuthenticated()._id !== this.props.userId &&
       isAuthenticated().user.role !== "admin"
     ) {
       this.setState({ redirectToHome: true });
     }
-      this.setState({user: this.props.user});
-      console.log("PROPS" + this.state.user);
-     getGuruCollection(this.props.user).then(bgList => {
+      console.log("ISAUTHENTICATED" + Object.keys(isAuthenticated().user));
+      console.log("PROPS" + this.props);
+      let user = "";
+      if(this.props.user === "" || this.props.user === undefined){
+        console.log("UNDEFINED block");
+        user = isAuthenticated().user.name;
+      }else{
+        user = this.props.user
+      }
+      
+     getGuruCollection(user).then(bgList => {
     this.setState({ bgData: bgList });
     })
 
