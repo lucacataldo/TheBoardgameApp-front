@@ -10,7 +10,7 @@ import { isAuthenticated } from "../auth";
 import { getUser } from "../user/apiUser";
 import BgContainer from "./BgContainer";
 const DefaultColumnFilter = ({
-  column: { filterValue, preFilteredRows, setFilter }
+  column: { filterValue, preFilteredRows, setFilter },
 }) => {
   const count = preFilteredRows.length;
 
@@ -18,7 +18,7 @@ const DefaultColumnFilter = ({
     <input
       className="form-control"
       value={filterValue || ""}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
       }}
       placeholder={`Search ${count} records...`}
@@ -31,7 +31,7 @@ const NumberSelectFilter = ({ column: { filterValue, setFilter } }) => {
     <select
       className="form-control"
       value={filterValue}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined);
       }}
     >
@@ -52,7 +52,7 @@ const PlayTimeSelectFilter = ({ column: { filterValue, setFilter } }) => {
     <select
       className="form-control"
       value={filterValue}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined);
       }}
     >
@@ -67,18 +67,18 @@ const PlayTimeSelectFilter = ({ column: { filterValue, setFilter } }) => {
 };
 
 const fuzzyTextFilterFn = (rows, id, filterValue) => {
-  return matchSorter(rows, filterValue, { keys: [row => row.values[id]] });
+  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 };
 
 // Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = val => !val;
+fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 const Table = ({ columns, data }) => {
   const filterTypes = React.useMemo(
     () => ({
       fuzzyText: fuzzyTextFilterFn,
       text: (rows, id, filterValue) => {
-        return rows.filter(row => {
+        return rows.filter((row) => {
           const rowValue = row.values[id];
           return rowValue !== undefined
             ? String(rowValue)
@@ -86,14 +86,14 @@ const Table = ({ columns, data }) => {
                 .startsWith(String(filterValue).toLowerCase())
             : true;
         });
-      }
+      },
     }),
     []
   );
 
   const defaultColumn = React.useMemo(
     () => ({
-      Filter: DefaultColumnFilter
+      Filter: DefaultColumnFilter,
     }),
     []
   );
@@ -112,7 +112,7 @@ const Table = ({ columns, data }) => {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -121,8 +121,8 @@ const Table = ({ columns, data }) => {
       filterTypes,
       initialState: {
         pageIndex: 0,
-        hiddenColumns: ["minPlayers"]
-      }
+        hiddenColumns: ["minPlayers"],
+      },
     },
     useFilters,
     usePagination
@@ -132,9 +132,9 @@ const Table = ({ columns, data }) => {
     <>
       <table className="table table-bordered" {...getTableProps()}>
         <thead className="thead-dark ">
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup) => (
             <tr className="align-bottom" {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column) => (
                 <th
                   scope="col"
                   className={"align-bottom " + column.render("className")}
@@ -159,7 +159,7 @@ const Table = ({ columns, data }) => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {row.cells.map((cell) => {
                     return (
                       <td
                         className={
@@ -189,11 +189,11 @@ const Table = ({ columns, data }) => {
             </span>
             <select
               value={pageSize}
-              onChange={e => {
+              onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}
             >
-              {[10, 20, 30, 40, 50].map(pageSize => (
+              {[10, 20, 30, 40, 50].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
                   Show {pageSize}
                 </option>
@@ -253,27 +253,27 @@ const Table = ({ columns, data }) => {
 /****************************************************/
 
 const filterCheck = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return rowValue >= filterValue;
   });
 };
 
 const filterGreaterThan = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return rowValue >= filterValue;
   });
 };
 
 const filterLessThan = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return filterValue <= rowValue;
   });
 };
 const filterLessThanMax = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return rowValue <= filterValue;
   });
@@ -283,7 +283,7 @@ const filterLessThanMax = (rows, id, filterValue) => {
 // when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
-filterCheck.autoRemove = val => typeof val !== "number";
+filterCheck.autoRemove = (val) => typeof val !== "number";
 
 const UserCollection = () => {
   const columns = React.useMemo(
@@ -299,12 +299,12 @@ const UserCollection = () => {
         ),
 
         className: "text-center d-none d-sm-table-cell",
-        disableFilters: true
+        disableFilters: true,
       },
       {
         Header: "Title",
         className: "",
-        accessor: d => `${d.title} ${d.yearPublished}`,
+        accessor: (d) => `${d.title} ${d.yearPublished}`,
         filter: "fuzzyText",
         Cell: ({ row: { original } }) => {
           return (
@@ -312,7 +312,7 @@ const UserCollection = () => {
               {String(original.title)} ({String(original.yearPublished)})
             </span>
           );
-        }
+        },
       },
       {
         Header: "Rating",
@@ -322,7 +322,7 @@ const UserCollection = () => {
           <span>{Math.round(10 * String(value)) / 10}</span>
         ),
         Filter: NumberSelectFilter,
-        filter: filterGreaterThan
+        filter: filterGreaterThan,
       },
       {
         Header: "Players",
@@ -337,7 +337,7 @@ const UserCollection = () => {
           );
         },
         Filter: NumberSelectFilter,
-        filter: filterLessThan
+        filter: filterLessThan,
       },
       {
         Header: "Play Time",
@@ -357,8 +357,8 @@ const UserCollection = () => {
           );
         },
         Filter: PlayTimeSelectFilter,
-        filter: filterLessThanMax
-      }
+        filter: filterLessThanMax,
+      },
     ],
     []
   );
@@ -379,10 +379,11 @@ const UserCollection = () => {
   useEffect(() => {
     setIsLoading(true);
     const token = isAuthenticated().token;
-    getUser(isAuthenticated().user._id, token).then(data => {
+    getUser(isAuthenticated().user._id, token).then((data) => {
       if (data.error === undefined && data.bggUsername) {
         setUsername(data.bggUsername);
-        getBGCollection(data.bggUsername).then(bggdata => {
+
+        getBGCollection(data.bggUsername).then((bggdata) => {
           if (bggdata !== undefined && !bggdata.error) {
             setData(bggdata);
           }
@@ -396,7 +397,7 @@ const UserCollection = () => {
     if (isLoading) return;
     setIsLoading(true);
     setAlertVible(false);
-    await getBGCollection(username).then(data => {
+    await getBGCollection(username).then((data) => {
       if (data !== undefined && !data.error) {
         setData(data);
       } else {
@@ -418,16 +419,16 @@ const UserCollection = () => {
         active={isLoading}
         spinner
         styles={{
-          spinner: base => ({
+          spinner: (base) => ({
             ...base,
             width: "100px",
             "& svg circle": {
-              stroke: "rgba(0,98,204,1)"
-            }
+              stroke: "rgba(0,98,204,1)",
+            },
           }),
           wrapper: {
-            height: "100%"
-          }
+            height: "100%",
+          },
         }}
         text="Fetching Collection....."
       >
