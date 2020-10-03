@@ -3,14 +3,14 @@ import LoadingOverlay from "react-loading-overlay";
 import { useTable, useFilters, usePagination } from "react-table";
 import matchSorter from "match-sorter";
 
-import { getBGCollection } from "./apiBoardgame";
+import { getGuruCollection } from "./apiBoardgame";
 import Alert from "../components/Alert";
 import NoImg from "../images/noImageAvailable.jpg";
 import { isAuthenticated } from "../auth";
 import { getUser } from "../user/apiUser";
 import BgContainer from "./BgContainer";
 const DefaultColumnFilter = ({
-  column: { filterValue, preFilteredRows, setFilter }
+  column: { filterValue, preFilteredRows, setFilter },
 }) => {
   const count = preFilteredRows.length;
 
@@ -18,7 +18,7 @@ const DefaultColumnFilter = ({
     <input
       className="form-control"
       value={filterValue || ""}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
       }}
       placeholder={`Search ${count} records...`}
@@ -31,7 +31,7 @@ const NumberSelectFilter = ({ column: { filterValue, setFilter } }) => {
     <select
       className="form-control"
       value={filterValue}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined);
       }}
     >
@@ -52,7 +52,7 @@ const PlayTimeSelectFilter = ({ column: { filterValue, setFilter } }) => {
     <select
       className="form-control"
       value={filterValue}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined);
       }}
     >
@@ -67,18 +67,18 @@ const PlayTimeSelectFilter = ({ column: { filterValue, setFilter } }) => {
 };
 
 const fuzzyTextFilterFn = (rows, id, filterValue) => {
-  return matchSorter(rows, filterValue, { keys: [row => row.values[id]] });
+  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 };
 
 // Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = val => !val;
+fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 const Table = ({ columns, data }) => {
   const filterTypes = React.useMemo(
     () => ({
       fuzzyText: fuzzyTextFilterFn,
       text: (rows, id, filterValue) => {
-        return rows.filter(row => {
+        return rows.filter((row) => {
           const rowValue = row.values[id];
           return rowValue !== undefined
             ? String(rowValue)
@@ -86,14 +86,14 @@ const Table = ({ columns, data }) => {
                 .startsWith(String(filterValue).toLowerCase())
             : true;
         });
-      }
+      },
     }),
     []
   );
 
   const defaultColumn = React.useMemo(
     () => ({
-      Filter: DefaultColumnFilter
+      Filter: DefaultColumnFilter,
     }),
     []
   );
@@ -112,7 +112,7 @@ const Table = ({ columns, data }) => {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -121,8 +121,8 @@ const Table = ({ columns, data }) => {
       filterTypes,
       initialState: {
         pageIndex: 0,
-        hiddenColumns: ["minPlayers"]
-      }
+        hiddenColumns: ["minPlayers"],
+      },
     },
     useFilters,
     usePagination
@@ -132,12 +132,12 @@ const Table = ({ columns, data }) => {
     <>
       <table className="table table-bordered" {...getTableProps()}>
         <thead className="thead-dark ">
-          {headerGroups.map(headerGroup => (
-            <tr className="align-bottom" {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+          {headerGroups.map((headerGroup) => (
+            <tr className="align-middle" {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
                 <th
                   scope="col"
-                  className={"align-bottom " + column.render("className")}
+                  className={"align-middle " + column.render("className")}
                   {...column.getHeaderProps()}
                 >
                   {column.render("Header")}
@@ -159,7 +159,7 @@ const Table = ({ columns, data }) => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {row.cells.map((cell) => {
                     return (
                       <td
                         className={
@@ -179,6 +179,7 @@ const Table = ({ columns, data }) => {
         </tbody>
       </table>
       <div className="col-12">
+        {" "}
         <div className="row justify-content-between mx-2">
           <div>
             <span>
@@ -189,11 +190,11 @@ const Table = ({ columns, data }) => {
             </span>
             <select
               value={pageSize}
-              onChange={e => {
+              onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}
             >
-              {[10, 20, 30, 40, 50].map(pageSize => (
+              {[10, 20, 30, 40, 50].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
                   Show {pageSize}
                 </option>
@@ -253,27 +254,27 @@ const Table = ({ columns, data }) => {
 /****************************************************/
 
 const filterCheck = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return rowValue >= filterValue;
   });
 };
 
 const filterGreaterThan = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return rowValue >= filterValue;
   });
 };
 
 const filterLessThan = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return filterValue <= rowValue;
   });
 };
 const filterLessThanMax = (rows, id, filterValue) => {
-  return rows.filter(row => {
+  return rows.filter((row) => {
     const rowValue = row.values[id];
     return rowValue <= filterValue;
   });
@@ -283,13 +284,13 @@ const filterLessThanMax = (rows, id, filterValue) => {
 // when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
-filterCheck.autoRemove = val => typeof val !== "number";
+filterCheck.autoRemove = (val) => typeof val !== "number";
 
 const UserCollection = () => {
   const columns = React.useMemo(
     () => [
       {
-        accessor: "imgThumbnail",
+        accessor: "boardgame.imgThumbnail",
         Cell: ({ cell: { value } }) => (
           <img
             src={String(value) === "" ? `${NoImg}` : String(value)}
@@ -297,68 +298,154 @@ const UserCollection = () => {
             style={{ maxWidth: "50px", maxHeight: "50px" }}
           />
         ),
-
         className: "text-center d-none d-sm-table-cell",
-        disableFilters: true
+        disableFilters: true,
       },
       {
         Header: "Title",
         className: "",
-        accessor: d => `${d.title} ${d.yearPublished}`,
+        accessor: (d) => `${d.boardgame.title} ${d.boardgame.yearPublished}`,
         filter: "fuzzyText",
         Cell: ({ row: { original } }) => {
           return (
             <span>
-              {String(original.title)} ({String(original.yearPublished)})
+              {String(original.boardgame.title)} (
+              {String(original.boardgame.yearPublished)})
             </span>
           );
-        }
+        },
       },
       {
         Header: "Rating",
         className: "d-none d-sm-table-cell",
-        accessor: "avgRating",
+        accessor: "boardgame.avgRating",
         Cell: ({ cell: { value } }) => (
           <span>{Math.round(10 * String(value)) / 10}</span>
         ),
         Filter: NumberSelectFilter,
-        filter: filterGreaterThan
+        filter: filterGreaterThan,
       },
       {
         Header: "Players",
         className: "",
-        accessor: "maxPlayers",
+        accessor: "boardgame.maxPlayers",
         Cell: ({ row: { original } }) => {
           return (
             <span>
-              {String(original.minPlayers)}-
-              {original.maxPlayers === -1 ? "" : String(original.maxPlayers)}
+              {String(original.boardgame.minPlayers)}-
+              {original.boardgame.maxPlayers === -1
+                ? ""
+                : String(original.boardgame.maxPlayers)}
             </span>
           );
         },
         Filter: NumberSelectFilter,
-        filter: filterLessThan
+        filter: filterLessThan,
       },
       {
         Header: "Play Time",
         className: "",
-        accessor: "maxPlayTime",
+        accessor: "boardgame.maxPlayTime",
         Cell: ({ row: { original } }) => {
           return (
             <span>
-              {original.minPlayTime === original.maxPlayTime
-                ? original.minPlayTime === -1
+              {original.boardgame.minPlayTime === original.boardgame.maxPlayTime
+                ? original.boardgame.minPlayTime === -1
                   ? "--"
-                  : original.minPlayTime
-                : String(original.minPlayTime) +
+                  : original.boardgame.minPlayTime
+                : String(original.boardgame.minPlayTime) +
                   "-" +
-                  String(original.maxPlayTime)}
+                  String(original.boardgame.maxPlayTime)}
             </span>
           );
         },
         Filter: PlayTimeSelectFilter,
-        filter: filterLessThanMax
-      }
+        filter: filterLessThanMax,
+      },
+      {
+        Header: "For Trade",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "forTrade",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.forTrade === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "For Sale",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "forSale",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.forSale === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Want from Trade",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "wantFromTrade",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.wantFromTrade === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Want to Buy",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "wantFromBuy",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.wantFromBuy === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Want to Play",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "wantToPlay",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.wantToPlay === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Notes",
+        className: "",
+        accessor: "notes",
+        Cell: ({ row: { original } }) => {
+          return <span>{String(original.notes)}</span>;
+        },
+        disableFilters: true,
+      },
     ],
     []
   );
@@ -379,10 +466,9 @@ const UserCollection = () => {
   useEffect(() => {
     setIsLoading(true);
     const token = isAuthenticated().token;
-    getUser(isAuthenticated().user._id, token).then(data => {
-      if (data.error === undefined && data.bggUsername) {
-        setUsername(data.bggUsername);
-        getBGCollection(data.bggUsername).then(bggdata => {
+    getUser(isAuthenticated().user._id, token).then((data) => {
+      if (data.error === undefined) {
+        getGuruCollection(isAuthenticated().user._id).then((bggdata) => {
           if (bggdata !== undefined && !bggdata.error) {
             setData(bggdata);
           }
@@ -396,7 +482,7 @@ const UserCollection = () => {
     if (isLoading) return;
     setIsLoading(true);
     setAlertVible(false);
-    await getBGCollection(username).then(data => {
+    await getGuruCollection(username).then((data) => {
       if (data !== undefined && !data.error) {
         setData(data);
       } else {
@@ -418,16 +504,16 @@ const UserCollection = () => {
         active={isLoading}
         spinner
         styles={{
-          spinner: base => ({
+          spinner: (base) => ({
             ...base,
             width: "100px",
             "& svg circle": {
-              stroke: "rgba(0,98,204,1)"
-            }
+              stroke: "rgba(0,98,204,1)",
+            },
           }),
           wrapper: {
-            height: "100%"
-          }
+            height: "100%",
+          },
         }}
         text="Fetching Collection....."
       >
@@ -442,7 +528,7 @@ const UserCollection = () => {
               </h6>
             </div>
           </div>
-          <div className="row justify-content-center my-2">
+          {/* <div className="row justify-content-center my-2">
             <div className="col-lg-5 col-md-6">
               <div className="form-group row">
                 <div className="col-12">
@@ -470,7 +556,7 @@ const UserCollection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row justify-content-center bgTable mx-2">
             <Table columns={columns} data={data} />
           </div>
