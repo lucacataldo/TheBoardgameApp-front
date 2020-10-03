@@ -1,3 +1,17 @@
+
+
+export const getUserId = (username) => {
+
+    return fetch(`${process.env.REACT_APP_API_URL}/user/find/${username}`, {
+        method: "GET"
+    })
+        .then((response) => response.json())
+        .then((responseJson) =>{
+          return responseJson.user._id
+        })
+        .catch(err => console.log(err));
+};
+
 export const getUser = (userId, token) => {
     return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
         method: "GET",

@@ -10,13 +10,15 @@ export const getBGCollection = (username) => {
         .catch(err => console.log(err));
 
 };
-export const getGuruCollection = (username) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/boardgame/${username}`, {
+export const getGuruCollection = (userId) => {
+
+    return fetch(`${process.env.REACT_APP_API_URL}/boardgame/user/collection/${userId}`, {
         method: "GET"
     })
-        .then(response => {
+        .then((response) => {
             return response.json();
         })
+
         .catch(err => console.log(err));
 };
 export const getBGGCounts = (username) => {
