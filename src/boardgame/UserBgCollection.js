@@ -3,7 +3,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { useTable, useFilters, usePagination } from "react-table";
 import matchSorter from "match-sorter";
 
-import { getBGCollection } from "./apiBoardgame";
+import { getGuruCollection } from "./apiBoardgame";
 import Alert from "../components/Alert";
 import NoImg from "../images/noImageAvailable.jpg";
 import { isAuthenticated } from "../auth";
@@ -133,11 +133,11 @@ const Table = ({ columns, data }) => {
       <table className="table table-bordered" {...getTableProps()}>
         <thead className="thead-dark ">
           {headerGroups.map((headerGroup) => (
-            <tr className="align-bottom" {...headerGroup.getHeaderGroupProps()}>
+            <tr className="align-middle" {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th
                   scope="col"
-                  className={"align-bottom " + column.render("className")}
+                  className={"align-middle " + column.render("className")}
                   {...column.getHeaderProps()}
                 >
                   {column.render("Header")}
@@ -179,6 +179,7 @@ const Table = ({ columns, data }) => {
         </tbody>
       </table>
       <div className="col-12">
+        {" "}
         <div className="row justify-content-between mx-2">
           <div>
             <span>
@@ -289,7 +290,7 @@ const UserCollection = () => {
   const columns = React.useMemo(
     () => [
       {
-        accessor: "imgThumbnail",
+        accessor: "boardgame.imgThumbnail",
         Cell: ({ cell: { value } }) => (
           <img
             src={String(value) === "" ? `${NoImg}` : String(value)}
@@ -297,19 +298,19 @@ const UserCollection = () => {
             style={{ maxWidth: "50px", maxHeight: "50px" }}
           />
         ),
-
         className: "text-center d-none d-sm-table-cell",
         disableFilters: true,
       },
       {
         Header: "Title",
         className: "",
-        accessor: (d) => `${d.title} ${d.yearPublished}`,
+        accessor: (d) => `${d.boardgame.title} ${d.boardgame.yearPublished}`,
         filter: "fuzzyText",
         Cell: ({ row: { original } }) => {
           return (
             <span>
-              {String(original.title)} ({String(original.yearPublished)})
+              {String(original.boardgame.title)} (
+              {String(original.boardgame.yearPublished)})
             </span>
           );
         },
@@ -317,7 +318,7 @@ const UserCollection = () => {
       {
         Header: "Rating",
         className: "d-none d-sm-table-cell",
-        accessor: "avgRating",
+        accessor: "boardgame.avgRating",
         Cell: ({ cell: { value } }) => (
           <span>{Math.round(10 * String(value)) / 10}</span>
         ),
@@ -327,12 +328,14 @@ const UserCollection = () => {
       {
         Header: "Players",
         className: "",
-        accessor: "maxPlayers",
+        accessor: "boardgame.maxPlayers",
         Cell: ({ row: { original } }) => {
           return (
             <span>
-              {String(original.minPlayers)}-
-              {original.maxPlayers === -1 ? "" : String(original.maxPlayers)}
+              {String(original.boardgame.minPlayers)}-
+              {original.boardgame.maxPlayers === -1
+                ? ""
+                : String(original.boardgame.maxPlayers)}
             </span>
           );
         },
@@ -342,22 +345,106 @@ const UserCollection = () => {
       {
         Header: "Play Time",
         className: "",
-        accessor: "maxPlayTime",
+        accessor: "boardgame.maxPlayTime",
         Cell: ({ row: { original } }) => {
           return (
             <span>
-              {original.minPlayTime === original.maxPlayTime
-                ? original.minPlayTime === -1
+              {original.boardgame.minPlayTime === original.boardgame.maxPlayTime
+                ? original.boardgame.minPlayTime === -1
                   ? "--"
-                  : original.minPlayTime
-                : String(original.minPlayTime) +
+                  : original.boardgame.minPlayTime
+                : String(original.boardgame.minPlayTime) +
                   "-" +
-                  String(original.maxPlayTime)}
+                  String(original.boardgame.maxPlayTime)}
             </span>
           );
         },
         Filter: PlayTimeSelectFilter,
         filter: filterLessThanMax,
+      },
+      {
+        Header: "For Trade",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "forTrade",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.forTrade === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "For Sale",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "forSale",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.forSale === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Want from Trade",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "wantFromTrade",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.wantFromTrade === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Want to Buy",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "wantFromBuy",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.wantFromBuy === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Want to Play",
+        className: "text-center d-none d-sm-table-cell",
+        accessor: "wantToPlay",
+        Cell: ({ row: { original } }) => {
+          return (
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={original.wantToPlay === true}
+            />
+          );
+        },
+        disableFilters: true,
+      },
+      {
+        Header: "Notes",
+        className: "",
+        accessor: "notes",
+        Cell: ({ row: { original } }) => {
+          return <span>{String(original.notes)}</span>;
+        },
+        disableFilters: true,
       },
     ],
     []
@@ -380,10 +467,8 @@ const UserCollection = () => {
     setIsLoading(true);
     const token = isAuthenticated().token;
     getUser(isAuthenticated().user._id, token).then((data) => {
-      if (data.error === undefined && data.bggUsername) {
-        setUsername(data.bggUsername);
-
-        getBGCollection(data.bggUsername).then((bggdata) => {
+      if (data.error === undefined) {
+        getGuruCollection(isAuthenticated().user._id).then((bggdata) => {
           if (bggdata !== undefined && !bggdata.error) {
             setData(bggdata);
           }
@@ -397,7 +482,7 @@ const UserCollection = () => {
     if (isLoading) return;
     setIsLoading(true);
     setAlertVible(false);
-    await getBGCollection(username).then((data) => {
+    await getGuruCollection(username).then((data) => {
       if (data !== undefined && !data.error) {
         setData(data);
       } else {
@@ -443,7 +528,7 @@ const UserCollection = () => {
               </h6>
             </div>
           </div>
-          <div className="row justify-content-center my-2">
+          {/* <div className="row justify-content-center my-2">
             <div className="col-lg-5 col-md-6">
               <div className="form-group row">
                 <div className="col-12">
@@ -471,7 +556,7 @@ const UserCollection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row justify-content-center bgTable mx-2">
             <Table columns={columns} data={data} />
           </div>
