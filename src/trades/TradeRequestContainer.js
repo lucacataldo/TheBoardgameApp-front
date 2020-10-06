@@ -5,6 +5,10 @@ import  BgListPrice from "../boardgame/BgListPrice";
 import Button from "react-bootstrap/Button"
 import { getUserId } from "../user/apiUser";
 import {  getGuruCollection } from "../boardgame/apiBoardgame";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft,faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
+
 
 
 
@@ -152,12 +156,16 @@ this.loadSearchedUserBoardgameData(inputValue);
                 </div>
 
                 </div>
-                <div className="col-md-2">
-                <input className="p-4" style={{marginTop:'100px'}} type="button" id="left1" value="<" onClick={this.handleRemoveBoardgame}/>
+                <div className="col-md-2 w-25">
+                  <div className="pl-4 mt-5 align-middle">
+                <button className="p-4" style={{marginTop:'100px'}}  id="left1" onClick={this.handleRemoveBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
                 <br/>
-                <input type="button" className="mt-10 p-4 mt-4" id="right1" value=">" onClick={this.handleAddBoardgame}/>
+                <button type="button" className="mt-10 p-4 mt-4 " id="right1" value=">" onClick={this.handleAddBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+
+                  </div>
+                
                 </div>
-                <div className="col-md-5">
+                <div className="col-md-5 mt-5">
 
   
                 
@@ -190,9 +198,9 @@ this.loadSearchedUserBoardgameData(inputValue);
 
                 </div>
                 <div className="col-md-2">
-                <input className="p-4" style={{marginTop:'100px'}} type="button" id="left2" value="<" onClick={this.handleRemoveUserBoardgame}/>
+                <button className="p-4" style={{marginTop:'100px'}} type="button" id="left2" value="<" onClick={this.handleRemoveUserBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
                 <br/>
-                <input type="button" className="mt-10 p-4 mt-4" id="right2" value=">" onClick={this.handleAddUserBoardgame}/>
+                <button className="mt-10 p-4 mt-4" id="right2" value=">" onClick={this.handleAddUserBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
                 </div>
                 <div className="col-md-5">
                 
@@ -209,6 +217,7 @@ this.loadSearchedUserBoardgameData(inputValue);
               </div>
                 </div>}
           {/* END Recipient trade list */}
+          <div></div>
           </div>
         </div>
       </div>
