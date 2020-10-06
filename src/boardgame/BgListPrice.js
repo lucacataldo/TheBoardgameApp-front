@@ -59,7 +59,7 @@ class BgListPrice extends React.Component {
 
 
   render() {
-  return(<select multiple size="15" className="form-control h-100" id="availableList">
+  return(<select multiple size="15" className="form-control h-100" id={this.props.listID}>
 
            {this.props.bgData.map((bg,i)=>{
                return <option key={bg._id}>{bg.boardgame.title}</option>
