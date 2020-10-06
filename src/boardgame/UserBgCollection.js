@@ -9,69 +9,6 @@ import NoImg from "../images/noImageAvailable.jpg";
 import { isAuthenticated } from "../auth";
 import { getUser } from "../user/apiUser";
 import BgContainer from "./BgContainer";
-const DefaultColumnFilter = ({
-  column: { filterValue, preFilteredRows, setFilter },
-}) => {
-  const count = preFilteredRows.length;
-
-  return (
-    <input
-      className="form-control"
-      value={filterValue || ""}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
-      }}
-      placeholder={`Search ${count} records...`}
-    />
-  );
-};
-
-const NumberSelectFilter = ({ column: { filterValue, setFilter } }) => {
-  return (
-    <select
-      className="form-control"
-      value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-      }}
-    >
-      <option value="">All</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8+</option>
-    </select>
-  );
-};
-const PlayTimeSelectFilter = ({ column: { filterValue, setFilter } }) => {
-  return (
-    <select
-      className="form-control"
-      value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-      }}
-    >
-      <option value="">All</option>
-      <option value="30">30mins</option>
-      <option value="45">45mins</option>
-      <option value="60">60mins</option>
-      <option value="90">90mins</option>
-      <option value="180">180+mins</option>
-    </select>
-  );
-};
-
-const fuzzyTextFilterFn = (rows, id, filterValue) => {
-  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
-};
-
-// Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 const Table = ({ columns, data }) => {
   const filterTypes = React.useMemo(
@@ -130,14 +67,17 @@ const Table = ({ columns, data }) => {
 
   return (
     <>
-      <table className="table table-bordered" {...getTableProps()}>
+      <table
+        className="table table-bordered guruCollectionTable"
+        {...getTableProps()}
+      >
         <thead className="thead-dark ">
           {headerGroups.map((headerGroup) => (
             <tr className="align-middle" {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th
                   scope="col"
-                  className={"align-middle " + column.render("className")}
+                  className={"align-middle p-2 " + column.render("className")}
                   {...column.getHeaderProps()}
                 >
                   {column.render("Header")}
@@ -249,6 +189,89 @@ const Table = ({ columns, data }) => {
   );
 };
 
+/*****************************************************/
+/************** Filter Display option ****************/
+/*****************************************************/
+
+const DefaultColumnFilter = ({
+  column: { filterValue, preFilteredRows, setFilter },
+}) => {
+  const count = preFilteredRows.length;
+
+  return (
+    <input
+      className="form-control p-0"
+      value={filterValue || ""}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+      }}
+      placeholder={`Search ${count} records...`}
+    />
+  );
+};
+
+const NumberSelectFilter = ({ column: { filterValue, setFilter } }) => {
+  return (
+    <select
+      className="form-control p-0"
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">All</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8+</option>
+    </select>
+  );
+};
+const PlayTimeSelectFilter = ({ column: { filterValue, setFilter } }) => {
+  return (
+    <select
+      className="form-control p-0"
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">All</option>
+      <option value="30">30mins</option>
+      <option value="45">45mins</option>
+      <option value="60">60mins</option>
+      <option value="90">90mins</option>
+      <option value="180">180+mins</option>
+    </select>
+  );
+};
+
+const YesNoSelectFilter = ({ column: { filterValue, setFilter } }) => {
+  return (
+    <select
+      className="form-control p-0"
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">All</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+  );
+};
+const fuzzyTextFilterFn = (rows, id, filterValue) => {
+  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
+};
+
+// Let the table remove the filter if the string is empty
+fuzzyTextFilterFn.autoRemove = (val) => !val;
+
 /****************************************************/
 /*************** Custom filter fxns *****************/
 /****************************************************/
@@ -277,6 +300,13 @@ const filterLessThanMax = (rows, id, filterValue) => {
   return rows.filter((row) => {
     const rowValue = row.values[id];
     return rowValue <= filterValue;
+  });
+};
+
+const filterYesNo = (rows, id, filterValue) => {
+  return rows.filter((row) => {
+    const rowValue = row.values[id];
+    return String(rowValue) === filterValue;
   });
 };
 
@@ -317,7 +347,8 @@ const UserCollection = () => {
       },
       {
         Header: "Rating",
-        className: "d-none d-sm-table-cell",
+        className: " d-none d-sm-table-cell maxColWidth-100",
+        headerClassName: "d-none d-sm-table-cell",
         accessor: "boardgame.avgRating",
         Cell: ({ cell: { value } }) => (
           <span>{Math.round(10 * String(value)) / 10}</span>
@@ -327,7 +358,7 @@ const UserCollection = () => {
       },
       {
         Header: "Players",
-        className: "",
+        className: "maxColWidth-100",
         accessor: "boardgame.maxPlayers",
         Cell: ({ row: { original } }) => {
           return (
@@ -343,8 +374,8 @@ const UserCollection = () => {
         filter: filterLessThan,
       },
       {
-        Header: "Play Time",
-        className: "",
+        Header: "PlayTime",
+        className: " maxColWidth-100",
         accessor: "boardgame.maxPlayTime",
         Cell: ({ row: { original } }) => {
           return (
@@ -364,7 +395,8 @@ const UserCollection = () => {
       },
       {
         Header: "For Trade",
-        className: "text-center d-none d-sm-table-cell",
+        className:
+          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont ",
         accessor: "forTrade",
         Cell: ({ row: { original } }) => {
           return (
@@ -375,11 +407,13 @@ const UserCollection = () => {
             />
           );
         },
-        disableFilters: true,
+        Filter: YesNoSelectFilter,
+        filter: filterYesNo,
       },
       {
         Header: "For Sale",
-        className: "text-center d-none d-sm-table-cell",
+        className:
+          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont ",
         accessor: "forSale",
         Cell: ({ row: { original } }) => {
           return (
@@ -390,11 +424,13 @@ const UserCollection = () => {
             />
           );
         },
-        disableFilters: true,
+        Filter: YesNoSelectFilter,
+        filter: filterYesNo,
       },
       {
         Header: "Want from Trade",
-        className: "text-center d-none d-sm-table-cell",
+        className:
+          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
         accessor: "wantFromTrade",
         Cell: ({ row: { original } }) => {
           return (
@@ -405,11 +441,13 @@ const UserCollection = () => {
             />
           );
         },
-        disableFilters: true,
+        Filter: YesNoSelectFilter,
+        filter: filterYesNo,
       },
       {
         Header: "Want to Buy",
-        className: "text-center d-none d-sm-table-cell",
+        className:
+          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
         accessor: "wantFromBuy",
         Cell: ({ row: { original } }) => {
           return (
@@ -420,11 +458,13 @@ const UserCollection = () => {
             />
           );
         },
-        disableFilters: true,
+        Filter: YesNoSelectFilter,
+        filter: filterYesNo,
       },
       {
         Header: "Want to Play",
-        className: "text-center d-none d-sm-table-cell",
+        className:
+          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
         accessor: "wantToPlay",
         Cell: ({ row: { original } }) => {
           return (
@@ -435,11 +475,12 @@ const UserCollection = () => {
             />
           );
         },
-        disableFilters: true,
+        Filter: YesNoSelectFilter,
+        filter: filterYesNo,
       },
       {
         Header: "Notes",
-        className: "",
+        className: " d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
         accessor: "notes",
         Cell: ({ row: { original } }) => {
           return <span>{String(original.notes)}</span>;
