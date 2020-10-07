@@ -333,21 +333,27 @@ const UserCollection = () => {
       },
       {
         Header: "Title",
-        className: "",
+        className: " ",
         accessor: (d) => `${d.boardgame.title} ${d.boardgame.yearPublished}`,
         filter: "fuzzyText",
         Cell: ({ row: { original } }) => {
           return (
-            <span>
+            <a
+              target="_blank"
+              href={
+                "https://boardgamegeek.com/boardgame/" +
+                `${original.boardgame.bggId}`
+              }
+            >
               {String(original.boardgame.title)} (
               {String(original.boardgame.yearPublished)})
-            </span>
+            </a>
           );
         },
       },
       {
         Header: "Rating",
-        className: " d-none d-sm-table-cell maxColWidth-100",
+        className: " d-none d-sm-table-cell maxColWidth-50",
         headerClassName: "d-none d-sm-table-cell",
         accessor: "boardgame.avgRating",
         Cell: ({ cell: { value } }) => (
@@ -358,7 +364,7 @@ const UserCollection = () => {
       },
       {
         Header: "Players",
-        className: "maxColWidth-100",
+        className: "maxColWidth-50",
         accessor: "boardgame.maxPlayers",
         Cell: ({ row: { original } }) => {
           return (
@@ -374,8 +380,8 @@ const UserCollection = () => {
         filter: filterLessThan,
       },
       {
-        Header: "PlayTime",
-        className: " maxColWidth-100",
+        Header: "Play Time",
+        className: " maxColWidth-50",
         accessor: "boardgame.maxPlayTime",
         Cell: ({ row: { original } }) => {
           return (
@@ -395,8 +401,7 @@ const UserCollection = () => {
       },
       {
         Header: "For Trade",
-        className:
-          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont ",
+        className: " d-none d-sm-table-cell maxColWidth-50  alignCenter",
         accessor: "forTrade",
         Cell: ({ row: { original } }) => {
           return (
@@ -404,6 +409,7 @@ const UserCollection = () => {
               type="checkbox"
               className="checkbox"
               checked={original.forTrade === true}
+              readOnly
             />
           );
         },
@@ -411,33 +417,16 @@ const UserCollection = () => {
         filter: filterYesNo,
       },
       {
-        Header: "For Sale",
-        className:
-          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont ",
-        accessor: "forSale",
-        Cell: ({ row: { original } }) => {
-          return (
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={original.forSale === true}
-            />
-          );
-        },
-        Filter: YesNoSelectFilter,
-        filter: filterYesNo,
-      },
-      {
-        Header: "Want from Trade",
-        className:
-          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
+        Header: "Want",
+        className: "d-none d-sm-table-cell maxColWidth-50 alignCenter",
         accessor: "wantFromTrade",
         Cell: ({ row: { original } }) => {
           return (
             <input
               type="checkbox"
-              className="checkbox"
+              className="checkbox text-center"
               checked={original.wantFromTrade === true}
+              readOnly
             />
           );
         },
@@ -445,9 +434,8 @@ const UserCollection = () => {
         filter: filterYesNo,
       },
       {
-        Header: "Want to Buy",
-        className:
-          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
+        Header: "To Buy",
+        className: " d-none d-sm-table-cell maxColWidth-50 alignCenter",
         accessor: "wantFromBuy",
         Cell: ({ row: { original } }) => {
           return (
@@ -455,6 +443,7 @@ const UserCollection = () => {
               type="checkbox"
               className="checkbox"
               checked={original.wantFromBuy === true}
+              readOnly
             />
           );
         },
@@ -462,9 +451,8 @@ const UserCollection = () => {
         filter: filterYesNo,
       },
       {
-        Header: "Want to Play",
-        className:
-          "text-center d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
+        Header: "To Play",
+        className: " d-none d-sm-table-cell maxColWidth-50 alignCenter ",
         accessor: "wantToPlay",
         Cell: ({ row: { original } }) => {
           return (
@@ -472,6 +460,7 @@ const UserCollection = () => {
               type="checkbox"
               className="checkbox"
               checked={original.wantToPlay === true}
+              readOnly
             />
           );
         },
@@ -480,7 +469,7 @@ const UserCollection = () => {
       },
       {
         Header: "Notes",
-        className: " d-none d-sm-table-cell maxColWidth-100 maxHeaderFont",
+        className: " d-none d-sm-table-cell maxColWidth-50 ",
         accessor: "notes",
         Cell: ({ row: { original } }) => {
           return <span>{String(original.notes)}</span>;
