@@ -1,29 +1,15 @@
 
-import React, {Component} from "react";
+import React from "react";
+import Button from "react-bootstrap/Button";
 
  class SearchUser extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-          search:''
-      };
-    }
-  
-    handleChange = (event) => {
-        this.setState({
-            search: event.target.value
-        })
-
-    }
-
 
     render() {
 
       return (
-        
-        <input id='searchbar' className='w-100 mt-2 rounded' type='text' name='search' placeholder='Search...' value={this.state.search} onChange={this.handleChange}/>
-
-
+        <div>
+        <input id='searchbar' className='w-25 mt-2 rounded' type='text' name='search' placeholder='Search...' value={this.props.searchValue} onChange={this.props.onChangeValue}/>
+        <Button variant="primary" id="userInput">Search</Button></div>
 
       );
     }

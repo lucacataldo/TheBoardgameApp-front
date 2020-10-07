@@ -24,7 +24,7 @@ class BgListPrice extends React.Component {
         //  bgList.map(function(item,i){
         //     array.push(item.boardgame.title);
         //  })
-        
+
    this.setState({ bgData: bgList, isLoading:false });
   })
     }).catch(err =>{
@@ -49,8 +49,8 @@ class BgListPrice extends React.Component {
         user = this.props.user
       }
       this.loadBoardgameData(user);
-      console.log("BGDATA");
-      console.log(this.state.bgData);
+
+
 
      
 
@@ -59,20 +59,15 @@ class BgListPrice extends React.Component {
 
 
   render() {
-if(this.state.isLoading){
-   return (
-      this.state.isLoading &&
-      <h3>Data is Loading</h3>);
-}else{
-  return(<select multiple size="15" className="form-control h-100" id="availableList">
+  return(<select multiple size="15" className="form-control h-100" id={this.props.listID}>
 
-           {this.state.bgData.map((bg,i)=>{
+           {this.props.bgData.map((bg,i)=>{
                return <option key={bg._id}>{bg.boardgame.title}</option>
            })}
             
        </select>
     );
-}
+
        
   }
 }

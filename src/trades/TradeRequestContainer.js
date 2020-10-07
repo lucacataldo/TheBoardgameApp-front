@@ -1,18 +1,68 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import  BgListPrice from "../boardgame/BgListPrice";
+import Button from "react-bootstrap/Button"
+import { getUserId } from "../user/apiUser";
+import {  getGuruCollection } from "../boardgame/apiBoardgame";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft,faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
+
+
 
 
 class TradeRequestContainer extends React.Component {
   state = {
-    redirectToHome: false
+    redirectToHome: false,
+    foundUser: false,
+    isLoading: true,
+    userBoardgames: [],
+    searchedUserBoardgames: [],
+    searchedUser:""
   }
 
 
+componentWillMount(){
+  var user = isAuthenticated().user.name;
+  this.loadUserBoardgameData(user);
+
+}
+
+async loadUserBoardgameData(user){
+
+  await getUserId(user).then(id =>{
+     console.log(id);
+  getGuruCollection(id).then(bgList => {
+  this.setState({ userBoardgames: bgList, isLoading:false });
+ })
+   }).catch(err =>{
+     console.log(err);
+   })
+
+ }
+
+ loadSearchedUserBoardgameData(user){
+
+  getUserId(user).then(id =>{
+  getGuruCollection(id).then(bgList => {
+    if(bgList !== undefined) 
+
+    this.setState({ searchUser: user,searchedUserBoardgames: bgList, isLoading:false,foundUser:true });
+ })
+   }).catch(err =>{
+     console.log(err);
+   })
+
+ }
+
+
+
+
 handleAddBoardgame(event){
-var available = document.getElementById("availableList");
-var tradeBox = document.getElementById("toBeTraded");
+
+var available = document.getElementById("myList");
+var tradeBox = document.getElementById("tradedToYou");
 var val = available.options[available.selectedIndex].value;
 var id = available.options[available.selectedIndex].id;
 var element = document.createElement('option');
@@ -22,31 +72,70 @@ tradeBox.appendChild(element);
 available.removeChild(available.options[available.selectedIndex]);
 return true;
 }
-
-
 handleRemoveBoardgame(event){
-var tradeBox = document.getElementById("toBeTraded");
-var available = document.getElementById("availableList");
-var val = tradeBox.options[tradeBox.selectedIndex].value;
-var id = tradeBox.options[tradeBox.selectedIndex].id;
-var element = document.createElement('option');
-element.setAttribute("id",id);
-element.appendChild(document.createTextNode(val));
-available.appendChild(element);
-tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
-return true;
+  var available = document.getElementById("myList");
+  var tradeBox = document.getElementById("tradedToYou");
+  var val = tradeBox.options[tradeBox.selectedIndex].value;
+  var id = tradeBox.options[tradeBox.selectedIndex].id;
+  var element = document.createElement('option');
+  element.setAttribute("id",id);
+  element.appendChild(document.createTextNode(val));
+  available.appendChild(element);
+  tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
+  return true;
+  }
+
+handleAddUserBoardgame(event){
+
+  var available = document.getElementById("yourList");
+  var tradeBox = document.getElementById("tradedToMe");
+  var val = available.options[available.selectedIndex].value;
+  var id = available.options[available.selectedIndex].id;
+  var element = document.createElement('option');
+  element.setAttribute("id",id);
+  element.appendChild(document.createTextNode(val));
+  tradeBox.appendChild(element);
+  available.removeChild(available.options[available.selectedIndex]);
+  return true;
+  }
+  handleRemoveUserBoardgame(event){
+    var available = document.getElementById("yourList");
+    var tradeBox = document.getElementById("tradedToMe");
+    var val = tradeBox.options[tradeBox.selectedIndex].value;
+    var id = tradeBox.options[tradeBox.selectedIndex].id;
+    var element = document.createElement('option');
+    element.setAttribute("id",id);
+    element.appendChild(document.createTextNode(val));
+    available.appendChild(element);
+    tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
+    return true;
+    }
+
+
+
+// handleChangeValue = e => {
+
+   
+//    this.setState({searchValue: e.target.searchValue,
+//                      foundUser:true});
+  
+  
+//  };
+ 
+ 
+
+handleSearchButton(event){
+var inputValue = document.getElementById("searchbar").value;
+console.log(inputValue);
+this.loadSearchedUserBoardgameData(inputValue);
+
 }
 
 
 
 
 
-
-
-
-
   render() { 
-    
     return (
       <div className="container-fluid">
         <div className="row my-3 justify-content-center">
@@ -63,22 +152,26 @@ return true;
                 
                 <div className="form-group">
                     <label >Available:</label>
-                    <BgListPrice user=""  />
+                    <BgListPrice bgData={this.state.userBoardgames} listID="myList"  />
                 </div>
 
                 </div>
-                <div className="col-md-2">
-                <input className="p-4" style={{marginTop:'100px'}} type="button" id="left" value="<" onClick={this.handleRemoveBoardgame}/>
+                <div className="col-md-2 w-25">
+                  <div className="pl-4 mt-5 align-middle">
+                <button className="p-4" style={{marginTop:'100px'}}  id="left1" onClick={this.handleRemoveBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
                 <br/>
-                <input type="button" className="mt-10 p-4 mt-4" id="right" value=">" onClick={this.handleAddBoardgame}/>
+                <button type="button" className="mt-10 p-4 mt-4 " id="right1" value=">" onClick={this.handleAddBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+
+                  </div>
+                
                 </div>
-                <div className="col-md-5">
+                <div className="col-md-5 mt-5">
 
   
                 
                 <div className="form-group mt-6">
                  <label >To Trade:</label>
-                    <select multiple size="15" className="form-control h-100 w-100" id="toBeTraded">
+                    <select multiple size="15" className="form-control h-100 w-100" id="tradedToYou">
                     </select>
                 </div>
                 </div>
@@ -86,32 +179,45 @@ return true;
 {/* END USER trade list */}
           <hr/>
 {/* START Recipient trade list */}
+
+<div>
+        <input id='searchbar' className='w-25 mt-2 rounded' type='text' name='search' placeholder='Search...' />
+        <Button variant="primary" onClick={this.handleSearchButton.bind(this)}>Search</Button></div>
+{this.state.foundUser ?
+
             <div className="row bg-white">
                 <div className="col-md-5">
-                <h4 className="p-2 my-0">Someone's List</h4>
+                  
+                <h4 className="p-2 my-0">{this.state.searchUser}'s List</h4>
                 <br/>
                 
                 <div className="form-group">
                  <label >Available:</label>
-                    <BgListPrice user= "ecargo"/>
+                    <BgListPrice bgData= {this.state.searchedUserBoardgames} listID="yourList" />
                 </div>
 
                 </div>
                 <div className="col-md-2">
-                <input className="p-4" style={{marginTop:'100px'}} type="button" id="left" value="<" onClick={this.handleRemoveBoardgame}/>
+                <button className="p-4" style={{marginTop:'100px'}} type="button" id="left2" value="<" onClick={this.handleRemoveUserBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
                 <br/>
-                <input type="button" className="mt-10 p-4 mt-4" id="right" value=">" onClick={this.handleAddBoardgame}/>
+                <button className="mt-10 p-4 mt-4" id="right2" value=">" onClick={this.handleAddUserBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
                 </div>
                 <div className="col-md-5">
                 
                 <div className="form-group">
                  <label >To Trade:</label>
-                    <select multiple size="15" className="form-control h-100 w-100" id="toBeTraded">
+                    <select multiple size="15" className="form-control h-100 w-100" id="tradedToMe">
                     </select>
                 </div>
                 </div>
             </div>
+            : <div className="row bg-white">
+            <div className="col-md-5">
+              <h3>Please search a username</h3>
+              </div>
+                </div>}
           {/* END Recipient trade list */}
+          <div></div>
           </div>
         </div>
       </div>

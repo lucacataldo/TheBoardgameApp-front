@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "../auth";
 import React from "react";
-import SearchUser from "./SearchUser";
 import { getUser } from "../user/apiUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";

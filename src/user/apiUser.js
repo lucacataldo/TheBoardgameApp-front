@@ -9,7 +9,10 @@ export const getUserId = (username) => {
         .then((responseJson) =>{
           return responseJson.user._id
         })
-        .catch(err => console.log(err));
+        .catch(err =>{
+             console.log(err);
+             return false;
+        })
 };
 
 export const getUser = (userId, token) => {
