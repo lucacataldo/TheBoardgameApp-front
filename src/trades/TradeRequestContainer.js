@@ -20,7 +20,8 @@ class TradeRequestContainer extends React.Component {
     userBoardgames: [],
     searchedUserBoardgames: [],
     searchedUser:"",
-    price:''
+    price:'',
+    userTotalPrice: 0
   }
 
 
@@ -73,6 +74,9 @@ element.setAttribute("id",id);
 element.appendChild(document.createTextNode(val));
 tradeBox.appendChild(element);
 available.removeChild(available.options[available.selectedIndex]);
+let total = parseFloat(this.state.userTotalPrice) + parseFloat(number);
+
+this.setState({userTotalPrice: total.toFixed(2)});
 return true;
 
 }
@@ -86,6 +90,9 @@ handleRemoveBoardgame(event){
   element.appendChild(document.createTextNode(val[0]));
   available.appendChild(element);
   tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
+  let parsedPrice = val[1].split("$");
+  let total = parseFloat(this.state.userTotalPrice) - parseFloat(parsedPrice[1]);
+  this.setState({userTotalPrice: total.toFixed(2)});
   return true;
   }
 
@@ -220,9 +227,9 @@ handlePriceChange(event){
                 </div>
                 <div className="justify-content-center text-center px-5">
            
-                <button type="button" className=" p-4 center-block text-center"style={{marginTop:'200px'}} id="right1" value=">" onClick={this.handleAddBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+                <button type="button" className=" p-4 center-block text-center"style={{marginTop:'200px'}} id="right1" value=">" onClick={this.handleAddBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
                 <br/>          
-                <button className="p-4 center-block"   id="left1" onClick={this.handleRemoveBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
+                <button className="p-4 center-block"   id="left1" onClick={this.handleRemoveBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
                 
                 
                 </div>
@@ -234,7 +241,7 @@ handlePriceChange(event){
                  <label >To Trade:</label>
                     <select multiple size="8" className="form-control h-100 w-100" id="tradedToYou">
                     </select>
-      
+      <h3>Total Value: ${this.state.userTotalPrice}</h3>
                 </div>
                 </div>
             </div>
