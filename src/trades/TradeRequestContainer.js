@@ -19,7 +19,8 @@ class TradeRequestContainer extends React.Component {
     isLoading: true,
     userBoardgames: [],
     searchedUserBoardgames: [],
-    searchedUser:""
+    searchedUser:"",
+    price:''
   }
 
 
@@ -64,7 +65,8 @@ handleAddBoardgame(event){
 var available = document.getElementById("myList");
 var tradeBox = document.getElementById("tradedToYou");
 var price = document.getElementById("bgSetPrice");
-var val = available.options[available.selectedIndex].value + " | $" + price.value;
+var number = parseFloat(price.value).toFixed(2);
+var val = available.options[available.selectedIndex].value + " | $" + number;
 var id = available.options[available.selectedIndex].id;
 var element = document.createElement('option');
 element.setAttribute("id",id);
@@ -72,15 +74,16 @@ element.appendChild(document.createTextNode(val));
 tradeBox.appendChild(element);
 available.removeChild(available.options[available.selectedIndex]);
 return true;
+
 }
 handleRemoveBoardgame(event){
   var available = document.getElementById("myList");
   var tradeBox = document.getElementById("tradedToYou");
-  var val = tradeBox.options[tradeBox.selectedIndex].value;
+  var val = tradeBox.options[tradeBox.selectedIndex].value.split("|");
   var id = tradeBox.options[tradeBox.selectedIndex].id;
   var element = document.createElement('option');
   element.setAttribute("id",id);
-  element.appendChild(document.createTextNode(val));
+  element.appendChild(document.createTextNode(val[0]));
   available.appendChild(element);
   tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
   return true;
@@ -113,7 +116,6 @@ handleAddUserBoardgame(event){
     }
 
 
-
 // handleChangeValue = e => {
 
    
@@ -132,6 +134,13 @@ this.loadSearchedUserBoardgameData(inputValue);
 
 }
 
+//handles price change up till the decimal, extra validation toFixed(2) is used to round decimals to 2 digits.
+handlePriceChange(event){
+  let { value, min, max } = event.target;
+  value = Math.max(Number(min), Math.min(Number(max), Number(value)));
+  this.setState({price: value});
+
+}
 
 
 
@@ -201,7 +210,7 @@ this.loadSearchedUserBoardgameData(inputValue);
         <div className="input-group-prepend">
           <div className="input-group-text">$</div>
         </div>
-        <input type="number" pattern="^\d+(?:\.\d{1,2})?$" step=".01" min="0" max="999" className="form-control" id="bgSetPrice" placeholder="Set Price" />
+        <input type="number" step="0.01" max="999" min="1" onChange={this.handlePriceChange.bind(this)} className="form-control" id="bgSetPrice" value={this.state.price} placeholder="Set Price" />
       </div>
                    <br/>
                     
