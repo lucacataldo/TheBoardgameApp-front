@@ -5,6 +5,7 @@ Login & Logout CSS
 Navbar CSS
 Sidebar CSS
 Profile CSS
+GuruCollection CSS
 ***************************************************/
 html,
 body {
@@ -30,7 +31,7 @@ body {
 }
 
 .header-font {
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
 /**************************************************/
@@ -145,9 +146,19 @@ body {
 /* Profile CSS */
 /**************************************************/
 
-
-
-
+/**************************************************/
+/* GuruCollection CSS*/
+/**************************************************/
+.guruCollectionTable .maxColWidth-100 {
+  max-width: 100px;
+}
+@media (min-width: 768px) {
+  .guruCollectionTable .maxHeaderFont {
+    font-size: 0.75rem;
+  }
+}
 @media (max-width: 576px) {
-  html { font-size: .75rem; }
+  html {
+    font-size: 0.75rem;
+  }
 }
