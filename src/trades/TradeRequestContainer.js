@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button"
 import { getUserId } from "../user/apiUser";
 import {  getGuruCollection } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft,faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft,faArrowRight,faSearch, faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -19,7 +19,9 @@ class TradeRequestContainer extends React.Component {
     isLoading: true,
     userBoardgames: [],
     searchedUserBoardgames: [],
-    searchedUser:""
+    searchedUser:"",
+    price:'',
+    userTotalPrice: 0
   }
 
 
@@ -63,25 +65,34 @@ handleAddBoardgame(event){
 
 var available = document.getElementById("myList");
 var tradeBox = document.getElementById("tradedToYou");
-var val = available.options[available.selectedIndex].value;
+var price = document.getElementById("bgSetPrice");
+var number = parseFloat(price.value).toFixed(2);
+var val = available.options[available.selectedIndex].value + " | $" + number;
 var id = available.options[available.selectedIndex].id;
 var element = document.createElement('option');
 element.setAttribute("id",id);
 element.appendChild(document.createTextNode(val));
 tradeBox.appendChild(element);
 available.removeChild(available.options[available.selectedIndex]);
+let total = parseFloat(this.state.userTotalPrice) + parseFloat(number);
+
+this.setState({userTotalPrice: total.toFixed(2)});
 return true;
+
 }
 handleRemoveBoardgame(event){
   var available = document.getElementById("myList");
   var tradeBox = document.getElementById("tradedToYou");
-  var val = tradeBox.options[tradeBox.selectedIndex].value;
+  var val = tradeBox.options[tradeBox.selectedIndex].value.split("|");
   var id = tradeBox.options[tradeBox.selectedIndex].id;
   var element = document.createElement('option');
   element.setAttribute("id",id);
-  element.appendChild(document.createTextNode(val));
+  element.appendChild(document.createTextNode(val[0]));
   available.appendChild(element);
   tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
+  let parsedPrice = val[1].split("$");
+  let total = parseFloat(this.state.userTotalPrice) - parseFloat(parsedPrice[1]);
+  this.setState({userTotalPrice: total.toFixed(2)});
   return true;
   }
 
@@ -112,7 +123,6 @@ handleAddUserBoardgame(event){
     }
 
 
-
 // handleChangeValue = e => {
 
    
@@ -131,6 +141,13 @@ this.loadSearchedUserBoardgameData(inputValue);
 
 }
 
+//handles price change up till the decimal, extra validation toFixed(2) is used to round decimals to 2 digits.
+handlePriceChange(event){
+  let { value, min, max } = event.target;
+  value = Math.max(Number(min), Math.min(Number(max), Number(value)));
+  this.setState({price: value});
+
+}
 
 
 
@@ -143,52 +160,21 @@ this.loadSearchedUserBoardgameData(inputValue);
           <TradesSideBar
           />
           <div className="col-sm-6 col-lg-6">
-          <h4>Trade Information</h4>
-  {/* START USER trade list */}
-            <div className="row bg-white">
-                <div className="col-md-5">
-                    <h4 className="p-2 my-0">Your List</h4>
-                <br/>
-                
-                <div className="form-group">
-                    <label >Available:</label>
-                    <BgListPrice bgData={this.state.userBoardgames} listID="myList"  />
-                </div>
-
-                </div>
-                <div className="col-md-2 w-25">
-                  <div className="pl-4 mt-5 align-middle">
-                <button className="p-4" style={{marginTop:'100px'}}  id="left1" onClick={this.handleRemoveBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
-                <br/>
-                <button type="button" className="mt-10 p-4 mt-4 " id="right1" value=">" onClick={this.handleAddBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
-
-                  </div>
-                
-                </div>
-                <div className="col-md-5 mt-5">
-
-  
-                
-                <div className="form-group mt-6">
-                 <label >To Trade:</label>
-                    <select multiple size="15" className="form-control h-100 w-100" id="tradedToYou">
-                    </select>
-                </div>
-                </div>
-            </div>
-{/* END USER trade list */}
-          <hr/>
-{/* START Recipient trade list */}
-
-<div>
-        <input id='searchbar' className='w-25 mt-2 rounded' type='text' name='search' placeholder='Search...' />
-        <Button variant="primary" onClick={this.handleSearchButton.bind(this)}>Search</Button></div>
+          <div className="row">
+            <div className="col-12 px-0"> <h4>Make a Trade</h4></div>
+         
+<div className=" col-8 form-inline py-2 px-0">
+<input id='searchbar' className='w-25 h-100 mr-0 rounded form-control' type='text' name='search' placeholder='Search...' />
+        <Button variant="primary" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>  
+</div>
+</div>
+        {/* START Recipient trade list */}
 {this.state.foundUser ?
 
-            <div className="row bg-white">
+            <div className="row bg-white">   
                 <div className="col-md-5">
-                  
-                <h4 className="p-2 my-0">{this.state.searchUser}'s List</h4>
+                <h4>{this.state.searchUser}'s List</h4>
+                
                 <br/>
                 
                 <div className="form-group">
@@ -197,29 +183,76 @@ this.loadSearchedUserBoardgameData(inputValue);
                 </div>
 
                 </div>
-                <div className="col-md-2">
-                <button className="p-4" style={{marginTop:'100px'}} type="button" id="left2" value="<" onClick={this.handleRemoveUserBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
-                <br/>
-                <button className="mt-10 p-4 mt-4" id="right2" value=">" onClick={this.handleAddUserBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+                <div className="justify-content-center text-center px-5">
+                  <button className="p-4 mt-4" id="right2" style={{marginTop:'200px'}} value=">" onClick={this.handleAddUserBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+                  <br/>
+                  <button className="p-4"  type="button" id="left2" value="<" onClick={this.handleRemoveUserBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
+                
+                
                 </div>
                 <div className="col-md-5">
                 
-                <div className="form-group">
+                <div className="form-group mt-5">
                  <label >To Trade:</label>
-                    <select multiple size="15" className="form-control h-100 w-100" id="tradedToMe">
+                    <select multiple size="8" className="form-control h-100 w-100" id="tradedToMe">
                     </select>
                 </div>
                 </div>
-            </div>
-            : <div className="row bg-white">
+            </div>  
+        
+            : <div className="row">
             <div className="col-md-5">
-              <h3>Please search a username</h3>
+              {/* <h3>Please search a username</h3> */}
               </div>
                 </div>}
           {/* END Recipient trade list */}
-          <div></div>
-          </div>
+            {/* START USER trade list */}
+            <div className="row bg-white">
+                <div className="col-md-5 ">
+                    <h4 className="p-2 my-0">Your List</h4>
+                <br/>
+                
+                <div className="form-group">
+                <div className="input-group">
+        <div className="input-group-prepend">
+          <div className="input-group-text">$</div>
         </div>
+        <input type="number" step="0.01" max="999" min="1" onChange={this.handlePriceChange.bind(this)} className="form-control" id="bgSetPrice" value={this.state.price} placeholder="Set Price" />
+      </div>
+                   <br/>
+                    
+                    <BgListPrice bgData={this.state.userBoardgames} listID="myList"  />
+                </div>
+
+                </div>
+                <div className="justify-content-center text-center px-5">
+           
+                <button type="button" className=" p-4 center-block text-center"style={{marginTop:'200px'}} id="right1" value=">" onClick={this.handleAddBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+                <br/>          
+                <button className="p-4 center-block"   id="left1" onClick={this.handleRemoveBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
+                
+                
+                </div>
+                <div className="col-md-5 mt-5">
+
+  
+                
+                <div className="form-group mt-6">
+                 <label >To Trade:</label>
+                    <select multiple size="8" className="form-control h-100 w-100" id="tradedToYou">
+                    </select>
+      <h3>Total Value: ${this.state.userTotalPrice}</h3>
+                </div>
+                </div>
+            </div>
+{/* END USER trade list */}
+         
+          </div> <button className="btn btn-success">Request Trade<br/><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+        </div>
+
+         
+
+        
       </div>
     );
   }
