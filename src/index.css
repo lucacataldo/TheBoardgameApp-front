@@ -149,11 +149,19 @@ body {
 /**************************************************/
 /* GuruCollection CSS*/
 /**************************************************/
-.guruCollectionTable .maxColWidth-100 {
-  max-width: 100px;
+.guruCollectionTable .maxColWidth-50 {
+  max-width: 50px;
 }
-@media (min-width: 768px) {
-  .guruCollectionTable .maxHeaderFont {
+
+.guruCollectionTable td.alignCenter {
+  text-align: center;
+}
+
+.guruCollectionTable a {
+  color: #000;
+}
+@media (max-width: 1200px) {
+  .guruCollectionTable {
     font-size: 0.75rem;
   }
 }
