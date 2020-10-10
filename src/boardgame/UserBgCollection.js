@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
-import { useTable, useFilters, usePagination } from "react-table";
+import { useTable, useFilters, usePagination, useSortBy } from "react-table";
 import matchSorter from "match-sorter";
 
 import { getGuruCollection } from "./apiBoardgame";
@@ -62,6 +62,7 @@ const Table = ({ columns, data }) => {
       },
     },
     useFilters,
+    useSortBy,
     usePagination
   );
 
@@ -78,9 +79,12 @@ const Table = ({ columns, data }) => {
                 <th
                   scope="col"
                   className={"align-middle p-2 " + column.render("className")}
-                  {...column.getHeaderProps()}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
                 >
-                  {column.render("Header")}
+                  {column.render("Header")}{" "}
+                  <span>
+                    {column.isSorted ? (column.isSortedDesc ? " " : " ") : ""}
+                  </span>
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
               ))}
@@ -328,12 +332,12 @@ const UserCollection = () => {
             style={{ maxWidth: "50px", maxHeight: "50px" }}
           />
         ),
-        className: "text-center d-none d-sm-table-cell",
+        className: "text-center d-none d-sm-table-cell maxColWidth-50",
         disableFilters: true,
       },
       {
         Header: "Title",
-        className: " ",
+        className: " maxColWidth-175 ",
         accessor: (d) => `${d.boardgame.title} ${d.boardgame.yearPublished}`,
         filter: "fuzzyText",
         Cell: ({ row: { original } }) => {
@@ -353,8 +357,8 @@ const UserCollection = () => {
       },
       {
         Header: "Rating",
-        className: " d-none d-sm-table-cell maxColWidth-50",
-        headerClassName: "d-none d-sm-table-cell",
+        className: " d-none d-md-table-cell maxColWidth-50",
+        headerClassName: "d-none d-md-table-cell ",
         accessor: "boardgame.avgRating",
         Cell: ({ cell: { value } }) => (
           <span>{Math.round(10 * String(value)) / 10}</span>
@@ -469,7 +473,7 @@ const UserCollection = () => {
       },
       {
         Header: "Notes",
-        className: " d-none d-sm-table-cell maxColWidth-50 ",
+        className: " d-none d-sm-table-cell maxColWidth-200",
         accessor: "notes",
         Cell: ({ row: { original } }) => {
           return <span>{String(original.notes)}</span>;
@@ -587,7 +591,7 @@ const UserCollection = () => {
               </div>
             </div>
           </div> */}
-          <div className="row justify-content-center bgTable mx-2">
+          <div className="row justify-content-center bgTable ">
             <Table columns={columns} data={data} />
           </div>
         </BgContainer>

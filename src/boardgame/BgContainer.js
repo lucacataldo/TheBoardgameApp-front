@@ -6,7 +6,7 @@ class BgContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      redirectToHome: false
+      redirectToHome: false,
     };
   }
 
@@ -31,7 +31,9 @@ class BgContainer extends React.Component {
             highlight={this.props.sidebar}
             userId={this.props.userId}
           />
-          <div className="col-sm-9 col-lg-10">{this.props.children}</div>
+          <div className="col-sm-9 col-md-9 col-lg-9 col-xl-9">
+            {this.props.children}
+          </div>
         </div>
       </div>
     );

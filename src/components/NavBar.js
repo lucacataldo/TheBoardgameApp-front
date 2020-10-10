@@ -50,14 +50,37 @@ class NavBar extends React.Component {
                     Users
                   </NavLink>
                 </li>
-                <li className="nav-item ">
-                  <NavLink
-                    className="nav-link"
-                    activeClassName="selected"
-                    to="/collection/bgguru"
+                <li className="nav-item dropdown ">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdownCollectionLink"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
                   >
                     Collection
-                  </NavLink>
+                  </a>
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="navbarDropdownCollectionLink"
+                  >
+                    <NavLink
+                      className="dropdown-item"
+                      activeClassName="selected"
+                      to="/collection/bgguru"
+                    >
+                      Guru Collection
+                    </NavLink>
+                    <NavLink
+                      className="dropdown-item"
+                      activeClassName="selected"
+                      to="/collection/bgg"
+                    >
+                      BGGeek Collection
+                    </NavLink>
+                  </div>
                 </li>
                 <li className="nav-item ">
                   <NavLink

@@ -10,17 +10,17 @@ class BgSideBar extends React.Component {
     this.state = {
       name: "",
       loading: false,
-      file: null
+      file: null,
     };
   }
-  init = userId => {
+  init = (userId) => {
     const token = isAuthenticated().token;
-    getUser(userId, token).then(data => {
+    getUser(userId, token).then((data) => {
       if (data.error) {
         this.setState({ redirectToProfile: true });
       } else {
         this.setState({
-          name: data.name
+          name: data.name,
         });
       }
     });
@@ -35,7 +35,7 @@ class BgSideBar extends React.Component {
     return (
       <>
         <div
-          className="col-sm-3 col-lg-2 maxSidebarWidth ml-3 justify-content-right mt-5"
+          className="col-md-2 col-lg-2 col-xl-2 maxSidebarWidth  justify-content-right mt-5 pt-4 d-none d-lg-block"
           highlight={this.props.highlight}
         >
           <div className="list-group ">
