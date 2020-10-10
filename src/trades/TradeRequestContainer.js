@@ -22,8 +22,10 @@ class TradeRequestContainer extends React.Component {
     searchedUser: "",
     price: 0,
     userTotalPrice: 0,
+    searchedUserPrice: 0,
+    searchedUserTotalPrice:0,
     valueMin: 0,
-    valueMax: 999
+    valueMax: 9999
   }
 
 
@@ -102,25 +104,34 @@ class TradeRequestContainer extends React.Component {
 
     var available = document.getElementById("yourList");
     var tradeBox = document.getElementById("tradedToMe");
-    var val = available.options[available.selectedIndex].value;
+    var price = document.getElementById("bgSetPrice2");
+    var number = parseFloat(price.value).toFixed(2);
+    var val = available.options[available.selectedIndex].value + " | $" + number;
     var id = available.options[available.selectedIndex].id;
     var element = document.createElement('option');
     element.setAttribute("id", id);
     element.appendChild(document.createTextNode(val));
     tradeBox.appendChild(element);
     available.removeChild(available.options[available.selectedIndex]);
+    let total = parseFloat(this.state.searchedUserTotalPrice) + parseFloat(number);
+
+    this.setState({ searchedUserTotalPrice: total.toFixed(2) });
     return true;
   }
   handleRemoveUserBoardgame(event) {
     var available = document.getElementById("yourList");
     var tradeBox = document.getElementById("tradedToMe");
-    var val = tradeBox.options[tradeBox.selectedIndex].value;
+    var val = tradeBox.options[tradeBox.selectedIndex].value.split("|");
     var id = tradeBox.options[tradeBox.selectedIndex].id;
     var element = document.createElement('option');
     element.setAttribute("id", id);
-    element.appendChild(document.createTextNode(val));
+    element.appendChild(document.createTextNode(val[0]));
     available.appendChild(element);
     tradeBox.removeChild(tradeBox.options[tradeBox.selectedIndex]);
+    let parsedPrice = val[1].split("$");
+    let total = parseFloat(this.state.searchedUserTotalPrice) - parseFloat(parsedPrice[1]);
+    this.setState({ searchedUserTotalPrice: total.toFixed(2) });
+    
     return true;
   }
 
@@ -150,7 +161,12 @@ class TradeRequestContainer extends React.Component {
     this.setState({ price: value });
 
   }
+  handleSearchedUserPriceChange(event) {
+    let { value, min, max } = event.target;
+    value = Math.max(Number(min), Math.min(Number(max), Number(value)));
+    this.setState({ searchedUserPrice: value });
 
+  }
 
 
 
@@ -194,7 +210,7 @@ class TradeRequestContainer extends React.Component {
                       <div className="input-group-text">$</div>
                     </div>
 
-                    <input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} className="form-control" id="bgSetPrice" value={this.state.price} placeholder="Set Price" />
+                    <input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} className="form-control" id="bgSetPrice2" value={this.state.searchedUserPrice} placeholder="Set Price" />
 
                   </div>
                 </div>
@@ -205,16 +221,16 @@ class TradeRequestContainer extends React.Component {
                 </div>
 
                 <div className="col-1 justify-content-center">
-                  <button className="p-4 mt-4" id="right2" style={{ marginTop: '200px' }} value=">" onClick={this.handleAddUserBoardgame}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+                  <button className="p-4 mt-4" id="right2" style={{ marginTop: '200px' }} value=">" onClick={this.handleAddUserBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
                   <br />
-                  <button className="p-4" type="button" id="left2" value="<" onClick={this.handleRemoveUserBoardgame}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
+                  <button className="p-4" type="button" id="left2" value="<" onClick={this.handleRemoveUserBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
 
                 </div>
                 <div className="col-5">
                   <label >To Trade:</label>
                   <select multiple size="8" className="form-control " id="tradedToMe">
                   </select>
-
+                  <h3>Total Value: ${this.state.searchedUserTotalPrice}</h3>
                 </div>
               </div>
               {/* SPLIT TOP-BOTTOM BOXES */}
@@ -249,7 +265,6 @@ class TradeRequestContainer extends React.Component {
                 <button type="button" className=" p-4 center-block text-center" style={{ marginTop: '200px' }} id="right1" value=">" onClick={this.handleAddBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
                 <br />
                 <button className="p-4 center-block" id="left1" onClick={this.handleRemoveBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon></button>
-
 
               </div>
               <div className="col-md-5 mt-5">
