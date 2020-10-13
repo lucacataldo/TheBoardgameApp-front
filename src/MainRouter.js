@@ -24,15 +24,14 @@ import UserBgCollection from "./boardgame/UserBgCollection";
 
 import Trades from "./trades/Trades";
 import TradeMatch from "./trades/TradeMatch";
-import TradeSettings from "./trades/TradeSettings"
-import TradeListItems from "./trades/TradeRequestContainer"
+import TradeSettings from "./trades/TradeSettings";
+import TradeListItems from "./trades/TradeRequestContainer";
 
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
 
 import Admin from "./admin/Admin";
-;
-
+import Calendar from "./calendar/Calendar";
 
 class MainRouter extends React.Component {
   render() {
@@ -48,16 +47,8 @@ class MainRouter extends React.Component {
             path="/collection/bgguru"
             component={UserBgCollection}
           />
-          <PrivateRoute
-            exact
-            path="/trades"
-            component={Trades}
-          />
-          <PrivateRoute
-            exact
-            path="/trades/matches"
-            component={TradeMatch}
-          />
+          <PrivateRoute exact path="/trades" component={Trades} />
+          <PrivateRoute exact path="/trades/matches" component={TradeMatch} />
           <PrivateRoute
             exact
             path="/trades/settings"
@@ -89,6 +80,7 @@ class MainRouter extends React.Component {
             path="/user/edit/bgg/:userId"
             component={SettingCollection}
           />
+           <Route exact path="/calendar" component={Calendar} />
           <Route path="*" component={NotFound} />
         </Switch>
       </>
