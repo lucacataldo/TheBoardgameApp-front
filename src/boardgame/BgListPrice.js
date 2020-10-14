@@ -35,7 +35,7 @@ class BgListPrice extends React.Component {
   }
 
     
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (
       isAuthenticated()._id !== this.props.userId &&
       isAuthenticated().user.role !== "admin"
