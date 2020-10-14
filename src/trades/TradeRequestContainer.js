@@ -6,8 +6,8 @@ import Button from "react-bootstrap/Button"
 import { getUserId } from "../user/apiUser";
 import { getGuruCollection } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight, faSearch, faExchangeAlt, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { ListGroup, ListGroupItem, FormGroup, Label, Input } from 'reactstrap';
+import { faArrowRight, faSearch, faExchangeAlt, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 
 
 
@@ -58,17 +58,17 @@ class TradeRequestContainer extends React.Component {
     getUserId(user).then(id => {
       getGuruCollection(id).then(bgList => {
         if (bgList !== undefined)
-            if(document.getElementById("filterMatching").checked == true){
-              console.log("CHECKED")
-              bgList = bgList.filter(val => !this.state.userBoardgames.includes(val));
-              let userBoardgames = this.state.userBoardgames.filter(val => !bgList.includes(val));
-              this.setState({ searchUser: user, searchedUserBoardgames: bgList,userBoardgames: userBoardgames, isLoading: false, foundUser: true });     
-               
-            }else{
-              console.log("NOT CHECKED");
-              this.setState({ searchUser: user, searchedUserBoardgames: bgList, isLoading: false, foundUser: true });
-            }
-          
+          if (document.getElementById("filterMatching").checked == true) {
+            console.log("CHECKED")
+            bgList = bgList.filter(val => !this.state.userBoardgames.includes(val));
+            let userBoardgames = this.state.userBoardgames.filter(val => !bgList.includes(val));
+            this.setState({ searchUser: user, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: true });
+
+          } else {
+            console.log("NOT CHECKED");
+            this.setState({ searchUser: user, searchedUserBoardgames: bgList, isLoading: false, foundUser: true });
+          }
+
       })
     }).catch(err => {
       console.log(err);
@@ -92,9 +92,17 @@ class TradeRequestContainer extends React.Component {
         const tradeItem = Object.create(values);
         trades.push(tradeItem);
         available.removeChild(available.options[available.selectedIndex]);
+
+
         let total = parseFloat(this.state.userTotalPrice) + parseFloat(number);
 
         this.setState({ userTradeList: trades, userTotalPrice: total.toFixed(2) });
+        /*Consider using this for state purposes...
+        SOLUTION: make Database calls using ID to refill array with item.
+         let bg = this.state.userBoardgames;
+         bg = bg.filter((element) => element._id !== ID);
+       this.setState({userBoardgames:bg, userTradeList: trades, userTotalPrice: total.toFixed(2) }); */
+
         return true;
 
       } catch (e) {
@@ -107,6 +115,8 @@ class TradeRequestContainer extends React.Component {
         var number = parseFloat(price.value).toFixed(2);
         var ID = available.options[available.selectedIndex].id;
         const values = { id: ID, name: available.options[available.selectedIndex].value, price: number }
+        // values.name = (values.name.length > 30 ? values.name.substring(0,29)+"..." : values.name);
+
         const trades = this.state.searchedUserTradeList;
         const tradeItem = Object.create(values);
         trades.push(tradeItem);
@@ -206,13 +216,20 @@ class TradeRequestContainer extends React.Component {
               </div>
 
               <div className=" col-12 form-inline py-2 px-0">
-                <input id='searchbar' className='w-25 h-100 mr-0 rounded form-control' type='text' name='search' placeholder='Search...' />
-                <Button variant="primary" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>
+
+                <InputGroup>
+                  <Input id='searchbar' placeholder="Search..." />
+                  <InputGroupAddon addonType="append">
+                    <Button variant="primary" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>
+                  </InputGroupAddon>
+                </InputGroup>
+                {/* <input id='searchbar' className='w-25 h-100 mr-0 rounded form-control' type='text' name='search' placeholder='Search...' />
+                <Button variant="primary" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button> */}
                 &nbsp;<span><FormGroup check>
                   <Label check>
                     <Input id="filterMatching" type="checkbox" />
                     Filter Matching Games
-        </Label>
+              </Label>
                 </FormGroup></span>
 
 
@@ -230,24 +247,32 @@ class TradeRequestContainer extends React.Component {
               <div>
                 <div className="row bg-white">
                   <div className="col-12">
-                    <h4>{this.state.searchUser}'s List</h4>
+                    <h4>{this.state.searchUser}'s List ({this.state.searchedUserBoardgames.length})</h4>
                   </div>
                   <br />
 
                   <div className=" col-4 form-group">
-                    <small>A value between {this.state.valueMin} & {this.state.valueMax}</small>
+                    
                     <div className="input-group">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text">$</div>
-                      </div>
-
-                      <input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} className="form-control" id="bgSetPrice2" value={this.state.searchedUserPrice} placeholder="Set Price" />
-
+                      <FormGroup row>
+                      <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
+                        <InputGroup>
+                          <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                          <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice2" value={this.state.searchedUserPrice} />
+                        </InputGroup>
+                        {/* <input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} className="form-control" id="bgSetPrice2" value={this.state.searchedUserPrice} placeholder="Set Price" /> */}
+                        <Label for="conditionSelect">Condition</Label>
+                        <Input type="select" name="select" id="conditionSelect">
+                          <option>Excellent</option>
+                          <option>Good</option>
+                          <option>Fair</option>
+                          <option>Poor</option>
+                        </Input>
+                      </FormGroup>
                     </div>
                   </div>
                   <div className="col-8"></div>
                   <div className="col-5 pl-2 ml-2 mb-2">
-                    <label >Available:</label>
                     <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
                   </div>
 
@@ -258,31 +283,45 @@ class TradeRequestContainer extends React.Component {
                   <div className="col-5">
                     <label >To Trade:</label>
                     <ListGroup id="tradedToMe">
-                      {this.state.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveUserBoardgame.bind(this)}>{item.name} | ${item.price}
+                      {this.state.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveUserBoardgame.bind(this)}>
+                        {item.name.length < 30 ?
+                          item.name : item.name.substring(0, 30) + '...'} | ${item.price}
                         <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
                     </ListGroup>
                     <h3>Total Value: ${this.state.searchedUserTotalPrice}</h3>
                   </div>
                 </div>
                 {/* SPLIT TOP-BOTTOM BOXES */}
-                <div className="row offset-5 mt-3">
-                  <button className="btn btn-success">Request Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+                <div className="row bg-dark p-3">
+
+                  <div className="offset-5">
+                    <button className="btn btn-success">Request Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+                  </div>
                 </div>
                 <div className="row bg-white mt-3">
 
                   <div className="col-12">
-                    <h4>Your List</h4>
+                    <h4>Your List ({this.state.userBoardgames.length})</h4>
                   </div>
-                  <div className="col-md-5 ">
-
-                    <br />
-                    <small>A value between {this.state.valueMin} & {this.state.valueMax}</small>
+                  <div className="col-4 form-group ">
                     <div className="input-group">
-                      <div className="input-group-prepend">
-                        <div className="input-group-text">$</div>
-                      </div>
 
-                      <input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} className="form-control" id="bgSetPrice" value={this.state.price} placeholder="Set Price" />
+                    <FormGroup row>
+                      <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
+                        <InputGroup>
+                          <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                          <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice" value={this.state.price} />
+                        </InputGroup>
+                        <Label for="conditionSelect">Condition</Label>
+                        <Input type="select" name="select" id="conditionSelect2">
+                          <option>Excellent</option>
+                          <option>Good</option>
+                          <option>Fair</option>
+                          <option>Poor</option>
+                        </Input>
+                      </FormGroup>
+
+                      {/* <input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} className="form-control" id="bgSetPrice" value={this.state.price} placeholder="Set Price" /> */}
 
                     </div>
 
@@ -302,7 +341,9 @@ class TradeRequestContainer extends React.Component {
                     <div className="form-group mt-6">
                       <label >To Trade:</label>
                       <ListGroup id="tradedToYou">
-                        {this.state.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>{item.name} | ${item.price}
+                        {this.state.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>
+                          {item.name.length < 30 ?
+                            item.name : item.name.substring(0, 30) + '...'} | ${item.price}
                           <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
                       </ListGroup>
                       <h3>Total Value: ${this.state.userTotalPrice}</h3>
