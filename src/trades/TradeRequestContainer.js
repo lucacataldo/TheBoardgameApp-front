@@ -33,8 +33,8 @@ class TradeRequestContainer extends React.Component {
 
 
 
-
-  componentWillMount() {
+//needs to be updated to new methdology
+  UNSAFE_componentWillMount() {
     var user = isAuthenticated().user.name;
     this.loadUserBoardgameData(user);
 
@@ -58,14 +58,14 @@ class TradeRequestContainer extends React.Component {
     getUserId(user).then(id => {
       getGuruCollection(id).then(bgList => {
         if (bgList !== undefined)
-          if (document.getElementById("filterMatching").checked == true) {
+          if (document.getElementById("filterMatching").checked === true) {
             console.log("CHECKED")
             bgList = bgList.filter(val => !this.state.userBoardgames.includes(val));
             let userBoardgames = this.state.userBoardgames.filter(val => !bgList.includes(val));
             this.setState({ searchUser: user, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: true });
 
           } else {
-            console.log("NOT CHECKED");
+            console.log("FILTER NOT CHECKED");
             this.setState({ searchUser: user, searchedUserBoardgames: bgList, isLoading: false, foundUser: true });
           }
 
@@ -80,14 +80,16 @@ class TradeRequestContainer extends React.Component {
 
 
   handleAddBoardgame(event) {
-    if (event.target.id == "right1") {
+    if (event.target.id === "right1") {
       try {
-        var available = document.getElementById("myList");
-        var price = document.getElementById("bgSetPrice");
+        let available = document.getElementById("myList");
+        let price = document.getElementById("bgSetPrice");
+        let condition = document.getElementById("conditionSelect2");
         var number = parseFloat(price.value).toFixed(2);
         var ID = available.options[available.selectedIndex].id;
+        console.log("HELLO?" + condition);
 
-        const values = { id: ID, name: available.options[available.selectedIndex].value, price: number }
+        const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
         const trades = this.state.userTradeList;
         const tradeItem = Object.create(values);
         trades.push(tradeItem);
@@ -110,11 +112,12 @@ class TradeRequestContainer extends React.Component {
       }
     } else {
       try {
-        var available = document.getElementById("yourList");
-        var price = document.getElementById("bgSetPrice2");
-        var number = parseFloat(price.value).toFixed(2);
-        var ID = available.options[available.selectedIndex].id;
-        const values = { id: ID, name: available.options[available.selectedIndex].value, price: number }
+        let available = document.getElementById("yourList");
+        let price = document.getElementById("bgSetPrice2");
+        let condition = document.getElementById("conditionSelect");
+        let number = parseFloat(price.value).toFixed(2); 
+        let ID = available.options[available.selectedIndex].id;
+        const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
         // values.name = (values.name.length > 30 ? values.name.substring(0,29)+"..." : values.name);
 
         const trades = this.state.searchedUserTradeList;
@@ -138,7 +141,7 @@ class TradeRequestContainer extends React.Component {
     try {
       const trades = this.state.userTradeList;
 
-      const foundItem = trades.find(item => item.id == event.currentTarget.id);
+      const foundItem = trades.find(item => item.id === event.currentTarget.id);
 
       const removeItem = trades.filter(item => item.id !== event.currentTarget.id);
       var available = document.getElementById("myList");
@@ -158,7 +161,7 @@ class TradeRequestContainer extends React.Component {
   handleRemoveUserBoardgame(event) {
     try {
       const trades = this.state.searchedUserTradeList;
-      const foundItem = trades.find(item => item.id == event.currentTarget.id);
+      const foundItem = trades.find(item => item.id === event.currentTarget.id);
       const removeItem = trades.filter(item => item.id !== event.currentTarget.id);
       console.log(foundItem);
       var available = document.getElementById("yourList");
@@ -285,7 +288,7 @@ class TradeRequestContainer extends React.Component {
                     <ListGroup id="tradedToMe">
                       {this.state.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveUserBoardgame.bind(this)}>
                         {item.name.length < 30 ?
-                          item.name : item.name.substring(0, 30) + '...'} | ${item.price}
+                          item.name : item.name.substring(0, 30) + '...'} | ${item.price} | {item.condition}
                         <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
                     </ListGroup>
                     <h3>Total Value: ${this.state.searchedUserTotalPrice}</h3>
@@ -312,7 +315,7 @@ class TradeRequestContainer extends React.Component {
                           <InputGroupAddon addonType="prepend">$</InputGroupAddon>
                           <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice" value={this.state.price} />
                         </InputGroup>
-                        <Label for="conditionSelect">Condition</Label>
+                        <Label for="conditionSelect2">Condition</Label>
                         <Input type="select" name="select" id="conditionSelect2">
                           <option>Excellent</option>
                           <option>Good</option>
@@ -343,7 +346,7 @@ class TradeRequestContainer extends React.Component {
                       <ListGroup id="tradedToYou">
                         {this.state.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>
                           {item.name.length < 30 ?
-                            item.name : item.name.substring(0, 30) + '...'} | ${item.price}
+                            item.name : item.name.substring(0, 30) + '...'} | ${item.price} | {item.condition}
                           <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
                       </ListGroup>
                       <h3>Total Value: ${this.state.userTotalPrice}</h3>
