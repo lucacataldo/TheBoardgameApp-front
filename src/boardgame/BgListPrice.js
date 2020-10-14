@@ -2,6 +2,7 @@ import React from "react";
 import { isAuthenticated } from "../auth";
 import {  getGuruCollection } from "../boardgame/apiBoardgame";
 import { getUserId } from "../user/apiUser";
+import {Input} from 'reactstrap';
 
 
 class BgListPrice extends React.Component {
@@ -34,7 +35,7 @@ class BgListPrice extends React.Component {
   }
 
     
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (
       isAuthenticated()._id !== this.props.userId &&
       isAuthenticated().user.role !== "admin"
@@ -59,13 +60,12 @@ class BgListPrice extends React.Component {
 
 
   render() {
-  return(<select multiple size="15" className="form-control" id={this.props.listID}>
-
+   return(
+ <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple size="15" id={this.props.listID}>
            {this.props.bgData.map((bg,i)=>{
                return <option id={bg._id} key={bg._id}>{bg.boardgame.title}</option>
            })}
-            
-       </select>
+            </Input>
     );
 
        
