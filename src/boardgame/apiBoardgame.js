@@ -1,5 +1,3 @@
-import XML2JS from "xml2js";
-
 export const getBGCollection = (username) => {
   return fetch(`${process.env.REACT_APP_API_URL}/boardgame/${username}`, {
     method: "GET",
@@ -10,16 +8,17 @@ export const getBGCollection = (username) => {
     .catch((err) => console.log(err));
 };
 export const getGuruCollection = (userId) => {
-
-    return fetch(`${process.env.REACT_APP_API_URL}/boardgame/user/collection/${userId}`, {
-        method: "GET"
+  return fetch(
+    `${process.env.REACT_APP_API_URL}/boardgame/user/collection/${userId}`,
+    {
+      method: "GET",
+    }
+  )
+    .then((response) => {
+      return response.json();
     })
-        .then((response) => {
-            return response.json();
-        })
 
-        .catch(err => console.log(err));
-
+    .catch((err) => console.log(err));
 };
 export const getBGGCounts = (username) => {
   return fetch(`${process.env.REACT_APP_API_URL}/boardgame/count/${username}`, {

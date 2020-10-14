@@ -9,7 +9,6 @@ import {
   endOfMonth,
   endOfWeek,
   isSameMonth,
-  parse,
   isSameDay,
 } from "date-fns";
 
@@ -40,11 +39,9 @@ class Calendar extends React.Component {
   }
 
   renderDays() {
-    const dateFormat = "dddd";
+    const dateFormat = "EEEE";
     const days = [];
-
     let startDate = startOfWeek(this.state.currentMonth);
-
     for (let i = 0; i < 7; i++) {
       days.push(
         <div className="col col-center" key={i}>
@@ -84,7 +81,7 @@ class Calendar extends React.Component {
                 : ""
             }`}
             key={day}
-            onClick={() => this.onDateClick(parse(cloneDay))}
+            onClick={() => this.onDateClick(cloneDay)}
           >
             <span className="number">{formattedDate}</span>
             <span className="bg">{formattedDate}</span>
@@ -122,7 +119,7 @@ class Calendar extends React.Component {
 
   render() {
     return (
-      <div className="calendar">
+      <div className="calendar col-lg-9 col-xl-10">
         {this.renderHeader()}
         {this.renderDays()}
         {this.renderCells()}

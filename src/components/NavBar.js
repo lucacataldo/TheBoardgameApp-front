@@ -52,8 +52,9 @@ class NavBar extends React.Component {
                 </li>
                 <li className="nav-item dropdown ">
                   <a
+
                     className="nav-link dropdown-toggle"
-                    href="#"
+                    href="/#"
                     id="navbarDropdownCollectionLink"
                     role="button"
                     data-toggle="dropdown"

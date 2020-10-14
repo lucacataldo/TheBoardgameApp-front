@@ -4,7 +4,7 @@ import { useTable, useFilters, usePagination, useSortBy } from "react-table";
 import matchSorter from "match-sorter";
 
 import { getGuruCollection } from "./apiBoardgame";
-import Alert from "../components/Alert";
+//import Alert from "../components/Alert";
 import NoImg from "../images/noImageAvailable.jpg";
 import { isAuthenticated } from "../auth";
 import { getUser } from "../user/apiUser";
@@ -344,6 +344,7 @@ const UserCollection = () => {
           return (
             <a
               target="_blank"
+              rel="noopener noreferrer"
               href={
                 "https://boardgamegeek.com/boardgame/" +
                 `${original.boardgame.bggId}`
@@ -484,16 +485,16 @@ const UserCollection = () => {
     []
   );
   const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [data, setData] = useState([]);
-  const [alertStatus, setAlertStatus] = useState("");
-  const [alertMsg, setAlertMsg] = useState("");
-  const [alertVisible, setAlertVible] = useState(false);
+  // const [alertStatus, setAlertStatus] = useState("");
+  // const [alertMsg, setAlertMsg] = useState("");
+  // const [alertVisible, setAlertVible] = useState(false);
 
-  const handleChange = ({ target }) => {
-    setAlertVible(false);
-    setUsername(target.value);
-  };
+  // const handleChange = ({ target }) => {
+  //   setAlertVible(false);
+  //   setUsername(target.value);
+  // };
 
   // on load get the username if there's any
   // then grab the collection
@@ -512,28 +513,28 @@ const UserCollection = () => {
     setIsLoading(false);
   }, []);
 
-  async function submitClick(event) {
-    if (isLoading) return;
-    setIsLoading(true);
-    setAlertVible(false);
-    await getGuruCollection(username).then((data) => {
-      if (data !== undefined && !data.error) {
-        setData(data);
-      } else {
-        setData([]);
-        setAlertStatus("danger");
-        setAlertMsg(
-          "Unable to get user information, please check if username is valid"
-        );
-        setAlertVible(true);
-      }
-      setIsLoading(false);
-    });
-  }
+  // async function submitClick(event) {
+  //   if (isLoading) return;
+  //   setIsLoading(true);
+  //   setAlertVible(false);
+  //   await getGuruCollection(username).then((data) => {
+  //     if (data !== undefined && !data.error) {
+  //       setData(data);
+  //     } else {
+  //       setData([]);
+  //       setAlertStatus("danger");
+  //       setAlertMsg(
+  //         "Unable to get user information, please check if username is valid"
+  //       );
+  //       setAlertVible(true);
+  //     }
+  //     setIsLoading(false);
+  //   });
+  // }
 
   return (
     <>
-      <Alert type={alertStatus} message={alertMsg} visible={alertVisible} />
+      {/* <Alert type={alertStatus} message={alertMsg} visible={alertVisible} /> */}
       <LoadingOverlay
         active={isLoading}
         spinner
