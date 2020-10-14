@@ -52,8 +52,8 @@ class NavBar extends React.Component {
                 </li>
                 <li className="nav-item dropdown ">
                   <a
-                    className="nav-link dropdown-toggle"
-                    href="#"
+                    class="nav-link dropdown-toggle"
+                    href="/#"
                     id="navbarDropdownCollectionLink"
                     role="button"
                     data-toggle="dropdown"
@@ -63,7 +63,7 @@ class NavBar extends React.Component {
                     Collection
                   </a>
                   <div
-                    className="dropdown-menu"
+                    class="dropdown-menu"
                     aria-labelledby="navbarDropdownCollectionLink"
                   >
                     <NavLink

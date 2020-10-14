@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 const SideBar = () => {
   return (
     <div className="col-lg-3 col-xl-2">
