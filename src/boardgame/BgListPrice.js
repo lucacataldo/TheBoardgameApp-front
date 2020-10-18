@@ -11,7 +11,8 @@ class BgListPrice extends React.Component {
     super(props);
     this.state = {
       bgData: [{}],
-      isLoading:true
+      isLoading:true,
+      search:null
   }  
 
   }
@@ -51,24 +52,44 @@ class BgListPrice extends React.Component {
       }
       this.loadBoardgameData(user);
 
-
-
-     
-
-
   }
 
+  searchSpace=(event)=>{
+    let keyword = event.target.value;
+    this.setState({search:keyword})
+  }
 
   render() {
+    const items = this.props.bgData.filter((data)=>{
+      if(this.state.search == null)
+          return data
+      else if(data.boardgame.title.toLowerCase().includes(this.state.search.toLowerCase())){
+          return data
+      }
+    })
+
    return(
+/* <div class="card"  id={this.props.listID}>
+  <ul className="list-group list-group-flush pagination">
+  {this.props.bgData.map((bg,i)=>{
+                return <li className="list-group-item bgListItem font-weight-bold" id={bg._id} key={bg._id}><img className="bgListImg" src={bg.boardgame.imgThumbnail} alt="pic" />{bg.boardgame.title}</li>
+            })}
+
+  </ul>
+</div> */
+<div>
+  <Input type="search" id="searchList"onChange={(e)=>this.searchSpace(e)}></Input>
+
  <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple size="15" id={this.props.listID}>
-           {this.props.bgData.map((bg,i)=>{
+   
+           {items.map((bg,i)=>{
                return <option id={bg._id} key={bg._id}>{bg.boardgame.title}</option>
            })}
             </Input>
+          </div>   
     );
 
-       
+      
   }
 }
 export default BgListPrice;
