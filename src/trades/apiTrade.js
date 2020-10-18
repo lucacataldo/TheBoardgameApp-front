@@ -1,9 +1,9 @@
 
 function replacer(key,value){
     if(key === "userTradeList" || key === "searchedUserTradeList"){
-        let obj = {};
         let list = [];
             for(var i =0; i< value.length;i++){
+                let obj = {};
                 obj.name=value[i].name;
                 obj.condition= value[i].condition;
                 obj.id = value[i].id;
@@ -20,15 +20,13 @@ function replacer(key,value){
 export const createTrade = (token,trade) => {
 
 
-    console.log(JSON.stringify(trade,replacer));
-    
 
     return fetch(`${process.env.REACT_APP_API_URL}/trade/requestTrade`, {
         method: "POST",
         headers: {
             'Content-Type': "application/json"
         },
-        body: JSON.stringify(trade)
+        body: JSON.stringify(trade,replacer)
     })
         .then(response => response.json())
         .then((data) =>{
