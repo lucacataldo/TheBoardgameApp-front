@@ -340,7 +340,7 @@ class TradeRequestContainer extends React.Component {
                   <div className="col-4 form-group ">
                     <div className="input-group">
 
-                      <FormGroup row>
+                      <FormGroup row className="pl-3">
                         <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
                         <InputGroup>
                           <InputGroupAddon addonType="prepend">$</InputGroupAddon>
