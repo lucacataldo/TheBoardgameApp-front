@@ -23,7 +23,7 @@ const EventForm = (props) => {
   } = props;
   return (
     <div>
-      <div className="modal" id="add-event" tabindex="-1" role="dialog">
+      <div className="modal" id={modalId} tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -61,7 +61,10 @@ const EventForm = (props) => {
                     checked={checkbox}
                     onChange={onCheckBoxChange}
                   />
-                  <label className="form-check-label" for="allDayEventChkBox">
+                  <label
+                    className="form-check-label"
+                    htmlFor="allDayEventChkBox"
+                  >
                     All-day event? (optional)
                   </label>
                 </div>
@@ -75,6 +78,7 @@ const EventForm = (props) => {
                         timeIntervals={15}
                         dateFormat="Pp"
                         className="form-control"
+                        onChange={onInputChange("startdate")}
                         selected={startDate}
                       />
                     </div>
@@ -109,6 +113,7 @@ const EventForm = (props) => {
                   <select
                     className="form-control form-white"
                     name="event-color"
+                    onChange={handleChange}
                   >
                     <option>Select color</option>
                     {colors.map((color) => (

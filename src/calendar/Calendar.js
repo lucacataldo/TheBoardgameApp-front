@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import AppContext from "../context/App/appContext";
 import {
   format,
   startOfWeek,
@@ -12,36 +13,37 @@ import {
   isSameDay,
 } from "date-fns";
 
-class Calendar extends React.Component {
-  state = {
-    currentMonth: new Date(),
-    selectedDate: new Date(),
-  };
+const Calendar = () => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  renderHeader() {
+  const calContext = useContext(AppContext);
+  const { addEvent, events, colors } = calContext;
+
+  const renderHeader = () => {
     const dateFormat = "MMMM yyyy";
 
     return (
       <div className="header row flex-middle">
         <div className="col col-start">
-          <div className="icon" onClick={this.prevMonth}>
+          <div className="icon" onClick={prevMonth}>
             chevron_left
           </div>
         </div>
         <div className="col col-center">
-          <span>{format(this.state.currentMonth, dateFormat)}</span>
+          <span>{format(currentMonth, dateFormat)}</span>
         </div>
-        <div className="col col-end" onClick={this.nextMonth}>
+        <div className="col col-end" onClick={nextMonth}>
           <div className="icon">chevron_right</div>
         </div>
       </div>
     );
-  }
+  };
 
-  renderDays() {
+  const renderDays = () => {
     const dateFormat = "EEEE";
     const days = [];
-    let startDate = startOfWeek(this.state.currentMonth);
+    let startDate = startOfWeek(currentMonth);
     for (let i = 0; i < 7; i++) {
       days.push(
         <div className="col col-center" key={i}>
@@ -51,10 +53,9 @@ class Calendar extends React.Component {
     }
 
     return <div className="days row">{days}</div>;
-  }
+  };
 
-  renderCells() {
-    const { currentMonth, selectedDate } = this.state;
+  const renderCells = () => {
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
@@ -81,7 +82,7 @@ class Calendar extends React.Component {
                 : ""
             }`}
             key={day}
-            onClick={() => this.onDateClick(cloneDay)}
+            onClick={() => onDateClick(cloneDay)}
           >
             <span className="number">{formattedDate}</span>
             <span className="bg">{formattedDate}</span>
@@ -97,35 +98,27 @@ class Calendar extends React.Component {
       days = [];
     }
     return <div className="body">{rows}</div>;
-  }
-
-  onDateClick = (day) => {
-    this.setState({
-      selectedDate: day,
-    });
   };
 
-  nextMonth = () => {
-    this.setState({
-      currentMonth: addMonths(this.state.currentMonth, 1),
-    });
+  const onDateClick = (day) => {
+    setSelectedDate(day);
   };
 
-  prevMonth = () => {
-    this.setState({
-      currentMonth: subMonths(this.state.currentMonth, 1),
-    });
+  const nextMonth = () => {
+    setCurrentMonth(addMonths(currentMonth, 1));
   };
 
-  render() {
-    return (
-      <div className="calendar col-lg-9 col-xl-10">
-        {this.renderHeader()}
-        {this.renderDays()}
-        {this.renderCells()}
-      </div>
-    );
-  }
-}
+  const prevMonth = () => {
+    setCurrentMonth(subMonths(currentMonth, 1));
+  };
+
+  return (
+    <div className="calendar col-lg-9 col-xl-10">
+      {renderHeader()}
+      {renderDays()}
+      {renderCells()}
+    </div>
+  );
+};
 
 export default Calendar;
