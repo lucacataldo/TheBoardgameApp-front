@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button"
 import { getUserId } from "../user/apiUser";
 import { getGuruCollection } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faSearch, faExchangeAlt, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faSearch, faExchangeAlt, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { createTrade } from "./apiTrade";
 
@@ -24,13 +24,17 @@ class TradeRequestContainer extends React.Component {
     userBoardgames: [],
     searchedUserBoardgames: [],
     price: 0,
-    searchedUserPrice:0,
+    searchedUserPrice: 0,
+
     tradeData: {
+      userID: '',
       userTradeList: [],
       userTotalPrice: 0,
+      searchedUserID: '',
       searchedUser: "",
       searchedUserTotalPrice: 0,
-      searchedUserTradeList: []
+      searchedUserTradeList: [],
+      notes: ""
     }
   }
 
@@ -40,6 +44,9 @@ class TradeRequestContainer extends React.Component {
   UNSAFE_componentWillMount() {
     var user = isAuthenticated().user.name;
     this.loadUserBoardgameData(user);
+    this.setState(prevState => ({
+      tradeData: { ...prevState.tradeData, userID: isAuthenticated().user._id }
+    }));
 
   }
 
@@ -63,16 +70,17 @@ class TradeRequestContainer extends React.Component {
         if (bgList !== undefined)
           if (document.getElementById("filterMatching").checked === true) {
             console.log("CHECKED")
+            console.log(bgList);
             bgList = bgList.filter(val => !this.state.userBoardgames.includes(val));
             let userBoardgames = this.state.userBoardgames.filter(val => !bgList.includes(val));
             this.setState(prevState => ({
-              tradeData: { ...prevState.tradeData, searchedUser: user }, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: true
+              tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: true
             }));
 
           } else {
             console.log("FILTER NOT CHECKED");
             this.setState(prevState => ({
-              tradeData: { ...prevState.tradeData, searchedUser: user }, searchedUserBoardgames: bgList, isLoading: false, foundUser: true
+              tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, isLoading: false, foundUser: true
             }));
           }
 
@@ -85,16 +93,17 @@ class TradeRequestContainer extends React.Component {
 
   submitTrade = event => {
 
-      const token = isAuthenticated().token;
-      createTrade(token, this.state.tradeData).then(data => {
-        // if (data.error) this.setState({ error: data.error });
-        // else {
-        //   this.setState({
-        //     redirectToHome: true
-        //   });
-        // }
-      });
-    
+    const token = isAuthenticated().token;
+    createTrade(token, this.state.tradeData).then(data => {
+      // if (data.error) this.setState({ error: data.error });
+      // else {
+      //   this.setState({
+      //     redirectToHome: true
+      //   });
+      // }
+      /*CREATE LOGIC FOR redirect after trade*/
+    });
+
   };
 
   handleAddBoardgame(event) {
@@ -120,7 +129,8 @@ class TradeRequestContainer extends React.Component {
             ...prevState.tradeData,
             userTradeList: trades,
             userTotalPrice: total.toFixed(2)
-          }}));
+          }
+        }));
         /*Consider using this for state purposes...
         SOLUTION: make Database calls using ID to refill array with item.
          let bg = this.state.userBoardgames;
@@ -148,7 +158,7 @@ class TradeRequestContainer extends React.Component {
         available.removeChild(available.options[available.selectedIndex]);
         let total = parseFloat(this.state.tradeData.searchedUserTotalPrice) + parseFloat(number);
 
-        this.setState(prevState =>({tradeData:{ ...prevState.tradeData,searchedUserTradeList: trades, searchedUserTotalPrice: total.toFixed(2) }}));
+        this.setState(prevState => ({ tradeData: { ...prevState.tradeData, searchedUserTradeList: trades, searchedUserTotalPrice: total.toFixed(2) } }));
         return true;
 
       } catch (e) {
@@ -174,7 +184,7 @@ class TradeRequestContainer extends React.Component {
 
       let parsedPrice = foundItem.price;
       let total = parseFloat(this.state.tradeData.userTotalPrice) - parseFloat(parsedPrice);
-      this.setState(prevState =>({tradeData:{...prevState.tradeData, userTradeList: removeItem, userTotalPrice: total.toFixed(2) }}));
+      this.setState(prevState => ({ tradeData: { ...prevState.tradeData, userTradeList: removeItem, userTotalPrice: total.toFixed(2) } }));
       return true;
     } catch (e) {
       console.log(e);
@@ -194,7 +204,7 @@ class TradeRequestContainer extends React.Component {
 
       let parsedPrice = foundItem.price;
       let total = parseFloat(this.state.tradeData.searchedUserTotalPrice) - parseFloat(parsedPrice);
-      this.setState(prevState => ({tradeData:{...prevState.tradeData, searchedUserTradeList: removeItem, searchedUserTotalPrice: total.toFixed(2) }}));
+      this.setState(prevState => ({ tradeData: { ...prevState.tradeData, searchedUserTradeList: removeItem, searchedUserTotalPrice: total.toFixed(2) } }));
       return true;
     } catch (e) {
       console.log(e);
@@ -279,7 +289,7 @@ class TradeRequestContainer extends React.Component {
                   <div className=" col-4 form-group">
 
                     <div className="input-group">
-                      <FormGroup row>
+                      <FormGroup row className="pl-3">
                         <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
                         <InputGroup>
                           <InputGroupAddon addonType="prepend">$</InputGroupAddon>
@@ -296,14 +306,13 @@ class TradeRequestContainer extends React.Component {
                       </FormGroup>
                     </div>
                   </div>
-                  <div className="col-8"></div>
+                  <div className="col-1"><FontAwesomeIcon className="btn-success mt-4 cursor-pointer" id="right2" onClick={this.handleAddBoardgame.bind(this)} icon={faPlusCircle} size="5x"color="green"></FontAwesomeIcon></div>
+                  <FormGroup className="col-7">
+                    <Label for="searchedUserNotes">Notes</Label>
+                    <Input type="textarea" rows="5" name="searchedUserNotes" id="searchedUserNotes" />
+                  </FormGroup>
                   <div className="col-5 pl-2 ml-2 mb-2">
                     <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
-                  </div>
-
-                  <div className="col-1 justify-content-center">
-                    <button className="p-4 mt-4" id="right2" style={{ marginTop: '200px' }} value=">" onClick={this.handleAddBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
-
                   </div>
                   <div className="col-5">
                     <label >To Trade:</label>
