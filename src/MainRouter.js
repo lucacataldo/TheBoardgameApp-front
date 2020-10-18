@@ -31,7 +31,7 @@ import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
 
 import Admin from "./admin/Admin";
-import Calendar from "./calendar/Calendar";
+import CalContainer from "./calendar/CalContainer";
 
 class MainRouter extends React.Component {
   render() {
@@ -80,7 +80,7 @@ class MainRouter extends React.Component {
             path="/user/edit/bgg/:userId"
             component={SettingCollection}
           />
-           <Route exact path="/calendar" component={Calendar} />
+          <Route exact path="/calendar" component={CalContainer} />
           <Route path="*" component={NotFound} />
         </Switch>
       </>

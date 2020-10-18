@@ -7,8 +7,7 @@ import DefaultProfileImg from "../images/avatar.png";
 
 import Alert from "../components/Alert";
 
-{
-  /* 
+/* 
 This sidebar is use for all Settings pages
 Use this format to keep consistency
 
@@ -35,7 +34,6 @@ Use this format to keep consistency
   </div>
 </div>; 
 */
-}
 
 class SettingSideBar extends React.Component {
   constructor() {
