@@ -6,8 +6,9 @@ import Button from "react-bootstrap/Button"
 import { getUserId } from "../user/apiUser";
 import { getGuruCollection } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faSearch, faExchangeAlt, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faSearch, faExchangeAlt, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { createTrade } from "./apiTrade";
 
 
 
@@ -18,25 +19,34 @@ class TradeRequestContainer extends React.Component {
     redirectToHome: false,
     foundUser: false, //true for testing
     isLoading: true,
-    userBoardgames: [],
-    searchedUserBoardgames: [],
-    searchedUser: "",
-    price: 0,
-    userTotalPrice: 0,
-    searchedUserPrice: 0,
-    searchedUserTotalPrice: 0,
     valueMin: 0,
     valueMax: 9999,
-    userTradeList: [],
-    searchedUserTradeList: []
+    userBoardgames: [],
+    searchedUserBoardgames: [],
+    price: 0,
+    searchedUserPrice: 0,
+
+    tradeData: {
+      userID: '',
+      userTradeList: [],
+      userTotalPrice: 0,
+      searchedUserID: '',
+      searchedUser: "",
+      searchedUserTotalPrice: 0,
+      searchedUserTradeList: [],
+      notes: ""
+    }
   }
 
 
 
-//needs to be updated to new methdology
+  //needs to be updated to new methdology
   UNSAFE_componentWillMount() {
     var user = isAuthenticated().user.name;
     this.loadUserBoardgameData(user);
+    this.setState(prevState => ({
+      tradeData: { ...prevState.tradeData, userID: isAuthenticated().user._id }
+    }));
 
   }
 
@@ -60,13 +70,18 @@ class TradeRequestContainer extends React.Component {
         if (bgList !== undefined)
           if (document.getElementById("filterMatching").checked === true) {
             console.log("CHECKED")
+            console.log(bgList);
             bgList = bgList.filter(val => !this.state.userBoardgames.includes(val));
             let userBoardgames = this.state.userBoardgames.filter(val => !bgList.includes(val));
-            this.setState({ searchUser: user, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: true });
+            this.setState(prevState => ({
+              tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: true
+            }));
 
           } else {
             console.log("FILTER NOT CHECKED");
-            this.setState({ searchUser: user, searchedUserBoardgames: bgList, isLoading: false, foundUser: true });
+            this.setState(prevState => ({
+              tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, isLoading: false, foundUser: true
+            }));
           }
 
       })
@@ -76,8 +91,20 @@ class TradeRequestContainer extends React.Component {
 
   }
 
+  submitTrade = event => {
 
+    const token = isAuthenticated().token;
+    createTrade(token, this.state.tradeData).then(data => {
+      // if (data.error) this.setState({ error: data.error });
+      // else {
+      //   this.setState({
+      //     redirectToHome: true
+      //   });
+      // }
+      /*CREATE LOGIC FOR redirect after trade*/
+    });
 
+  };
 
   handleAddBoardgame(event) {
     if (event.target.id === "right1") {
@@ -87,18 +114,23 @@ class TradeRequestContainer extends React.Component {
         let condition = document.getElementById("conditionSelect2");
         var number = parseFloat(price.value).toFixed(2);
         var ID = available.options[available.selectedIndex].id;
-        console.log("HELLO?" + condition);
 
         const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
-        const trades = this.state.userTradeList;
+        const trades = this.state.tradeData.userTradeList;
         const tradeItem = Object.create(values);
         trades.push(tradeItem);
         available.removeChild(available.options[available.selectedIndex]);
 
 
-        let total = parseFloat(this.state.userTotalPrice) + parseFloat(number);
+        let total = parseFloat(this.state.tradeData.userTotalPrice) + parseFloat(number);
 
-        this.setState({ userTradeList: trades, userTotalPrice: total.toFixed(2) });
+        this.setState(prevState => ({
+          tradeData: {
+            ...prevState.tradeData,
+            userTradeList: trades,
+            userTotalPrice: total.toFixed(2)
+          }
+        }));
         /*Consider using this for state purposes...
         SOLUTION: make Database calls using ID to refill array with item.
          let bg = this.state.userBoardgames;
@@ -115,18 +147,18 @@ class TradeRequestContainer extends React.Component {
         let available = document.getElementById("yourList");
         let price = document.getElementById("bgSetPrice2");
         let condition = document.getElementById("conditionSelect");
-        let number = parseFloat(price.value).toFixed(2); 
+        let number = parseFloat(price.value).toFixed(2);
         let ID = available.options[available.selectedIndex].id;
         const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
         // values.name = (values.name.length > 30 ? values.name.substring(0,29)+"..." : values.name);
 
-        const trades = this.state.searchedUserTradeList;
+        const trades = this.state.tradeData.searchedUserTradeList;
         const tradeItem = Object.create(values);
         trades.push(tradeItem);
         available.removeChild(available.options[available.selectedIndex]);
-        let total = parseFloat(this.state.searchedUserTotalPrice) + parseFloat(number);
+        let total = parseFloat(this.state.tradeData.searchedUserTotalPrice) + parseFloat(number);
 
-        this.setState({ searchedUserTradeList: trades, searchedUserTotalPrice: total.toFixed(2) });
+        this.setState(prevState => ({ tradeData: { ...prevState.tradeData, searchedUserTradeList: trades, searchedUserTotalPrice: total.toFixed(2) } }));
         return true;
 
       } catch (e) {
@@ -139,7 +171,7 @@ class TradeRequestContainer extends React.Component {
   }
   handleRemoveBoardgame(event) {
     try {
-      const trades = this.state.userTradeList;
+      const trades = this.state.tradeData.userTradeList;
 
       const foundItem = trades.find(item => item.id === event.currentTarget.id);
 
@@ -151,8 +183,8 @@ class TradeRequestContainer extends React.Component {
       available.appendChild(element);
 
       let parsedPrice = foundItem.price;
-      let total = parseFloat(this.state.userTotalPrice) - parseFloat(parsedPrice);
-      this.setState({ userTradeList: removeItem, userTotalPrice: total.toFixed(2) });
+      let total = parseFloat(this.state.tradeData.userTotalPrice) - parseFloat(parsedPrice);
+      this.setState(prevState => ({ tradeData: { ...prevState.tradeData, userTradeList: removeItem, userTotalPrice: total.toFixed(2) } }));
       return true;
     } catch (e) {
       console.log(e);
@@ -160,7 +192,7 @@ class TradeRequestContainer extends React.Component {
   }
   handleRemoveUserBoardgame(event) {
     try {
-      const trades = this.state.searchedUserTradeList;
+      const trades = this.state.tradeData.searchedUserTradeList;
       const foundItem = trades.find(item => item.id === event.currentTarget.id);
       const removeItem = trades.filter(item => item.id !== event.currentTarget.id);
       console.log(foundItem);
@@ -171,8 +203,8 @@ class TradeRequestContainer extends React.Component {
       available.appendChild(element);
 
       let parsedPrice = foundItem.price;
-      let total = parseFloat(this.state.searchedUserTotalPrice) - parseFloat(parsedPrice);
-      this.setState({ searchedUserTradeList: removeItem, searchedUserTotalPrice: total.toFixed(2) });
+      let total = parseFloat(this.state.tradeData.searchedUserTotalPrice) - parseFloat(parsedPrice);
+      this.setState(prevState => ({ tradeData: { ...prevState.tradeData, searchedUserTradeList: removeItem, searchedUserTotalPrice: total.toFixed(2) } }));
       return true;
     } catch (e) {
       console.log(e);
@@ -250,15 +282,15 @@ class TradeRequestContainer extends React.Component {
               <div>
                 <div className="row bg-white">
                   <div className="col-12">
-                    <h4>{this.state.searchUser}'s List ({this.state.searchedUserBoardgames.length})</h4>
+                    <h4>{this.state.tradeData.searchedUser}'s List ({this.state.searchedUserBoardgames.length})</h4>
                   </div>
                   <br />
 
                   <div className=" col-4 form-group">
-                    
+
                     <div className="input-group">
-                      <FormGroup row>
-                      <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
+                      <FormGroup row className="pl-3">
+                        <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
                         <InputGroup>
                           <InputGroupAddon addonType="prepend">$</InputGroupAddon>
                           <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice2" value={this.state.searchedUserPrice} />
@@ -274,31 +306,30 @@ class TradeRequestContainer extends React.Component {
                       </FormGroup>
                     </div>
                   </div>
-                  <div className="col-8"></div>
+                  <div className="col-1"><FontAwesomeIcon className="btn-success mt-4 cursor-pointer" id="right2" onClick={this.handleAddBoardgame.bind(this)} icon={faPlusCircle} size="5x"color="green"></FontAwesomeIcon></div>
+                  <FormGroup className="col-7">
+                    <Label for="searchedUserNotes">Notes</Label>
+                    <Input type="textarea" rows="5" name="searchedUserNotes" id="searchedUserNotes" />
+                  </FormGroup>
                   <div className="col-5 pl-2 ml-2 mb-2">
                     <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
-                  </div>
-
-                  <div className="col-1 justify-content-center">
-                    <button className="p-4 mt-4" id="right2" style={{ marginTop: '200px' }} value=">" onClick={this.handleAddBoardgame.bind(this)}><FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
-
                   </div>
                   <div className="col-5">
                     <label >To Trade:</label>
                     <ListGroup id="tradedToMe">
-                      {this.state.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveUserBoardgame.bind(this)}>
+                      {this.state.tradeData.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveUserBoardgame.bind(this)}>
                         {item.name.length < 30 ?
                           item.name : item.name.substring(0, 30) + '...'} | ${item.price} | {item.condition}
                         <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
                     </ListGroup>
-                    <h3>Total Value: ${this.state.searchedUserTotalPrice}</h3>
+                    <h3>Total Value: ${this.state.tradeData.searchedUserTotalPrice}</h3>
                   </div>
                 </div>
                 {/* SPLIT TOP-BOTTOM BOXES */}
                 <div className="row bg-dark p-3">
 
                   <div className="offset-5">
-                    <button className="btn btn-success">Request Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+                    <button className="btn btn-success" onClick={this.submitTrade.bind(this)}>Request Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
                   </div>
                 </div>
                 <div className="row bg-white mt-3">
@@ -309,8 +340,8 @@ class TradeRequestContainer extends React.Component {
                   <div className="col-4 form-group ">
                     <div className="input-group">
 
-                    <FormGroup row>
-                      <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
+                      <FormGroup row className="pl-3">
+                        <Label for="bgSetPrice2">Set Price(${this.state.valueMin}-${this.state.valueMax})</Label>
                         <InputGroup>
                           <InputGroupAddon addonType="prepend">$</InputGroupAddon>
                           <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice" value={this.state.price} />
@@ -344,12 +375,12 @@ class TradeRequestContainer extends React.Component {
                     <div className="form-group mt-6">
                       <label >To Trade:</label>
                       <ListGroup id="tradedToYou">
-                        {this.state.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>
+                        {this.state.tradeData.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>
                           {item.name.length < 30 ?
                             item.name : item.name.substring(0, 30) + '...'} | ${item.price} | {item.condition}
                           <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
                       </ListGroup>
-                      <h3>Total Value: ${this.state.userTotalPrice}</h3>
+                      <h3>Total Value: ${this.state.tradeData.userTotalPrice}</h3>
                     </div>
                   </div>
                 </div>

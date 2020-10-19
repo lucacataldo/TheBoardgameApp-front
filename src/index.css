@@ -48,6 +48,10 @@ body {
     font-size: 0.75rem;
   }
 }
+/*general class for changing item to button*/
+.cursor-pointer{
+  cursor: pointer;
+}
 /**************************************************/
 /* Sidebar CSS */
 /**************************************************/
@@ -185,3 +189,18 @@ body {
     font-size: 0.75rem;
   }
 }
+
+/**************************************************/
+/* TRADE CSS*/
+/**************************************************/
+
+.bgListItem {
+height: "8px"
+}
+
+.bgListImg{
+  border-radius: 50%;
+  height:50px;
+  width:50px;
+}
+
