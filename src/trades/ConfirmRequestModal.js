@@ -53,7 +53,7 @@ state = {
           </div >
           <div className="row">
             <div className="col-6">
-              <h3>What you're trading</h3>
+              <h3>You</h3>
               <table className="table table-bordered">
                 <tr><th scope="col">Name</th>
                   <th scope="col">Price</th>
@@ -71,7 +71,7 @@ state = {
             </div>
 
             <div className="col-6">
-            <h3>What {this.props.tradeData.searchedUser}'s trading</h3>
+            <h3>{this.props.tradeData.searchedUser}</h3>
               <table className="table table-bordered">
                 <tr><th scope="col">Name</th>
                   <th scope="col">Price</th>
