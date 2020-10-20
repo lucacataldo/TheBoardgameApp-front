@@ -3,6 +3,7 @@ import AppState from "../context/App/AppState";
 import SideBar from "./CalSideBar";
 import Calendar from "./Calendar";
 import "./calStyle.css";
+
 const CalContainer = () => {
   return (
     <AppState>
