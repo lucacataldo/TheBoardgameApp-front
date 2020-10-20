@@ -62,10 +62,11 @@ class BgListPrice extends React.Component {
   render() {
     const items = this.props.bgData.filter((data)=>{
       if(this.state.search == null)
-          return data
+          return data;
       else if(data.boardgame.title.toLowerCase().includes(this.state.search.toLowerCase())){
-          return data
+          return data;
       }
+      return 0;
     })
 
    return(
@@ -80,7 +81,7 @@ class BgListPrice extends React.Component {
 <div>
   <Input type="search" id="searchList"onChange={(e)=>this.searchSpace(e)}></Input>
 
- <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple size="15" id={this.props.listID}>
+ <Input type="select" name="selectMulti"  multiple size="15" id={this.props.listID}>
    
            {items.map((bg,i)=>{
                return <option id={bg._id} key={bg._id}>{bg.boardgame.title}</option>

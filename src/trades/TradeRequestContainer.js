@@ -2,7 +2,8 @@ import React from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import BgListPrice from "../boardgame/BgListPrice";
-import Button from "react-bootstrap/Button"
+import Button from "react-bootstrap/Button";
+import ConfirmRequestModal from "./ConfirmRequestModal";
 import { getUserId } from "../user/apiUser";
 import { getGuruCollection } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,7 +26,7 @@ class TradeRequestContainer extends React.Component {
     searchedUserBoardgames: [],
     price: 0,
     searchedUserPrice: 0,
-
+    show: false,
     tradeData: {
       userID: '',
       userTradeList: [],
@@ -60,8 +61,13 @@ class TradeRequestContainer extends React.Component {
     }).catch(err => {
       console.log(err);
     })
-
   }
+
+  showModal = e => {
+    this.setState({ show: !this.state.show });
+  };
+
+
 
   loadSearchedUserBoardgameData(user) {
 
@@ -91,20 +97,14 @@ class TradeRequestContainer extends React.Component {
 
   }
 
-  submitTrade = event => {
+  // submitTrade = event => {
 
-    const token = isAuthenticated().token;
-    createTrade(token, this.state.tradeData).then(data => {
-      // if (data.error) this.setState({ error: data.error });
-      // else {
-      //   this.setState({
-      //     redirectToHome: true
-      //   });
-      // }
-      /*CREATE LOGIC FOR redirect after trade*/
-    });
+  //   const token = isAuthenticated().token;
+  //   createTrade(token, this.state.tradeData).then(data => {
+  //     /*CREATE LOGIC FOR redirect after trade*/
+  //   });
 
-  };
+  // };
 
   handleAddBoardgame(event) {
     if (event.target.id === "right1") {
@@ -306,7 +306,7 @@ class TradeRequestContainer extends React.Component {
                       </FormGroup>
                     </div>
                   </div>
-                  <div className="col-1"><FontAwesomeIcon className="btn-success mt-4 cursor-pointer" id="right2" onClick={this.handleAddBoardgame.bind(this)} icon={faPlusCircle} size="5x"color="green"></FontAwesomeIcon></div>
+                  <div className="col-1"><FontAwesomeIcon className="btn-success mt-4 cursor-pointer" id="right2" onClick={this.handleAddBoardgame.bind(this)} icon={faPlusCircle} size="5x" color="green"></FontAwesomeIcon></div>
                   <FormGroup className="col-7">
                     <Label for="searchedUserNotes">Notes</Label>
                     <Input type="textarea" rows="5" name="searchedUserNotes" id="searchedUserNotes" />
@@ -324,12 +324,18 @@ class TradeRequestContainer extends React.Component {
                     </ListGroup>
                     <h3>Total Value: ${this.state.tradeData.searchedUserTotalPrice}</h3>
                   </div>
-                </div>
+                </div> 
+                    <ConfirmRequestModal tradeData={this.state.tradeData} onClose={this.showModal} show={this.state.show} ></ConfirmRequestModal>  
+                    
                 {/* SPLIT TOP-BOTTOM BOXES */}
                 <div className="row bg-dark p-3">
 
                   <div className="offset-5">
-                    <button className="btn btn-success" onClick={this.submitTrade.bind(this)}>Request Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+                    <button className="btn btn-success" onClick={e => {
+              this.showModal();
+         }}>Request Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+                    
+              
                   </div>
                 </div>
                 <div className="row bg-white mt-3">
