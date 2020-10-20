@@ -81,7 +81,7 @@ class BgListPrice extends React.Component {
 <div>
   <Input type="search" id="searchList"onChange={(e)=>this.searchSpace(e)}></Input>
 
- <Input type="select" name="selectMulti"  multiple size="15" id={this.props.listID}>
+ <Input type="select" name="selectMulti"  multiple size="15" id={this.props.listID} required>
    
            {items.map((bg,i)=>{
                return <option id={bg._id} key={bg._id}>{bg.boardgame.title}</option>
