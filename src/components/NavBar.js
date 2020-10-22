@@ -64,7 +64,7 @@ class NavBar extends React.Component {
                     Collection
                   </a>
                   <div
-                    class="dropdown-menu"
+                    className="dropdown-menu"
                     aria-labelledby="navbarDropdownCollectionLink"
                   >
                     <NavLink

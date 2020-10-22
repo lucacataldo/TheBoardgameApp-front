@@ -61,7 +61,7 @@ state = {
                 </tr>
 
                 {this.props.tradeData.userTradeList.map(item => {
-                  return <tr>
+                  return <tr key={item.id}>
                     <td>{item.name}</td>
                     <td>{item.price}</td>
                     <td>{item.condition}</td>
@@ -78,7 +78,7 @@ state = {
                   <th scope="col">Condition</th></tr>
 
                 {this.props.tradeData.searchedUserTradeList.map(item => {
-                  return <tr>
+                  return <tr key={item.id}>
                     <td>{item.name}</td>
                     <td>{item.price}</td>
                     <td>{item.condition}</td>
