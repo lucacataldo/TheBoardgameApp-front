@@ -20,8 +20,8 @@ class TradeRequestContainer extends React.Component {
     redirectToHome: false,
     foundUser: false,
     showAlert: false,
-    selectGameAlert:false,
-    selectGameMsg:'',
+    selectGameAlert: false,
+    selectGameMsg: '',
     isLoading: true,
     valueMin: 0,
     valueMax: 9999,
@@ -91,9 +91,14 @@ class TradeRequestContainer extends React.Component {
 
             } else {
               console.log("FILTER NOT CHECKED");
-              this.setState(prevState => ({
+              try{
+                this.setState(prevState => ({
                 tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, isLoading: false, foundUser: true, showAlert: false
               }));
+              }catch(e){
+                console.log(e);
+              }
+              
             }
 
         })
@@ -113,14 +118,14 @@ class TradeRequestContainer extends React.Component {
         let price = document.getElementById("bgSetPrice");
         let condition = document.getElementById("conditionSelect2");
         var number = parseFloat(price.value).toFixed(2);
-        
-        if(available.options[available.selectedIndex] === undefined){
+
+        if (available.options[available.selectedIndex] === undefined) {
           throw "Please select a game";
         }
-         else if(condition.value === ""){
-            throw "No condition was selected.";
-          }
-          var ID = available.options[available.selectedIndex].id;
+        else if (condition.value === "") {
+          throw "No condition was selected.";
+        }
+        var ID = available.options[available.selectedIndex].id;
         const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
         const trades = this.state.tradeData.userTradeList;
         const tradeItem = Object.create(values);
@@ -143,11 +148,14 @@ class TradeRequestContainer extends React.Component {
          bg = bg.filter((element) => element._id !== ID);
        this.setState({userBoardgames:bg, userTradeList: trades, userTotalPrice: total.toFixed(2) }); */
 
+        document.getElementById("conditionSelect2").selectedIndex = 0;
+
         return true;
 
       } catch (e) {
-        this.setState({selectGameAlert:true,selectGameMsg: e},() => {
-          window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)});
+        this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
+          window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
+        });
         console.log(e);
       }
     } else {
@@ -155,11 +163,11 @@ class TradeRequestContainer extends React.Component {
         let available = document.getElementById("yourList");
         let price = document.getElementById("bgSetPrice2");
         let condition = document.getElementById("conditionSelect");
-        
-        if(available.options[available.selectedIndex] === undefined){
+
+        if (available.options[available.selectedIndex] === undefined) {
           throw "Please select a game";
         }
-        else if(condition.value === ""){
+        else if (condition.value === "") {
           throw "No condition was selected.";
         }
         let number = parseFloat(price.value).toFixed(2);
@@ -174,11 +182,13 @@ class TradeRequestContainer extends React.Component {
         let total = parseFloat(this.state.tradeData.searchedUserTotalPrice) + parseFloat(number);
 
         this.setState(prevState => ({ tradeData: { ...prevState.tradeData, searchedUserTradeList: trades, searchedUserTotalPrice: total.toFixed(2) } }));
+        document.getElementById("conditionSelect").selectedIndex = 0;
         return true;
 
       } catch (e) {
-        this.setState({selectGameAlert:true,selectGameMsg:e},() => {
-          window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)});
+        this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
+          window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
+        });
         console.log(e);
       }
     }
@@ -251,6 +261,9 @@ class TradeRequestContainer extends React.Component {
 
   }
 
+  clear = () => {
+    this.setState(prevState => ({ tradeData: { ...prevState.tradeData, userTradeList: [], searchedUserTradeList:[]}}));
+  }
 
 
   render() {
@@ -275,12 +288,15 @@ class TradeRequestContainer extends React.Component {
                     <Button variant="primary" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>
                   </InputGroupAddon>
                 </InputGroup><br />
-                &nbsp;<span><FormGroup check>
+                <Input id="clear" type="button" className="btn btn-info" onClick={this.clear.bind(this)} value="Clear"/>
+                &nbsp;<span>
+                  <FormGroup check>
                   <Label check>
                     <Input id="filterMatching" type="checkbox" />
                     Filter Matching Games
               </Label>
                 </FormGroup></span>
+               
 
 
 
@@ -295,48 +311,66 @@ class TradeRequestContainer extends React.Component {
               </div> :
               <div>
                 <div className="row bg-white">
-                {this.state.selectGameAlert ? <div className="col-12 px-0"><Alert color="warning" >{this.state.selectGameMsg}</Alert></div> : null}
+                  {this.state.selectGameAlert ? <div className="col-12 px-0"><Alert color="warning" >{this.state.selectGameMsg}</Alert></div> : null}
                   <div className="col-12">
                     <Link to={`/user/${this.state.tradeData.searchedUserID}`}>
                       <h3>{this.state.tradeData.searchedUser.charAt(0).toUpperCase() + this.state.tradeData.searchedUser.slice(1)}'s List ({this.state.searchedUserBoardgames.length})</h3>
                     </Link>
                   </div>
                   <br />
-                  <div className="col-5 pl-2 ml-2 mb-2">  
-                  <form>
-                    <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
-            
-                    <FormGroup row className="pt-2">
-                      <div className="col">
-                        <InputGroup>
-                          <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-                          <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice2" value={this.state.searchedUserPrice} />
-                        </InputGroup>
-                      </div>
+                  <div className="col-5 pl-2 ml-2 mb-2">
+                    <form>
+                      <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
 
-                      <div className="col">
+                      <FormGroup row className="pt-2">
+                        <div className="col">
+                          <InputGroup>
+                            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                            <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice2" value={this.state.searchedUserPrice} />
+                          </InputGroup>
+                        </div>
 
-                        <Input type="select" name="select" id="conditionSelect" required>
-                        <option value="" selected disabled hidden>Boardgame Condition</option>
-                          <option>Excellent</option>
-                          <option>Good</option>
-                          <option>Fair</option>
-                          <option>Poor</option>
-                        </Input>
-                      </div>
-                    </FormGroup>
-                <button type="submit" className="btn btn-success col-12" id="right2" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
-    </form>
+                        <div className="col">
+
+                          <Input type="select" name="select" id="conditionSelect" required>
+                            <option value="" defaultValue disabled hidden>Boardgame Condition</option>
+                            <option>Excellent</option>
+                            <option>Good</option>
+                            <option>Fair</option>
+                            <option>Poor</option>
+                          </Input>
+                        </div>
+                      </FormGroup>
+                      <button type="submit" className="btn btn-success col-12" id="right2" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
+                    </form>
                   </div>
 
 
                   <div className="col-5">
                     <label >To Trade:</label>
                     <ListGroup id="tradedToMe">
-                      {this.state.tradeData.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveUserBoardgame.bind(this)}>
+                      {this.state.tradeData.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle font-weight-bold" onClick={this.handleRemoveUserBoardgame.bind(this)}>
+                      
                         {item.name.length < 30 ?
-                          item.name : item.name.substring(0, 30) + '...'} | ${item.price} | {item.condition}
-                        <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
+                          item.name : item.name.substring(0, 30) + '...'}  |  ${item.price} 
+                          <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon> 
+                          <br/>
+                        {(function () {
+                          switch (item.condition) {
+                            case 'Excellent':
+                              return <span className="badge badge-success float-left">{item.condition}</span>;
+                            case 'Good':
+                              return <span className="badge badge-primary float-left">{item.condition}</span>;
+                            case 'Fair':
+                              return <span className="badge badge-warning float-left">{item.condition}</span>;
+                            case 'Poor':
+                              return <span className="badge badge-danger float-left">{item.condition}</span>;
+                            default:
+                              return null;
+                          }
+                        })()}
+                        
+                       </ListGroupItem>)}
                     </ListGroup>
                     <h3>Total Value: ${this.state.tradeData.searchedUserTotalPrice}</h3>
                   </div>
@@ -360,43 +394,58 @@ class TradeRequestContainer extends React.Component {
                     <h4>Your List ({this.state.userBoardgames.length})</h4>
                   </div>
                   <div className="col-5 form-group ">
-                   <div className="form-group">
+                    <div className="form-group">
                       <BgListPrice bgData={this.state.userBoardgames} listID="myList" />
                     </div>
-                      <FormGroup row>
+                    <FormGroup row>
 
-                        <div className="col">
-<InputGroup>
+                      <div className="col">
+                        <InputGroup>
                           <InputGroupAddon addonType="prepend">$</InputGroupAddon>
                           <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice" value={this.state.price} />
                         </InputGroup>
-                        </div>
+                      </div>
 
-                        <div className="col">
-                           <Input type="select" name="select" id="conditionSelect2" required>
-                           <option value="" selected disabled hidden>Boardgame Condition</option>
+                      <div className="col">
+                        <Input type="select" name="select" id="conditionSelect2" required>
+                          <option value="" defaultValue disabled hidden>Boardgame Condition</option>
                           <option>Excellent</option>
                           <option>Good</option>
                           <option>Fair</option>
                           <option>Poor</option>
                         </Input>
-                          </div>
-                      </FormGroup>
-                      <button className="btn btn-success col-12" id="right1" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
+                      </div>
+                    </FormGroup>
+                    <button className="btn btn-success col-12" id="right1" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
 
-                    
+
 
                   </div>
-  
+
                   <div className="col-5">
 
                     <div className="form-group">
                       <label >To Trade:</label>
                       <ListGroup id="tradedToYou">
                         {this.state.tradeData.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>
-                          {item.name.length < 30 ?
-                            item.name : item.name.substring(0, 30) + '...'} | ${item.price} | {item.condition}
-                          <FontAwesomeIcon className="align-middle" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle} ></FontAwesomeIcon></ListGroupItem>)}
+                        {item.name.length < 30 ?
+                          item.name : item.name.substring(0, 30) + '...'}  |  ${item.price} 
+                          <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon> 
+                          <br/>
+                        {(function () {
+                          switch (item.condition) {
+                            case 'Excellent':
+                              return <span className="badge badge-success float-left">{item.condition}</span>;
+                            case 'Good':
+                              return <span className="badge badge-primary float-left">{item.condition}</span>;
+                            case 'Fair':
+                              return <span className="badge badge-warning float-left">{item.condition}</span>;
+                            case 'Poor':
+                              return <span className="badge badge-danger float-left">{item.condition}</span>;
+                            default:
+                              return null;
+                          }
+                        })()}</ListGroupItem>)}
                       </ListGroup>
                       <h3>Total Value: ${this.state.tradeData.userTotalPrice}</h3>
                     </div>
