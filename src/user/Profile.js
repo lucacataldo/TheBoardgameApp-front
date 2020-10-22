@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
-
 import { getUser } from "./apiUser";
 import { isAuthenticated } from "../auth";
 import DefaultProfileImg from "../images/avatar.png";
