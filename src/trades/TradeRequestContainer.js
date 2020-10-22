@@ -153,7 +153,16 @@ class TradeRequestContainer extends React.Component {
         return true;
 
       } catch (e) {
-        document.getElementById("conditionSelect2").classList.add("is-invalid");
+        if(e === "Please select a game"){
+          document.getElementById("myList").classList.add("is-invalid");
+          window.setTimeout(() => { document.getElementById("myList").classList.remove("is-invalid"); }, 3000)
+          
+        }
+        if(e === "No condition was selected."){
+          document.getElementById("conditionSelect2").classList.add("is-invalid");
+          window.setTimeout(() => { document.getElementById("conditionSelect2").classList.remove("is-invalid"); }, 3000)
+        }
+
         this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
           window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
         });
