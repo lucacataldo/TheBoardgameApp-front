@@ -153,6 +153,7 @@ class TradeRequestContainer extends React.Component {
         return true;
 
       } catch (e) {
+        document.getElementById("conditionSelect2").classList.add("is-invalid");
         this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
           window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
         });
@@ -186,6 +187,16 @@ class TradeRequestContainer extends React.Component {
         return true;
 
       } catch (e) {
+        if(e === "Please select a game"){
+          document.getElementById("yourList").classList.add("is-invalid");
+          window.setTimeout(() => { document.getElementById("yourList").classList.remove("is-invalid"); }, 3000)
+          
+        }
+        if(e === "No condition was selected."){
+          document.getElementById("conditionSelect").classList.add("is-invalid");
+          window.setTimeout(() => { document.getElementById("conditionSelect").classList.remove("is-invalid"); }, 3000)
+        }
+        
         this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
           window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
         });
@@ -319,7 +330,7 @@ class TradeRequestContainer extends React.Component {
                   </div>
                   <br />
                   <div className="col-5 pl-2 ml-2 mb-2">
-                    <form>
+                    <form >
                       <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
 
                       <FormGroup row className="pt-2">
@@ -332,13 +343,16 @@ class TradeRequestContainer extends React.Component {
 
                         <div className="col">
 
-                          <Input type="select" name="select" id="conditionSelect" required>
-                            <option value="" defaultValue disabled hidden>Boardgame Condition</option>
+                          <Input type="select" name="select" id="conditionSelect" className="has-error" required>
+                            <option value="" disabled hidden>Boardgame Condition</option>
                             <option>Excellent</option>
                             <option>Good</option>
                             <option>Fair</option>
                             <option>Poor</option>
                           </Input>
+                          <div className="invalid-feedback">
+        Please provide a valid Selection.
+      </div>
                         </div>
                       </FormGroup>
                       <button type="submit" className="btn btn-success col-12" id="right2" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
