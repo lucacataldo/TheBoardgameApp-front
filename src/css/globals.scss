@@ -1,0 +1,21 @@
+body {
+  background-color: rgb(231, 231, 231);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.container {
+  font-family: "Montserrat", sans-serif;
+}
+
+.header-font {
+  font-family: "Raleway", sans-serif;
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 0.75rem;
+  }
+}
