@@ -19,8 +19,6 @@ function replacer(key,value){
 
 export const createTrade = (token,trade) => {
 
-
-
     return fetch(`${process.env.REACT_APP_API_URL}/trade/requestTrade`, {
         method: "POST",
         headers: {
@@ -30,7 +28,7 @@ export const createTrade = (token,trade) => {
     })
         .then(response => response.json())
         .then((data) =>{
-          console.log('success:',data);
+          return data.tradeId;
         })
         .catch(err =>{
             console.log(err);
