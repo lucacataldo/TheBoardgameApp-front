@@ -28,7 +28,7 @@ export const createTrade = (token,trade) => {
     })
         .then(response => response.json())
         .then((data) =>{
-          console.log('success:',data);
+          return data.tradeId;
         })
         .catch(err =>{
             console.log(err);
