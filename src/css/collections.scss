@@ -1,0 +1,22 @@
+.guruCollectionTable .maxColWidth-50 {
+  max-width: 50px;
+}
+
+.guruCollectionTable .maxColWidth-175 {
+  max-width: 175px;
+}
+.guruCollectionTable .maxColWidth-200 {
+  max-width: 200px;
+}
+.guruCollectionTable td.alignCenter {
+  text-align: center;
+}
+
+.guruCollectionTable a {
+  color: #000;
+}
+@media (max-width: 1200px) {
+  .guruCollectionTable {
+    font-size: 0.75rem;
+  }
+}
