@@ -416,7 +416,7 @@ class TradeRequestContainer extends React.Component {
                   <div className="offset-5">
                     <button className="btn btn-success" onClick={e => {
                       this.showModal();
-                    }}>Request Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+                    }}>Review Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
 
 
                   </div>
