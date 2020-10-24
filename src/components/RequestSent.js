@@ -14,8 +14,15 @@ state={
             return <Redirect to={this.state.redirect} />
           }
         return (
-            <div className="container-fluid overlay">
-                <h1 className="page-header">Your Request has been Sent</h1>Reference: {this.props.location.state.tradeId}
+            <div className="container-fluid ">
+                <h1 className="justify-content-center">Your Request has been Sent</h1>
+                {this.props.location.state !== undefined ?
+                <div>
+                    Reference: {this.props.location.state.tradeId}
+                </div> : null
+                
+                }
+                
                 <div>
                     <span>Look forward to your response! :) </span>
                 </div>
