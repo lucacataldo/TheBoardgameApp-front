@@ -7,19 +7,15 @@ import ConfirmRequestModal from "./ConfirmRequestModal";
 import { getUserId } from "../user/apiUser";
 import { getGuruCollection } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faSearch, faExchangeAlt, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faExchangeAlt, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroup, InputGroupAddon, Alert } from 'reactstrap';
 import { Link } from "react-router-dom";
-
-
-
 
 
 class TradeRequestContainer extends React.Component {
   state = {
     redirectToHome: false,
     foundUser: false,
-    showAlert: false,
     selectGameAlert: false,
     selectGameMsg: '',
     isLoading: true,
@@ -74,9 +70,8 @@ class TradeRequestContainer extends React.Component {
 
     getUserId(user).then((id) => {
       if (!id) {
-        this.setState({ showAlert: true }, () => {
-          window.setTimeout(() => { this.setState({ showAlert: false }) }, 3000)
-        });
+        document.getElementById("searchbar").classList.add("is-invalid");
+
       } else {
         getGuruCollection(id).then(bgList => {
           if (bgList !== undefined)
@@ -86,19 +81,19 @@ class TradeRequestContainer extends React.Component {
               bgList = bgList.filter(val => !this.state.userBoardgames.includes(val));
               let userBoardgames = this.state.userBoardgames.filter(val => !bgList.includes(val));
               this.setState(prevState => ({
-                tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: true, showAlert: false
+                tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: TextTrackCue
               }));
 
             } else {
               console.log("FILTER NOT CHECKED");
-              try{
+              try {
                 this.setState(prevState => ({
-                tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, isLoading: false, foundUser: true, showAlert: false
-              }));
-              }catch(e){
+                  tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, isLoading: false, foundUser: true
+                }));
+              } catch (e) {
                 console.log(e);
               }
-              
+
             }
 
         })
@@ -153,12 +148,12 @@ class TradeRequestContainer extends React.Component {
         return true;
 
       } catch (e) {
-        if(e === "Please select a game"){
+        if (e === "Please select a game") {
           document.getElementById("myList").classList.add("is-invalid");
           window.setTimeout(() => { document.getElementById("myList").classList.remove("is-invalid"); }, 3000)
-          
+
         }
-        if(e === "No condition was selected."){
+        if (e === "No condition was selected.") {
           document.getElementById("conditionSelect2").classList.add("is-invalid");
           window.setTimeout(() => { document.getElementById("conditionSelect2").classList.remove("is-invalid"); }, 3000)
         }
@@ -196,16 +191,16 @@ class TradeRequestContainer extends React.Component {
         return true;
 
       } catch (e) {
-        if(e === "Please select a game"){
+        if (e === "Please select a game") {
           document.getElementById("yourList").classList.add("is-invalid");
           window.setTimeout(() => { document.getElementById("yourList").classList.remove("is-invalid"); }, 3000)
-          
+
         }
-        if(e === "No condition was selected."){
+        if (e === "No condition was selected.") {
           document.getElementById("conditionSelect").classList.add("is-invalid");
           window.setTimeout(() => { document.getElementById("conditionSelect").classList.remove("is-invalid"); }, 3000)
         }
-        
+
         this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
           window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
         });
@@ -258,7 +253,9 @@ class TradeRequestContainer extends React.Component {
     }
   }
 
-
+  onChangeSearchBar = () =>{
+    document.getElementById("searchbar").classList.remove("is-invalid");
+  }
 
   handleSearchButton(event) {
     var inputValue = document.getElementById("searchbar").value;
@@ -282,7 +279,7 @@ class TradeRequestContainer extends React.Component {
   }
 
   clear = () => {
-    this.setState(prevState => ({ tradeData: { ...prevState.tradeData, userTradeList: [], searchedUserTradeList:[]}}));
+    this.setState(prevState => ({ tradeData: { ...prevState.tradeData, userTradeList: [], searchedUserTradeList: [] } }));
   }
 
 
@@ -301,27 +298,36 @@ class TradeRequestContainer extends React.Component {
               </div>
 
               <div className=" col-12 form-inline py-2 px-0">
+                <FormGroup className="col-12">
 
-                <InputGroup>
-                  <Input id='searchbar' placeholder="Search..." />
+                  <Input id='searchbar' onChange={this.onChangeSearchBar} placeholder="Search..." />
+
                   <InputGroupAddon addonType="append">
-                    <Button variant="primary" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>
+                    <Button variant="primary" className="rounded" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>
                   </InputGroupAddon>
-                </InputGroup><br />
-                <Input id="clear" type="button" className="btn btn-info" onClick={this.clear.bind(this)} value="Clear"/>
-                &nbsp;<span>
-                  <FormGroup check>
-                  <Label check>
-                    <Input id="filterMatching" type="checkbox" />
-                    Filter Matching Games
-              </Label>
-                </FormGroup></span>
-               
+                   &nbsp;
+                  <Input id="clear" type="button" className="btn btn-info rounded block" onClick={this.clear.bind(this)} value="Clear" />
+                 
+                  <div className="invalid-feedback">
+                    User does not exist.
+                  </div>
+                </FormGroup>
 
+                <FormGroup className="pl-4 pt-1">
+                  
+                  <span>
+
+                    <Label check>
+                      <Input id="filterMatching" type="checkbox" />
+                      Filter Matching Games
+              </Label>
+                  </span>
+
+                </FormGroup>
 
 
               </div>
-              {this.state.showAlert ? <div><Alert className="col-12" color="danger" >User Not Found.</Alert></div> : null}
+
             </div>
             {/* START Recipient trade list */}
             {!this.state.foundUser ?
@@ -353,14 +359,14 @@ class TradeRequestContainer extends React.Component {
                         <div className="col">
 
                           <Input type="select" name="select" id="conditionSelect" className="has-error" required>
-                            <option value="" disabled hidden>Boardgame Condition</option>
+                            <option value="" defaultValue disabled hidden>Boardgame Condition</option>
                             <option>Excellent</option>
                             <option>Good</option>
                             <option>Fair</option>
                             <option>Poor</option>
                           </Input>
                           <div className="invalid-feedback">
-        Please provide a valid Selection.
+                            Please provide a valid Selection.
       </div>
                         </div>
                       </FormGroup>
@@ -373,11 +379,11 @@ class TradeRequestContainer extends React.Component {
                     <label >To Trade:</label>
                     <ListGroup id="tradedToMe">
                       {this.state.tradeData.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle font-weight-bold" onClick={this.handleRemoveUserBoardgame.bind(this)}>
-                      
+
                         {item.name.length < 30 ?
-                          item.name : item.name.substring(0, 30) + '...'}  |  ${item.price} 
-                          <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon> 
-                          <br/>
+                          item.name : item.name.substring(0, 30) + '...'}  |  ${item.price}
+                        <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon>
+                        <br />
                         {(function () {
                           switch (item.condition) {
                             case 'Excellent':
@@ -392,8 +398,8 @@ class TradeRequestContainer extends React.Component {
                               return null;
                           }
                         })()}
-                        
-                       </ListGroupItem>)}
+
+                      </ListGroupItem>)}
                     </ListGroup>
                     <h3>Total Value: ${this.state.tradeData.searchedUserTotalPrice}</h3>
                   </div>
@@ -451,24 +457,24 @@ class TradeRequestContainer extends React.Component {
                       <label >To Trade:</label>
                       <ListGroup id="tradedToYou">
                         {this.state.tradeData.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>
-                        {item.name.length < 30 ?
-                          item.name : item.name.substring(0, 30) + '...'}  |  ${item.price} 
-                          <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon> 
-                          <br/>
-                        {(function () {
-                          switch (item.condition) {
-                            case 'Excellent':
-                              return <span className="badge badge-success float-left">{item.condition}</span>;
-                            case 'Good':
-                              return <span className="badge badge-primary float-left">{item.condition}</span>;
-                            case 'Fair':
-                              return <span className="badge badge-warning float-left">{item.condition}</span>;
-                            case 'Poor':
-                              return <span className="badge badge-danger float-left">{item.condition}</span>;
-                            default:
-                              return null;
-                          }
-                        })()}</ListGroupItem>)}
+                          {item.name.length < 30 ?
+                            item.name : item.name.substring(0, 30) + '...'}  |  ${item.price}
+                          <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon>
+                          <br />
+                          {(function () {
+                            switch (item.condition) {
+                              case 'Excellent':
+                                return <span className="badge badge-success float-left">{item.condition}</span>;
+                              case 'Good':
+                                return <span className="badge badge-primary float-left">{item.condition}</span>;
+                              case 'Fair':
+                                return <span className="badge badge-warning float-left">{item.condition}</span>;
+                              case 'Poor':
+                                return <span className="badge badge-danger float-left">{item.condition}</span>;
+                              default:
+                                return null;
+                            }
+                          })()}</ListGroupItem>)}
                       </ListGroup>
                       <h3>Total Value: ${this.state.tradeData.userTotalPrice}</h3>
                     </div>
