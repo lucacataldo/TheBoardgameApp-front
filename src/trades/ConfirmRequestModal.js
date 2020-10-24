@@ -1,6 +1,6 @@
 import React from "react";
 import ReactModal from 'react-modal';
-import {FormGroup, Label, Input } from 'reactstrap';
+import { FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
 import { createTrade } from "./apiTrade";
@@ -8,9 +8,9 @@ import { isAuthenticated } from "../auth";
 
 
 export default class ConfirmRequestModal extends React.Component {
-state = {
-  notes: ""
-}
+  state = {
+    notes: ""
+  }
 
   onClose = e => {
     this.props.onClose && this.props.onClose(e);
@@ -41,14 +41,14 @@ state = {
       <ReactModal isOpen={this.props.show} style={style}>
         <div className="container-fluid">
 
-          <div><h1>Confirm Request<button className="toggle-button float-right"
-                onClick={
-                  this.onClose
-                }
-              >
-                &times;
-        </button></h1>
-          
+          <div>
+            <h1>
+              Confirm Request
+          <button type="button" className="close float-right" onClick={this.onClose} data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </h1>
+
 
           </div >
           <div className="row">
@@ -65,13 +65,17 @@ state = {
                     <td>{item.name}</td>
                     <td>{item.price}</td>
                     <td>{item.condition}</td>
-                    </tr>;
+                  </tr>;
                 })}
+                <tr>
+                  <th>Total Value:</th>
+                  <td colspan="2">${this.props.tradeData.userTotalPrice}</td>
+                </tr>
               </table>
             </div>
 
             <div className="col-6">
-            <h3>{this.props.tradeData.searchedUser}</h3>
+              <h3>{this.props.tradeData.searchedUser}</h3>
               <table className="table table-bordered">
                 <tr><th scope="col">Name</th>
                   <th scope="col">Price</th>
@@ -84,19 +88,23 @@ state = {
                     <td>{item.condition}</td>
                   </tr>;
                 })}
+                 <tr>
+                  <th>Total Value:</th>
+                  <td colspan="2">${this.props.tradeData.searchedUserTotalPrice}</td>
+                </tr>
               </table>
             </div>
-                
+
             <div className="col-6">
-            <FormGroup style={{bottom:'10%',position:'fixed',width:'40%'}}>
-                    <Label for="notes">Notes</Label>
-                    <Input type="textarea" maxlength="500" style={{resize:'none'}} rows="5" name="notes" id="tradeNotes" placeholder="500 characters max." />
-                  </FormGroup>
+              <FormGroup style={{ bottom: '10%', position: 'fixed', width: '40%' }}>
+                <Label for="notes">Notes</Label>
+                <Input type="textarea" maxlength="500" style={{ resize: 'none' }} rows="5" name="notes" id="tradeNotes" placeholder="500 characters max." />
+              </FormGroup>
             </div>
-                <div className="col">
-                  <button style={{bottom:'15%',right:'10%',position:'fixed'}} className="btn btn-success" onClick={this.submitTrade}>Confirm Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
-                </div>
-            
+            <div className="col">
+              <button style={{ bottom: '15%', right: '10%', position: 'fixed' }} className="btn btn-success" onClick={this.submitTrade}>Confirm Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
+            </div>
+
           </div>
         </div>
 
