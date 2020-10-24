@@ -87,6 +87,8 @@ class BgListPrice extends React.Component {
                return <option id={bg._id} key={bg._id}>{bg.boardgame.title}</option>
            })}
             </Input>
+
+            <div className="invalid-feedback">Please select a game to trade.</div>
           </div>   
     );
 

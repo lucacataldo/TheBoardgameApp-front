@@ -155,7 +155,6 @@ class TradeRequestContainer extends React.Component {
         }
         if (e === "No condition was selected.") {
           document.getElementById("conditionSelect2").classList.add("is-invalid");
-          window.setTimeout(() => { document.getElementById("conditionSelect2").classList.remove("is-invalid"); }, 3000)
         }
 
         this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
@@ -178,7 +177,6 @@ class TradeRequestContainer extends React.Component {
         let number = parseFloat(price.value).toFixed(2);
         let ID = available.options[available.selectedIndex].id;
         const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
-        // values.name = (values.name.length > 30 ? values.name.substring(0,29)+"..." : values.name);
 
         const trades = this.state.tradeData.searchedUserTradeList;
         const tradeItem = Object.create(values);
@@ -198,7 +196,7 @@ class TradeRequestContainer extends React.Component {
         }
         if (e === "No condition was selected.") {
           document.getElementById("conditionSelect").classList.add("is-invalid");
-          window.setTimeout(() => { document.getElementById("conditionSelect").classList.remove("is-invalid"); }, 3000)
+
         }
 
         this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
@@ -253,10 +251,18 @@ class TradeRequestContainer extends React.Component {
     }
   }
 
-  onChangeSearchBar = () =>{
+  onChangeSearchBar = () => {
     document.getElementById("searchbar").classList.remove("is-invalid");
   }
 
+  onChangeCondition = () => {
+
+    document.getElementById("conditionSelect").classList.remove("is-invalid");
+  }
+  onChangeCondition2 = () => {
+
+    document.getElementById("conditionSelect2").classList.remove("is-invalid");
+  }
   handleSearchButton(event) {
     var inputValue = document.getElementById("searchbar").value;
     console.log(inputValue);
@@ -305,16 +311,16 @@ class TradeRequestContainer extends React.Component {
                   <InputGroupAddon addonType="append">
                     <Button variant="primary" className="rounded" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>
                   </InputGroupAddon>
-                   &nbsp;
+                  &nbsp;
                   <Input id="clear" type="button" className="btn btn-info rounded block" onClick={this.clear.bind(this)} value="Clear" />
-                 
+
                   <div className="invalid-feedback">
                     User does not exist.
                   </div>
                 </FormGroup>
 
                 <FormGroup className="pl-4 pt-1">
-                  
+
                   <span>
 
                     <Label check>
@@ -345,33 +351,31 @@ class TradeRequestContainer extends React.Component {
                   </div>
                   <br />
                   <div className="col-5 pl-2 ml-2 mb-2">
-                    <form >
-                      <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
+                    <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" />
+                    <FormGroup row className="pt-2">
+                      <div className="col">
+                        <InputGroup>
+                          <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                          <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice2" value={this.state.searchedUserPrice} />
+                        </InputGroup>
+                      </div>
 
-                      <FormGroup row className="pt-2">
-                        <div className="col">
-                          <InputGroup>
-                            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-                            <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice2" value={this.state.searchedUserPrice} />
-                          </InputGroup>
-                        </div>
+                      <div className="col">
 
-                        <div className="col">
-
-                          <Input type="select" name="select" id="conditionSelect" className="has-error" required>
-                            <option value="" defaultValue disabled hidden>Boardgame Condition</option>
-                            <option>Excellent</option>
-                            <option>Good</option>
-                            <option>Fair</option>
-                            <option>Poor</option>
-                          </Input>
-                          <div className="invalid-feedback">
-                            Please provide a valid Selection.
+                        <Input type="select" onChange={this.onChangeCondition} name="select" id="conditionSelect" className="has-error" required>
+                          <option value="" selected disabled hidden>Boardgame Condition</option>
+                          <option>Excellent</option>
+                          <option>Good</option>
+                          <option>Fair</option>
+                          <option>Poor</option>
+                        </Input>
+                        <div className="invalid-feedback">
+                          Please provide a valid Selection.
       </div>
-                        </div>
-                      </FormGroup>
-                      <button type="submit" className="btn btn-success col-12" id="right2" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
-                    </form>
+                      </div>
+                    </FormGroup>
+                    <button type="submit" className="btn btn-success col-12" id="right2" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
+
                   </div>
 
 
@@ -436,13 +440,16 @@ class TradeRequestContainer extends React.Component {
                       </div>
 
                       <div className="col">
-                        <Input type="select" name="select" id="conditionSelect2" required>
-                          <option value="" defaultValue disabled hidden>Boardgame Condition</option>
+                        <Input type="select" onChange={this.onChangeCondition2} name="select" id="conditionSelect2" required>
+                          <option value="" defaultValue selected disabled hidden>Boardgame Condition</option>
                           <option>Excellent</option>
                           <option>Good</option>
                           <option>Fair</option>
                           <option>Poor</option>
                         </Input>
+                        <div className="invalid-feedback">
+                          Please provide a valid Selection.
+      </div>
                       </div>
                     </FormGroup>
                     <button className="btn btn-success col-12" id="right1" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
