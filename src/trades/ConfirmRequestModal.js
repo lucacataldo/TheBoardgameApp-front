@@ -5,12 +5,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
 import { createTrade } from "./apiTrade";
 import { isAuthenticated } from "../auth";
+import { Redirect } from "react-router-dom";
 
 
 export default class ConfirmRequestModal extends React.Component {
   state = {
-    notes: ""
+    notes: "",
+    redirect: null,
+    tradeId: null
   }
+
+  componentWillMount() {
+    //Required to use modal or else it has errors
+    ReactModal.setAppElement('body');
+}
 
   onClose = e => {
     this.props.onClose && this.props.onClose(e);
@@ -19,7 +27,8 @@ export default class ConfirmRequestModal extends React.Component {
     const token = isAuthenticated().token;
     this.props.tradeData.notes = document.getElementById("tradeNotes").value;
     createTrade(token, this.props.tradeData).then(data => {
-      /*CREATE LOGIC FOR redirect after trade*/
+      //data returned is only _id of trade
+      this.setState({ redirect: "/requestSent", tradeId: data })
     });
 
   };
@@ -37,6 +46,15 @@ export default class ConfirmRequestModal extends React.Component {
         height: '80%'
       }
     };
+
+
+    if (this.state.redirect) {
+      return <Redirect to={{
+        pathname: this.state.redirect,
+        state: { tradeId: this.state.tradeId }
+      }} />
+      // return <RequestSent redirect={this.state.redirect}></RequestSent>
+    }
     return (
       <ReactModal isOpen={this.props.show} style={style}>
         <div className="container-fluid">
@@ -55,50 +73,64 @@ export default class ConfirmRequestModal extends React.Component {
             <div className="col-6">
               <h3>You</h3>
               <table className="table table-bordered">
-                <tr><th scope="col">Name</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Condition</th>
-                </tr>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Condition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.props.tradeData.userTradeList.map(item => {
+                    return <tr key={item.id}>
+                      <td>{item.name}</td>
+                      <td>{item.price}</td>
+                      <td>{item.condition}</td>
+                    </tr>;
+                  })}
+                  <tr>
+                    <th>Total Value:</th>
+                    <td colSpan="2">${this.props.tradeData.userTotalPrice}</td>
+                  </tr>
 
-                {this.props.tradeData.userTradeList.map(item => {
-                  return <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.price}</td>
-                    <td>{item.condition}</td>
-                  </tr>;
-                })}
-                <tr>
-                  <th>Total Value:</th>
-                  <td colspan="2">${this.props.tradeData.userTotalPrice}</td>
-                </tr>
+
+                </tbody>
+
               </table>
             </div>
 
             <div className="col-6">
               <h3>{this.props.tradeData.searchedUser}</h3>
               <table className="table table-bordered">
-                <tr><th scope="col">Name</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Condition</th></tr>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Condition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.props.tradeData.searchedUserTradeList.map(item => {
+                    return <tr key={item.id}>
+                      <td>{item.name}</td>
+                      <td>{item.price}</td>
+                      <td>{item.condition}</td>
+                    </tr>;
+                  })}
+                  <tr>
+                    <th>Total Value:</th>
+                    <td colSpan="2">${this.props.tradeData.searchedUserTotalPrice}</td>
+                  </tr>
 
-                {this.props.tradeData.searchedUserTradeList.map(item => {
-                  return <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.price}</td>
-                    <td>{item.condition}</td>
-                  </tr>;
-                })}
-                 <tr>
-                  <th>Total Value:</th>
-                  <td colspan="2">${this.props.tradeData.searchedUserTotalPrice}</td>
-                </tr>
+                </tbody>
+
               </table>
             </div>
 
             <div className="col-6">
               <FormGroup style={{ bottom: '10%', position: 'fixed', width: '40%' }}>
                 <Label for="notes">Notes</Label>
-                <Input type="textarea" maxlength="500" style={{ resize: 'none' }} rows="5" name="notes" id="tradeNotes" placeholder="500 characters max." />
+                <Input type="textarea" maxLength="500" style={{ resize: 'none' }} rows="5" name="notes" id="tradeNotes" placeholder="500 characters max." />
               </FormGroup>
             </div>
             <div className="col">
