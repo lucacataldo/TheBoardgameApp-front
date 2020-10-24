@@ -362,8 +362,8 @@ class TradeRequestContainer extends React.Component {
 
                       <div className="col">
 
-                        <Input type="select" onChange={this.onChangeCondition} name="select" id="conditionSelect" className="has-error" required>
-                          <option value="" selected disabled hidden>Boardgame Condition</option>
+                        <Input type="select" defaultValue={""} onChange={this.onChangeCondition} name="select" id="conditionSelect" className="has-error" required>
+                          <option value="" disabled hidden>Boardgame Condition</option>
                           <option>Excellent</option>
                           <option>Good</option>
                           <option>Fair</option>
@@ -440,8 +440,8 @@ class TradeRequestContainer extends React.Component {
                       </div>
 
                       <div className="col">
-                        <Input type="select" onChange={this.onChangeCondition2} name="select" id="conditionSelect2" required>
-                          <option value="" defaultValue selected disabled hidden>Boardgame Condition</option>
+                        <Input type="select" defaultValue={""} onChange={this.onChangeCondition2} name="select" id="conditionSelect2" required>
+                          <option value="" disabled hidden>Boardgame Condition</option>
                           <option>Excellent</option>
                           <option>Good</option>
                           <option>Fair</option>
