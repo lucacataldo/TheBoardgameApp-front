@@ -24,15 +24,17 @@ class TradeResponse extends React.Component {
         return <div className="card" >
         <div className="card-header">Response Needed</div>
     <div className="card-body">
-        <div className="row justify-content-center align-self-center mt-1">
+    {this.props.trades.map(trade=>{
+      return(
+        <div key={trade._id} className="row justify-content-center align-self-center mt-1">
             <div className="col-md-2">
             <img className="rounded-circle" src="https://via.placeholder.com/100" alt="displaypic"/>
             </div>
             <div className="col-md-6 mt-4">
   
-                <a className="font-weight-bold h5" href="/">Jane Doe</a>
+                <a className="font-weight-bold h5" href={'user/' + trade.tradeSender._id}>{trade.tradeSender.name}</a>
                 <br/>
-                <small>3 games</small>
+                <small>{trade.tradeOffer.length} games</small>
                    
             </div>
             <div className="col-md-4 mt-4">
@@ -40,23 +42,7 @@ class TradeResponse extends React.Component {
             <button type="button" className="btn btn-success mx-2 float-right"><FontAwesomeIcon icon={faCheck} /> Accept</button>
             <button type="button" className="btn btn-primary mx-2 float-right"><FontAwesomeIcon icon={faEye} /> View</button>
             </div>        
-        </div>
-
-        <div className="row justify-content-center align-self-center mt-1">
-            <div className="col-md-2">
-            <img className="rounded-circle" src="https://via.placeholder.com/100" alt="displaypic"/>
-            </div>
-            <div className="col-md-6 mt-4">
-                <a className="font-weight-bold h5" href="/">Joe Dae</a>
-                <br/>
-                <small>1 games</small>
-            </div>
-            <div className="col-md-4 mt-4">
-            <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
-            <button type="button" className="btn btn-success mx-2 float-right"><FontAwesomeIcon icon={faCheck} /> Accept</button>
-            <button type="button" className="btn btn-primary mx-2 float-right"><FontAwesomeIcon icon={faEye} /> View</button>
-            </div>        
-        </div>
+    </div>)})}
         
 
     </div>

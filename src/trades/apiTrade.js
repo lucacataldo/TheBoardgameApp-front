@@ -35,3 +35,37 @@ export const createTrade = (token,trade) => {
         
         })
 };
+
+export const getAllTradeRequests = () => {
+
+    return fetch(`${process.env.REACT_APP_API_URL}/trades`, {
+        method: "GET",
+        headers: {
+            'Content-Type': "application/json"
+        }
+    })
+        .then(response => response.json())         
+        .catch(err =>{
+            console.log(err);
+        
+        })
+
+
+;}
+
+export const getAllTradeRequestsById = (id) => {
+
+    return fetch(`${process.env.REACT_APP_API_URL}/trades/by/${id}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': "application/json"
+        }
+    })
+        .then(response => response.json())         
+        .catch(err =>{
+            console.log(err);
+        
+        })
+
+
+;}
