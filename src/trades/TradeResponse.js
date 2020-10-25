@@ -26,7 +26,7 @@ class TradeResponse extends React.Component {
     <div className="card-body">
     {this.props.trades.map(trade=>{
       return(
-        <div className="row justify-content-center align-self-center mt-1">
+        <div key={trade._id} className="row justify-content-center align-self-center mt-1">
             <div className="col-md-2">
             <img className="rounded-circle" src="https://via.placeholder.com/100" alt="displaypic"/>
             </div>
