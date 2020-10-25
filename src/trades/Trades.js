@@ -5,7 +5,7 @@ import TradeRequest from "./TradeRequest";
 import TradeResponse from "./TradeResponse";
 import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
-import { getAllTradeRequests } from "./apiTrade";
+import { getAllTradeRequestsById } from "./apiTrade";
 class Trades extends React.Component {
   constructor() {
     super();
@@ -17,12 +17,10 @@ class Trades extends React.Component {
   }
 
   componentWillMount(){
-    getAllTradeRequests().then(data =>{
-      let userId = isAuthenticated().user._id;
+    let userId = isAuthenticated().user._id;
+    getAllTradeRequestsById(userId).then(data =>{
      let outgoingRequests =  data.filter(trade => userId === trade.tradeSender._id);
      let incomingRequests = data.filter(trade => userId === trade.tradeReceiver._id);
-        console.log(outgoingRequests);
-        console.log(incomingRequests);
       this.setState({tradeResponses: incomingRequests, tradeRequests: outgoingRequests});
     })
   }
