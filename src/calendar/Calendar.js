@@ -1,6 +1,6 @@
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import React, { useState, useContext } from "react";
-import AppContext from "../context/App/appContext";
+import React, { useEffect } from "react";
+
 import { format, startOfWeek, parse, getDay } from "date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
@@ -17,15 +17,23 @@ const localizer = dateFnsLocalizer({
 });
 
 const MyCalendar = () => {
-  const calContext = useContext(AppContext);
-  const { addEvent, events, colors } = calContext;
+  const events = [];
+
+  useEffect(() => {}, [events]);
+
   return (
-    <div style={{ height: 700 }}>
+    <div style={{ height: 700 }} className="col-lg-9 col-xl-10">
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
+        eventPropGetter={(event) => ({
+          // style: {
+          //   backgroundColor: event.backgroundColor,
+          // },
+          className: "mx-1 " + event.bgColor,
+        })}
       />
     </div>
   );
