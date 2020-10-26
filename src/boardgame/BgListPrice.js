@@ -60,6 +60,7 @@ class BgListPrice extends React.Component {
   }
 
   handleDoubleClick=(event)=>{
+    this.props.addBoardgame(event);
 console.log(event.target.value);
   }
 

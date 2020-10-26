@@ -107,7 +107,8 @@ class TradeRequestContainer extends React.Component {
   }
 
   handleAddBoardgame(event) {
-    if (event.target.id === "right1") {
+    console.log(event.currentTarget);
+    if (event.currentTarget.id === "myList") {
       try {
         let available = document.getElementById("myList");
         let price = document.getElementById("bgSetPrice");
@@ -353,7 +354,7 @@ class TradeRequestContainer extends React.Component {
                     <br />
                     <div className="col-12 form-group ">
                       <div className="form-group">
-                        <BgListPrice bgData={this.state.userBoardgames} listID="myList" />
+                        <BgListPrice bgData={this.state.userBoardgames} listID="myList" addBoardgame={this.handleAddBoardgame.bind(this)}/>
                       </div>
                       <FormGroup row>
 
@@ -420,7 +421,7 @@ class TradeRequestContainer extends React.Component {
 
                     <br />
                     <div className="col-12 ">
-                      <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList"  />
+                      <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" addBoardgame={this.handleAddBoardgame.bind(this)} />
                       <FormGroup row className="pt-2">
                         <div className="col">
                           <InputGroup>
