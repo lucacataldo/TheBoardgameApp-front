@@ -11,13 +11,19 @@ COLOURS:
     $dark:          $gray-800 !default;
 */
 
-$primary:#102542;
-$secondary:#F56476;
-$success:#04bd98;
+$primary:#3D82AC;
+$secondary:#0a0c0f;
+$success:#34BC66;
 $danger:#f3422e;
-$info:#245294;
-$warning:#E6AF2E;
+$info:#1f242e;
+$warning:#ffbf49;
 $light:#fcfcfc;
-$dark:#000500;
+$dark:#020203;
 
 $body-bg: $light;
+$body-color: $dark;
+
+$card-bg: $light;
+
+$thumbnail-border-width: 0;
+$thumbnail-bg: none;

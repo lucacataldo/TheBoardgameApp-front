@@ -2,6 +2,29 @@
   cursor: pointer;
 }
 
+.list-group-item-dark{
+    background: $info;
+    color: $light;
+}
+
+.list-group-item{
+    transition: all 0.4s ease;
+    border-radius: 0px !important;
+}
+
+.list-group-item.active {
+    box-shadow: -5px 0px 0px $primary;
+    background: $primary;
+}
+
+a:any-link{
+    text-decoration: none;
+}
+
+body{
+    overflow-x: hidden;
+}
+
 @media (max-width: 576px) {
   html {
     font-size: 0.75rem;

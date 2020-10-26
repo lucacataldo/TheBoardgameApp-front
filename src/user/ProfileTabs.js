@@ -13,7 +13,7 @@ class ProfileTabs extends Component {
       <div className="">
         <div className="row">
           <div className="col-md-4">
-            <h4 className="text-dark">
+            <h4>
               <strong>Followers</strong>
             </h4>
             <h1>{followers.length}</h1>
@@ -43,7 +43,7 @@ class ProfileTabs extends Component {
           </div>
 
           <div className="col-md-4">
-            <h4 className="text-dark">
+            <h4>
               <strong>Following</strong>
             </h4>
             <h1>{following.length}</h1>
@@ -74,7 +74,7 @@ class ProfileTabs extends Component {
           </div>
 
           <div className="col-md-4">
-            <h4 className="text-dark">
+            <h4>
               <strong>Posts</strong>
             </h4>
             <h1>{posts.length}</h1>

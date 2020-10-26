@@ -94,7 +94,7 @@ class Profile extends Component {
                     <div className="col-lg-4">
                         <div className="row mt-5 justify-content-center">
                             <img
-                                style={{ height: "200px", width: "auto", borderRadius: "50%" }}
+                                style={{ height: "200px", width: "auto", borderRadius: "50%"}}
                                 src={photoUrl}
                                 onError={i => (i.target.src = `${DefaultProfileImg}`)}
                                 alt={user.name}
@@ -121,7 +121,7 @@ class Profile extends Component {
                                         Create Post
                                     </Link>
                                     <Link
-                                        className="btn btn-info my-1"
+                                        className="btn btn-primary my-2"
                                         to={`/user/edit/${user._id}`}
                                     >
                                         Edit Profile
@@ -140,12 +140,17 @@ class Profile extends Component {
                     </div>
                     <div className="col-lg-8">
                         <div className="row">
-                            <div className="col md-12 my-4 text-center">
-                                <ProfileTabs
-                                    followers={user.followers}
-                                    following={user.following}
-                                    posts={posts}
-                                />
+                            <div className="col-12 my-4 text-center">
+                                <div className="card p-3">
+                                    <div className="card-body">
+                                        <ProfileTabs
+                                            followers={user.followers}
+                                            following={user.following}
+                                            posts={posts}
+                                        />
+                                    </div>
+                                </div>
+                                
 
                                 {user.about ? (
                                     <div>

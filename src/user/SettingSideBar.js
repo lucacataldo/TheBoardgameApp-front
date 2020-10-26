@@ -237,7 +237,7 @@ class SettingSideBar extends React.Component {
           </div>
 
           <div className="list-group ">
-            <span className="list-group-item bg-primary text-white font-weight-bold">
+            <span className="list-group-item list-group-item-dark font-weight-bold">
               Settings
             </span>
             <Link

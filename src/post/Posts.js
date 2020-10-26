@@ -35,7 +35,10 @@ const Posts = () => {
     const posterName = post.postedBy ? post.postedBy.name : " Unknown";
 
     return (
-      <div className="card">
+      <div className="card my-4">
+        <div className="card-body">
+        <h5 className="card-title">{post.title}</h5>
+        </div>
         <img
           src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
           alt={post.title}
@@ -43,7 +46,6 @@ const Posts = () => {
           className="img-thumbnail postsImg mx-auto d-block"
         />
         <div className="card-body">
-          <h5 className="card-title">{post.title}</h5>
           <p className="card-text text-truncate">{post.body}</p>
         </div>
         <div className="card-footer text-muted">
@@ -69,7 +71,7 @@ const Posts = () => {
   return (
     <>
       <div className="row justify-content-center postRow">
-        <div className="card">
+        <div className="card mt-3">
           <h5 className="card-header">Create Post</h5>
           <div className="card-body">
             <Route

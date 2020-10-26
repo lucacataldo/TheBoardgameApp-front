@@ -4,14 +4,6 @@
   padding: 0px 12px 0 12px;
 }
 
-.card {
-  border: none;
-}
-
-.card-body {
-  color: #ced4da;
-}
-
 .external-event {
   cursor: move;
   margin: 10px 0;
