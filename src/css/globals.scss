@@ -1,0 +1,9 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 0.75rem;
+  }
+}

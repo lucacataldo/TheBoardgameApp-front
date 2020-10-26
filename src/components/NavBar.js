@@ -6,7 +6,7 @@ import BgLogo from "../images/BgLogo.png";
 class NavBar extends React.Component {
   render() {
     return (
-      <nav className="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
+      <nav className="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div className="container-fluid">
           <NavLink className="navbar-brand" to="/posts">
             <img src={BgLogo} width="20" height="20" alt="" /> Boardgame Guru
@@ -64,7 +64,7 @@ class NavBar extends React.Component {
                     Collection
                   </a>
                   <div
-                    class="dropdown-menu"
+                    className="dropdown-menu"
                     aria-labelledby="navbarDropdownCollectionLink"
                   >
                     <NavLink

@@ -278,11 +278,11 @@ class SettingUser extends Component {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3">
+          <div className="form-group row justify-content-md-end">
+            <div className="col-md-3">
               <button
                 type="submit"
-                className="btn btn-primary btn-block"
+                className="btn btn-success btn-block"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Please wait..." : "Submit"}
@@ -334,7 +334,7 @@ class SettingUser extends Component {
               <SettingSidebar highlight="UserSetting" userId={id} />
               <div className="col-sm-9">
                 <div className="card">
-                  <div className="card-body">
+                  <div className="card-body text-dark">
                     <div className="row">
                       <div className="col-md-12">
                         <h2>Basic Information</h2>

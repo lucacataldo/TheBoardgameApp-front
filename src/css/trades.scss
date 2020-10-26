@@ -1,0 +1,19 @@
+.bgListItem {
+  height: "8px";
+}
+
+.bgListImg {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+
+.ReactModal__Overlay {
+  z-index: 99;
+  position: absolute;
+  left: 40;
+  right: 140;
+  top: 40;
+  bottom: 10;
+  background-color: rgba(255, 255, 255, 0.75);
+}
