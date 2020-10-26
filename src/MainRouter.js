@@ -80,7 +80,7 @@ class MainRouter extends React.Component {
             path="/user/edit/bgg/:userId"
             component={SettingCollection}
           />
-          <Route exact path="/calendar" component={CalContainer} />
+          <Route exact path="/calendar/:userId" component={CalContainer} />
           <Route path="*" component={NotFound} />
         </Switch>
       </>
