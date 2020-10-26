@@ -1,7 +1,13 @@
+.list-group-item{
+    transition: all 0.4s ease;
+    border-radius: 0px !important;
+}
+
 .list-group-item.active {
-  background-color: #bee5eb;
-  border-color: #bee5eb;
-  color: #0c5460;
+    box-shadow: -5px 0px 0px $success;
+    background: $light;
+    border-color: $success;
+    color: $dark;
 }
 
 .maxSidebarWidth {
