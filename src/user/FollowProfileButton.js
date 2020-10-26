@@ -12,18 +12,18 @@ class FollowProfileButton extends Component {
 
     render() {
         return (
-            <div className="d-inline-block">
+            <div className="">
                 {!this.props.following ? (
                     <button
                         onClick={this.followClick}
-                        className="btn btn-success btn-raised mr-5"
+                        className="btn btn-success w-100"
                     >
                         Follow
                     </button>
                 ) : (
                         <button
                             onClick={this.unfollowClick}
-                            className="btn btn-warning btn-raised"
+                            className="btn btn-outline-danger w-100"
                         >
                             UnFollow
                     </button>
