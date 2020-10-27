@@ -29,3 +29,37 @@ export const getBGGCounts = (username) => {
     })
     .catch((err) => console.log(err));
 };
+
+export const getAtlasBoardgameId = (name) => {
+
+  return fetch(`${process.env.REACT_APP_BOARDGAME_ATLAS_API_URL}/search?name=${name}&fields=id,name,price,msrp&client_id=${process.env.REACT_APP_BOARDGAME_ATLAS_CLIENT_ID}`, {
+      method: "GET",
+      headers: {
+          'Content-Type': "application/json"
+      }
+  })
+      .then(response => response.json())        
+      .catch(err =>{
+          console.log(err);
+      
+      })
+
+
+;}
+
+export const getAtlasBoardgamePrice = (game_id) => {
+
+  return fetch(`${process.env.BOARDGAME_ATLAS_API_URL}/game/prices?game_id=${game_id}&client_id=${process.env.BOARDGAME_ATLAS_CLIENT_ID}`, {
+      method: "GET",
+      headers: {
+          'Content-Type': "application/json"
+      }
+  })
+      .then(response => response.json())         
+      .catch(err =>{
+          console.log(err);
+      
+      })
+
+
+;}
