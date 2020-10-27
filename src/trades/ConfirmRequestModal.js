@@ -113,13 +113,13 @@ export default class ConfirmRequestModal extends React.Component {
                   {this.props.tradeData.searchedUserTradeList.map(item => {
                     return <tr key={item.id}>
                       <td>{item.name}</td>
-                      <td>{item.price}</td>
-                      <td>{item.condition}</td>
+                      <td>null</td>
+                      <td>null</td>
                     </tr>;
                   })}
                   <tr>
                     <th>Total Value:</th>
-                    <td colSpan="2">${this.props.tradeData.searchedUserTotalPrice}</td>
+                    <td colSpan="2">$null</td>
                   </tr>
 
                 </tbody>
