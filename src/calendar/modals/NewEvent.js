@@ -38,7 +38,7 @@ class NewEvent extends Component {
         startDate: new Date(),
         endDate: new Date(),
         owner: "",
-        bgColor: "",
+        bgColor: "eventTag-Blue",
       },
     });
   }

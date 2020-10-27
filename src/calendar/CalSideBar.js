@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+
 import NewEvent from "./modals/NewEvent";
 import { isAuthenticated } from "../auth";
-const SideBar = (props) => {
-  const events = [];
+import { EventContext } from "../context/EventContext";
 
+const SideBar = (props) => {
+  const { events } = useContext(EventContext);
   return (
     <div className="col-lg-3 col-xl-2">
-      {isAuthenticated().user._id == props.userId ? (
+      {isAuthenticated().user._id === props.userId ? (
         <button
           data-toggle="modal"
           data-target="#add-event"
@@ -22,10 +24,8 @@ const SideBar = (props) => {
         {events.length > 0
           ? events.map((event, index) => (
               <div
-                className={`external-event bg-${event.bgColor}`}
-                key={event.id + index}
-                data-toggle="modal"
-                data-target="#selection-modal"
+                key={event._id}
+                className={`external-event ${event.bgColor}`}
               >
                 {event.title}
               </div>

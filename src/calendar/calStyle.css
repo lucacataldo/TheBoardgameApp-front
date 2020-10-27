@@ -75,3 +75,23 @@
 .modal {
   color: #dad7d7;
 }
+
+.eventTag-blue {
+  background-color: #0275d8;
+}
+
+.eventTag-red {
+  background-color: #d9534f;
+}
+
+.eventTag-yellow {
+  background-color: #f0ad4e;
+}
+
+.eventTag-green {
+  background-color: #5cb85c;
+}
+
+.eventTag-lightBlue {
+  background-color: #5bc0de;
+}
