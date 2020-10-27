@@ -2,6 +2,7 @@
 
 .wrapper {
   padding: 0px 12px 0 12px;
+  font-family: Roboto;
 }
 
 .external-event {
@@ -14,91 +15,17 @@
   text-overflow: ellipsis;
 }
 
-.fc td {
-  border-color: #495561;
+.rbc-month-header {
+  color: black;
+}
+.rbc-event {
+  width: auto;
 }
 
-.fc-today {
-  background: #495561 !important;
+.rbc-toolbar-label {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
-
-.fc-button {
-  background: #323b44;
-  border: none;
-  color: #dee2e6;
-  text-transform: capitalize;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  border-radius: 3px;
-  margin: 0 3px;
-  padding: 6px 12px;
-  height: auto;
-}
-
-.fc-day-header {
-  color: #a8b5c3;
-}
-
-button:focus {
-  outline: 0;
-}
-
-.fc-button-active {
-  background-color: #3bafda !important;
-  color: #fff;
-  text-shadow: none;
-}
-
-.fc-today-button {
-  background-color: #3bafda !important;
-}
-
-.fc-toolbar h2 {
-  font-size: 20px;
-}
-
-.fc-icon {
-  font-size: 1em !important;
-}
-
-.fc-event {
-  border-radius: 2px;
-  border: none;
-  cursor: move;
-  font-size: 0.8125rem;
-  margin: 5px 7px;
-  padding: 5px 5px;
-  text-align: center;
-}
-
-.fc th.fc-widget-header {
-  background: #323b44;
-  font-size: 13px;
-  text-transform: uppercase;
-}
-
-.fc-day-number {
-  float: right;
-  height: 20px;
-  width: 20px;
-  text-align: center;
-  line-height: 20px;
-  background-color: #323b44;
-  border-radius: 50%;
-  margin: 5px;
-  font-size: 12px;
-  color: #a8b5c3;
-}
-
-.fc th.fc-widget-header {
-  border: 1px solid #495561;
-}
-
-.fc-axis {
-  color: #a8b5c3;
-  font-size: 14px;
-}
-
 .modal-content {
   background: #323b43;
 }
@@ -115,7 +42,7 @@ button:focus {
   font-weight: 400;
   line-height: 1.5;
   color: #fff;
-  background-color: #414d59;
+  background-color: #5d666d;
   background-clip: padding-box;
   border: 1px solid #495561;
   border-radius: 0.2rem;
@@ -123,7 +50,7 @@ button:focus {
 }
 
 .form-control:focus {
-  background-color: #414d59;
+  background-color: #84888c;
   color: #fff;
   border-color: #414d59;
 }
@@ -143,4 +70,8 @@ button:focus {
 .modal-header,
 .modal-footer {
   border: 1px solid #414d59;
+}
+
+.modal {
+  color: #dad7d7;
 }
