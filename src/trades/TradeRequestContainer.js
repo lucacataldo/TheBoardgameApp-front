@@ -378,7 +378,6 @@ class TradeRequestContainer extends React.Component {
       </div>
                         </div>
                       </FormGroup>
-                      <button className="btn btn-success col-12" id="right1" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
 
 
 
@@ -444,7 +443,6 @@ class TradeRequestContainer extends React.Component {
       </div>
                         </div>
                       </FormGroup>
-                      <button type="submit" className="btn btn-success col-12" id="right2" onClick={this.handleAddBoardgame.bind(this)}>Add Boardgame</button>
 
                     </div>
 
