@@ -38,7 +38,7 @@ class TradeResponse extends React.Component {
                    
             </div>
             <div className="col-md-4 mt-4">
-            <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
+            <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Reject</button>
             <button type="button" className="btn btn-success mx-2 float-right"><FontAwesomeIcon icon={faCheck} /> Accept</button>
             <button type="button" className="btn btn-primary mx-2 float-right"><FontAwesomeIcon icon={faEye} /> View</button>
             </div>        
