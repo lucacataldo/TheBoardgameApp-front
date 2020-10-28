@@ -10,23 +10,10 @@ import {
   getAtlasBoardgameId,
 } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMinus,
-  faSearch,
-  faExchangeAlt,
-  faMinusCircle,
-  faPlusCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  ListGroup,
-  ListGroupItem,
-  FormGroup,
-  Label,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  Alert,
-} from "reactstrap";
+
+import { faMinus,faSearch, faExchangeAlt} from "@fortawesome/free-solid-svg-icons";
+import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroupAddon, Alert } from 'reactstrap';
+
 import { Link } from "react-router-dom";
 
 class TradeRequestContainer extends React.Component {
@@ -408,63 +395,28 @@ class TradeRequestContainer extends React.Component {
                       <div className="form-group">
                         <label>To Trade:</label>
                         <ListGroup id="tradedToYou">
-                          {this.state.tradeData.userTradeList.map((item) => (
-                            <ListGroupItem
-                              className="float-left font-weight-bold"
-                              key={item.id}
-                              id={item.id}
-                              onClick={this.handleRemoveBoardgame.bind(this)}
-                            >
-                              <FontAwesomeIcon
-                                className="align-middle cursor-pointer"
-                                style={{ float: "left" }}
-                                color="red"
-                                size="lg"
-                                icon={faMinus}
-                              ></FontAwesomeIcon>
-                              &nbsp;
-                              {item.name.length < 40
-                                ? item.name
-                                : item.name.substring(0, 40) + "..."}{" "}
-                              <h4 className="float-right">
-                                MSRP:
-                                {item.price == "0.00"
-                                  ? "N/A"
-                                  : "$" + item.price}
-                              </h4>
-                              <br />
-                              {(function () {
-                                switch (item.condition) {
-                                  case "Excellent":
-                                    return (
-                                      <span className="badge badge-success float-left">
-                                        {item.condition}
-                                      </span>
-                                    );
-                                  case "Good":
-                                    return (
-                                      <span className="badge badge-primary float-left">
-                                        {item.condition}
-                                      </span>
-                                    );
-                                  case "Fair":
-                                    return (
-                                      <span className="badge badge-warning float-left">
-                                        {item.condition}
-                                      </span>
-                                    );
-                                  case "Poor":
-                                    return (
-                                      <span className="badge badge-danger float-left">
-                                        {item.condition}
-                                      </span>
-                                    );
-                                  default:
-                                    return null;
-                                }
-                              })()}
-                            </ListGroupItem>
-                          ))}
+
+                          {this.state.tradeData.userTradeList.map(item => <ListGroupItem className="float-left font-weight-bold" key={item.id} id={item.id} onClick={this.handleRemoveBoardgame.bind(this)}>
+                            <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "left" }} color="red" size="lg" icon={faMinus}></FontAwesomeIcon>&nbsp;
+                            {item.name.length < 40 ?
+                              item.name : item.name.substring(0, 40) + '...'}  <h4 className="float-right">MSRP:{item.price === '0.00' ? 'N/A' : '$' + item.price}</h4>
+                            
+                            <br />
+                            {(function () {
+                              switch (item.condition) {
+                                case 'Excellent':
+                                  return <span className="badge badge-success float-left">{item.condition}</span>;
+                                case 'Good':
+                                  return <span className="badge badge-primary float-left">{item.condition}</span>;
+                                case 'Fair':
+                                  return <span className="badge badge-warning float-left">{item.condition}</span>;
+                                case 'Poor':
+                                  return <span className="badge badge-danger float-left">{item.condition}</span>;
+                                default:
+                                  return null;
+                              }
+                            })()}</ListGroupItem>)}
+
                         </ListGroup>
                         <h3 className="float-right">
                           Total Value: ${this.state.tradeData.userTotalPrice}
@@ -493,46 +445,21 @@ class TradeRequestContainer extends React.Component {
                       />
                     </div>
 
-                    <div className="col-12">
-                      <div className="form-group">
-                        <label>To Trade:</label>
-                        <ListGroup id="tradedToMe">
-                          {this.state.tradeData.searchedUserTradeList.map(
-                            (item) => (
-                              <ListGroupItem
-                                key={item.id}
-                                id={item.id}
-                                className="align-middle font-weight-bold"
-                                onClick={this.handleRemoveUserBoardgame.bind(
-                                  this
-                                )}
-                              >
-                                <FontAwesomeIcon
-                                  className="align-middle cursor-pointer"
-                                  style={{ float: "left" }}
-                                  color="red"
-                                  size="lg"
-                                  icon={faMinus}
-                                ></FontAwesomeIcon>
-                                &nbsp;
-                                {item.name.length < 40
-                                  ? item.name
-                                  : item.name.substring(0, 40) + "..."}
-                                <h4 className="float-right">
-                                  MSRP:
-                                  {item.price == "0.00"
-                                    ? "N/A"
-                                    : "$" + item.price}
-                                </h4>
-                              </ListGroupItem>
-                            )
-                          )}
-                        </ListGroup>
-                        <h3 className="float-right">
-                          Total Value: $
-                          {this.state.tradeData.searchedUserTotalPrice}
-                        </h3>
-                      </div>
+
+                    <div className="col-12"><div className="form-group">
+                      <label >To Trade:</label>
+                      <ListGroup id="tradedToMe">
+                        {this.state.tradeData.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle font-weight-bold" onClick={this.handleRemoveUserBoardgame.bind(this)}>
+                        <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "left" }} color="red" size="lg" icon={faMinus}></FontAwesomeIcon>&nbsp;
+                          {item.name.length < 40 ?
+                            item.name : item.name.substring(0, 40) + '...'}<h4 className="float-right">MSRP:{item.price === '0.00' ? 'N/A' : '$' + item.price}</h4>
+                          
+                  
+
+                        </ListGroupItem>)}
+                      </ListGroup>
+                     <h3 className="float-right">Total Value: ${this.state.tradeData.searchedUserTotalPrice}</h3>
+
                     </div>
                   </div>
                 </div>
