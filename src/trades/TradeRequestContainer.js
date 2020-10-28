@@ -7,8 +7,8 @@ import ConfirmRequestModal from "./ConfirmRequestModal";
 import { getUserId } from "../user/apiUser";
 import { getGuruCollection, getAtlasBoardgameId } from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus,faSearch, faExchangeAlt, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroup, InputGroupAddon, Alert } from 'reactstrap';
+import { faMinus,faSearch, faExchangeAlt} from "@fortawesome/free-solid-svg-icons";
+import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroupAddon, Alert } from 'reactstrap';
 import { Link } from "react-router-dom";
 
 
@@ -351,7 +351,7 @@ class TradeRequestContainer extends React.Component {
                           {this.state.tradeData.userTradeList.map(item => <ListGroupItem className="float-left font-weight-bold" key={item.id} id={item.id} onClick={this.handleRemoveBoardgame.bind(this)}>
                             <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "left" }} color="red" size="lg" icon={faMinus}></FontAwesomeIcon>&nbsp;
                             {item.name.length < 40 ?
-                              item.name : item.name.substring(0, 40) + '...'}  <h4 className="float-right">MSRP:{item.price == '0.00' ? 'N/A' : '$' + item.price}</h4>
+                              item.name : item.name.substring(0, 40) + '...'}  <h4 className="float-right">MSRP:{item.price === '0.00' ? 'N/A' : '$' + item.price}</h4>
                             
                             <br />
                             {(function () {
@@ -393,7 +393,7 @@ class TradeRequestContainer extends React.Component {
                         {this.state.tradeData.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle font-weight-bold" onClick={this.handleRemoveUserBoardgame.bind(this)}>
                         <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "left" }} color="red" size="lg" icon={faMinus}></FontAwesomeIcon>&nbsp;
                           {item.name.length < 40 ?
-                            item.name : item.name.substring(0, 40) + '...'}<h4 className="float-right">MSRP:{item.price == '0.00' ? 'N/A' : '$' + item.price}</h4>
+                            item.name : item.name.substring(0, 40) + '...'}<h4 className="float-right">MSRP:{item.price === '0.00' ? 'N/A' : '$' + item.price}</h4>
                           
                   
 
