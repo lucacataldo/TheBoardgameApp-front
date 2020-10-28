@@ -182,11 +182,7 @@ class TradeRequestContainer extends React.Component {
 
         return true;
       } catch (e) {
-        this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
-          window.setTimeout(() => {
-            this.setState({ selectGameAlert: false });
-          }, 3000);
-        });
+
         console.log(e);
       }
     } else {
@@ -219,11 +215,7 @@ class TradeRequestContainer extends React.Component {
         });
         return true;
       } catch (e) {
-        this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
-          window.setTimeout(() => {
-            this.setState({ selectGameAlert: false });
-          }, 3000);
-        });
+
         console.log(e);
       }
     }
