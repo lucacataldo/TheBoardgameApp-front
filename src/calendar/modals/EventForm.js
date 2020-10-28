@@ -50,7 +50,7 @@ const EventForm = (props) => {
 
   return (
     <>
-      <Modal id={modalId} show={showModal.showModal} onHide={handleCloseModal}>
+      <Modal centered id={modalId} show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
@@ -111,7 +111,7 @@ const EventForm = (props) => {
                         minDate={new Date()}
                         timeFormat="p"
                         timeIntervals={15}
-                        dateFormat="Pp"
+                        dateFormat="PP"
                         name="startDate"
                         className="form-control"
                         selected={values.startDate}
@@ -139,7 +139,7 @@ const EventForm = (props) => {
                           showTimeSelect
                           timeFormat="p"
                           timeIntervals={1}
-                          dateFormat="Pp"
+                          dateFormat="PP"
                           minDate={values.startDate}
                           className="form-control"
                           selected={values.endDate}
