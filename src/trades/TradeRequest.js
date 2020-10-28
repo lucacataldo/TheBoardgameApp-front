@@ -1,37 +1,30 @@
 import React from "react";
-import { isAuthenticated } from "../auth";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faEye, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTimes, faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 
 class TradeRequest extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-          redirectToHome: false
+          redirectToHome: faClosedCaptioning
         };
       }
     
-      componentWillMount(){
+      componentDidUpdate(prevProps){
+        if (this.props.id !== prevProps.id) {
+         this.setState({id: this.props.id});
+       }
+     }
 
-      }
-
-
-      componentDidMount() {
-        if (
-          isAuthenticated()._id !== this.props.userId &&
-          isAuthenticated().user.role !== "admin"
-        ) {
-          this.setState({ redirectToHome: true });
-        }
-      }
+      
     render() {
         return (
          <div className="card" >
             <div className="card-header">Waiting for Response</div>
         <div className="card-body">
         {this.props.trades.map(trade=>{
-                return (<>
+                return (
             <div key={trade._id} className="row justify-content-center align-self-center mt-1">
               
                 <div className="col-md-2" >
@@ -45,10 +38,10 @@ class TradeRequest extends React.Component {
                        
                 </div>
                 <div className="col-md-4 mt-4">
-                    <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
+                    <button type="button" onClick={()=> this.props.onClickDelete(trade._id)} className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
                 <button type="button" className="btn btn-primary float-right mx-2"><FontAwesomeIcon icon={faEye} /> View</button>
                 
-                </div></div></>);        
+                </div></div>);        
                 })}
             
             <div className="card-footer text-center"><a href="/" className="btn btn-primary">Show More</a></div>
