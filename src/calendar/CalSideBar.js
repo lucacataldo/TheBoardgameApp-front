@@ -7,8 +7,8 @@ import { EventContext } from "../context/EventContext";
 const SideBar = (props) => {
   const { events } = useContext(EventContext);
   const [showModal, setShowModal] = useState(false);
-  const handleShowModal = () => setShowModal({ showModal: true });
-  const handleCloseModal = () => setShowModal({ showModal: false });
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
   return (
     <div className="col-lg-3 col-xl-2">
       {isAuthenticated().user._id === props.userId ? (
