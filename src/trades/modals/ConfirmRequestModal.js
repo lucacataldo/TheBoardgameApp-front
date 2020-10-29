@@ -3,8 +3,8 @@ import ReactModal from 'react-modal';
 import { FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
-import { createTrade } from "./apiTrade";
-import { isAuthenticated } from "../auth";
+import { createTrade } from "../apiTrade";
+import { isAuthenticated } from "../../auth";
 import { Redirect } from "react-router-dom";
 
 
