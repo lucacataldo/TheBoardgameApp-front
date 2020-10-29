@@ -3,7 +3,7 @@ import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import BgListPrice from "../boardgame/BgListPrice";
 import Button from "react-bootstrap/Button";
-import ConfirmRequestModal from "./ConfirmRequestModal";
+import ConfirmRequestModal from "./modals/ConfirmRequestModal";
 import { getUserId } from "../user/apiUser";
 import {
   getGuruCollection,

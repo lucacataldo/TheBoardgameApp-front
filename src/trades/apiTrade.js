@@ -69,9 +69,26 @@ export const getAllTradeRequests = () => {
 
 ;}
 
-export const getAllTradeRequestsById = (id) => {
+export const getAllTradeRequestsById = (userId) => {
 
-    return fetch(`${process.env.REACT_APP_API_URL}/trades/by/${id}`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/trades/by/${userId}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': "application/json"
+        }
+    })
+        .then(response => response.json())         
+        .catch(err =>{
+            console.log(err);
+        
+        })
+
+
+;}
+
+export const getTradeRequestById = (tradeId) => {
+
+    return fetch(`${process.env.REACT_APP_API_URL}/trade/by/${tradeId}`, {
         method: "GET",
         headers: {
             'Content-Type': "application/json"
