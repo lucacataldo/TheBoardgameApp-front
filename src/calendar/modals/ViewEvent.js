@@ -2,8 +2,6 @@ import React from "react";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Modal } from "react-bootstrap";
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ViewEvent = (props) => {
   const { modalId, event, showEvent, handleCloseModal, sameDate } = props;
@@ -25,9 +23,10 @@ const ViewEvent = (props) => {
   };
 
   let formatDate;
-
   if (sameDate) {
-    formatDate = (
+    formatDate = event.allDay ? (
+      <>{event.startDate}</>
+    ) : (
       <>
         {event.startDate} - {event.endDate}
       </>
@@ -39,7 +38,7 @@ const ViewEvent = (props) => {
       </>
     );
   }
-  console.log(event.owner);
+
   return (
     <>
       <Modal id={modalId} show={showEvent} onHide={handleCloseModal}>
@@ -48,17 +47,22 @@ const ViewEvent = (props) => {
         </Modal.Header>
         <Modal.Body>
           <div className="container-fluid">
-            <div className="row align-middle text-center">
-              <span
-                className="fa fa-square align-middle"
-                style={{ color: getColor(event.bgColor) }}
-              ></span>
-              &nbsp;
-              {formatDate}
+            <div className="row ">
+              <div className="col-1">
+                <span
+                  className="fa fa-square align-middle"
+                  style={{ color: getColor(event.bgColor) }}
+                ></span>
+              </div>
+              <div className="col-11 text-wrap text-left">{formatDate}</div>
             </div>
             <div className="row">
-              <span className="fa fa-address-book"></span>
-              {event.owner.name}
+              <div className="col-1">
+                <span className="fa fa-address-book"></span>{" "}
+              </div>
+              <div className="col-11 text-wrap text-left">
+                {event.owner.name}
+              </div>
             </div>
           </div>
         </Modal.Body>

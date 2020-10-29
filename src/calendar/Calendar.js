@@ -42,6 +42,7 @@ const MyCalendar = () => {
 
   const showModal = (event) => {
     event.startDate = format(parseISO(event.startDate), "PPp");
+
     if (isSameDay(parseISO(event.endDate), parseISO(event.endDate))) {
       event.endDate = format(parseISO(event.endDate), "p");
       setSameDate(true);
