@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
-import { isAfter } from "date-fns";
+import { isAfter, isEqual, isSameDay } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Modal } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
 
 import { createEvent } from "../apiCalendar";
 import { isAuthenticated } from "../../auth";
@@ -28,11 +30,11 @@ const EventForm = (props) => {
     handleCloseModal,
   } = props;
   const { events, setEvents } = useContext(EventContext);
-
+  const [eventColor, setEventColor] = useState("#0275d8");
   const submitFunction = (eventData) => {
     const userId = isAuthenticated().user._id;
     const token = isAuthenticated().token;
-
+    eventData.allDay = isEqual(eventData.startDate, eventData.endDate);
     if (modalId === "add-event") {
       createEvent(userId, token, eventData).then((data) => {
         if (data.error) {
@@ -47,7 +49,28 @@ const EventForm = (props) => {
       });
     }
   };
-
+  const getColor = (color) => {
+    switch (color) {
+      case "eventTag-blue":
+        setEventColor("#0275d8");
+        return;
+      case "eventTag-red":
+        setEventColor("#d9534f");
+        return;
+      case "eventTag-yellow":
+        setEventColor("#f0ad4e");
+        return;
+      case "eventTag-green":
+        setEventColor("#5cb85c");
+        return;
+      case "eventTag-lightBlue":
+        setEventColor("#5bc0de");
+        return;
+      default:
+        setEventColor("#0275d8");
+        return;
+    }
+  };
   return (
     <>
       <Modal centered id={modalId} show={showModal} onHide={handleCloseModal}>
@@ -109,9 +132,8 @@ const EventForm = (props) => {
                       <DatePicker
                         showTimeSelect
                         minDate={new Date()}
-                        timeFormat="p"
                         timeIntervals={15}
-                        dateFormat="PP"
+                        dateFormat="MMM d, yyyy h:mm aa"
                         name="startDate"
                         className="form-control"
                         selected={values.startDate}
@@ -137,19 +159,23 @@ const EventForm = (props) => {
                       {!values.allDay ? (
                         <DatePicker
                           showTimeSelect
-                          timeFormat="p"
                           timeIntervals={1}
-                          dateFormat="PP"
+                          dateFormat="MMM d, yyyy h:mm aa"
                           minDate={values.startDate}
                           className="form-control"
-                          selected={values.endDate}
+                          selected={
+                            isAfter(values.endDate, values.startDate) ||
+                            isSameDay(values.endDate, values.startDate)
+                              ? values.endDate
+                              : values.startDate
+                          }
                           name="endDate"
                           onChange={(date) => setFieldValue("endDate", date)}
                         />
                       ) : (
                         <DatePicker
                           className="form-control"
-                          dateFormat="PP"
+                          dateFormat="MMM d, yyyy"
                           minDate={values.startDate}
                           selected={values.endDate}
                           name="endDate"
@@ -166,17 +192,30 @@ const EventForm = (props) => {
                 </div>
                 <div className="form-group">
                   <label className="control-label">Choose Event Color</label>
-                  <Field
-                    as="select"
-                    className="form-control form-white"
-                    name="bgColor"
-                  >
-                    <option value="eventTag-blue"> Blue</option>
-                    <option value="eventTag-yellow"> Yellow</option>
-                    <option value="eventTag-green"> Green</option>
-                    <option value="eventTag-red"> Red</option>
-                    <option value="eventTag-lightBlue"> Light Blue</option>
-                  </Field>
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend ">
+                      <label className="input-group-text" htmlFor="bgColor">
+                        <FontAwesomeIcon
+                          icon={faCalendarWeek}
+                          style={{ color: eventColor }}
+                        />
+                      </label>
+                    </div>
+                    <Field
+                      as="select"
+                      className="form-control form-white"
+                      name="bgColor"
+                      onClick={() => {
+                        getColor(values.bgColor);
+                      }}
+                    >
+                      <option value="eventTag-blue">Blue</option>
+                      <option value="eventTag-yellow"> Yellow</option>
+                      <option value="eventTag-green"> Green</option>
+                      <option value="eventTag-red"> Red</option>
+                      <option value="eventTag-lightBlue"> Light Blue</option>
+                    </Field>
+                  </div>
                 </div>
               </Modal.Body>
               <Modal.Footer>
