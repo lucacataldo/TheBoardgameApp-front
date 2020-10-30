@@ -5,7 +5,7 @@ import TradeRequest from "./TradeRequest";
 import TradeResponse from "./TradeResponse";
 import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
-import { getAllTradeRequestsById } from "./apiTrade";
+import { getAllTradeRequestsById, deleteTrade } from "./apiTrade";
 import Animator from "../animator/Animator";
 class Trades extends React.Component {
   constructor() {
@@ -17,13 +17,20 @@ class Trades extends React.Component {
     };
   }
 
-  componentWillMount(){
+  componentWillMount() {
     let userId = isAuthenticated().user._id;
-    getAllTradeRequestsById(userId).then(data =>{
-     let outgoingRequests =  data.filter(trade => userId === trade.tradeSender._id);
-     let incomingRequests = data.filter(trade => userId === trade.tradeReceiver._id);
-      this.setState({tradeResponses: incomingRequests, tradeRequests: outgoingRequests});
-    })
+    getAllTradeRequestsById(userId).then(data => {
+      let outgoingRequests = data.filter(
+        trade => userId === trade.tradeSender._id
+      );
+      let incomingRequests = data.filter(
+        trade => userId === trade.tradeReceiver._id
+      );
+      this.setState({
+        tradeResponses: incomingRequests,
+        tradeRequests: outgoingRequests
+      });
+    });
   }
 
   componentDidMount() {
@@ -37,6 +44,27 @@ class Trades extends React.Component {
     }
   }
 
+  onClickRemoveTrade = tradeId => {
+    const token = isAuthenticated().token;
+    try{
+
+      deleteTrade(token, tradeId).then(data => {
+      console.log("inDelete");
+      if (data.error) {
+        console.log(data.error);
+      }
+    }); 
+    let newList = this.state.tradeRequests.filter(
+      request => request._id !== tradeId
+    );
+    this.setState({ tradeRequests: newList });
+    }catch(err){
+      console.error(err);
+    }
+    
+   
+  };
+
   render() {
     const { redirectToHome } = this.state;
     if (redirectToHome) return <Redirect to="/" />;
@@ -45,16 +73,17 @@ class Trades extends React.Component {
       <div className="container-fluid">
         <div className="row my-3 justify-content-center">
           {/* BgSidebar is col-sm-3 */}
-          <TradesSideBar
-            highlight= "Trades"
-          />
+          <TradesSideBar highlight="Trades" />
           <div className="col-sm-6 col-lg-6 animator">
             <h4>My Trades</h4>
-            <TradeRequest trades={this.state.tradeRequests}/>
-            <br/>
-            <TradeResponse trades={this.state.tradeResponses}/>
-            <br/>
-            <TradePending/>
+            <TradeRequest
+              trades={this.state.tradeRequests}
+              onClickDelete={this.onClickRemoveTrade.bind(this)}
+            />
+            <br />
+            <TradeResponse trades={this.state.tradeResponses} />
+            <br />
+            <TradePending />
           </div>
         </div>
       </div>

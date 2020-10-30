@@ -26,7 +26,7 @@ import Trades from "./trades/Trades";
 import TradeMatch from "./trades/TradeMatch";
 import TradeSettings from "./trades/TradeSettings";
 import TradeListItems from "./trades/TradeRequestContainer";
-import RequestSent from "./components/RequestSent"
+import RequestSent from "./components/RequestSent";
 
 import Users from "./user/Users";
 import PrivateRoute from "./auth/PrivateRoute"; // only authenticated user can use
@@ -55,7 +55,7 @@ class MainRouter extends React.Component {
             path="/trades/settings"
             component={TradeSettings}
           />
-           <Route exact path="/requestSent" component={RequestSent} />
+          <Route exact path="/requestSent" component={RequestSent} />
           <Route exact path="/newTrade" component={TradeListItems} />
           <PrivateRoute exact path="/admin" component={Admin} />
           <Route exact path="/forgot-password" component={ForgotPassword} />
@@ -83,6 +83,7 @@ class MainRouter extends React.Component {
             component={SettingCollection}
           />
           <Route exact path="/calendar/:userId" component={CalContainer} />
+          <Route path="/404" component={NotFound} />
           <Route path="*" component={NotFound} />
         </Switch>
       </>

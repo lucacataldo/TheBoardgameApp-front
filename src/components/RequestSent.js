@@ -7,7 +7,7 @@ state={
     redirect:null
 }
     componentDidMount() {
-        setTimeout(() => this.setState({ redirect: "/trades" }), 20000)
+        setTimeout(() => this.setState({ redirect: "/trades" }), 2000)
       }
     render() {
         if (this.state.redirect) {

@@ -52,7 +52,6 @@ class NavBar extends React.Component {
                 </li>
                 <li className="nav-item dropdown ">
                   <a
-
                     className="nav-link dropdown-toggle"
                     href="/#"
                     id="navbarDropdownCollectionLink"
@@ -91,6 +90,17 @@ class NavBar extends React.Component {
                   >
                     Trades
                   </NavLink>
+                </li>
+                <li className="nav-item ">
+                  {isAuthenticated().user && (
+                    <NavLink
+                      className="nav-link"
+                      activeClassName="selected"
+                      to={`/calendar/${isAuthenticated().user._id}`}
+                    >
+                      Calendar
+                    </NavLink>
+                  )}
                 </li>
               </ul>
             )}
