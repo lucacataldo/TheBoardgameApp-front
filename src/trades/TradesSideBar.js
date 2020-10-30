@@ -47,7 +47,7 @@ class TradesSideBar extends React.Component {
               Trades
             </span>
 
-                <Link
+            <Link
               className={`btn btn-success text-left my-1 font-weight-bold`}
               to={`/newTrade`}
             >

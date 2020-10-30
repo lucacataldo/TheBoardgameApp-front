@@ -3,6 +3,7 @@ import React, { useState, useRef, useCallback } from "react";
 
 import useFetchMorePosts from "./useFetchMorePosts";
 import DefaultPostImg from "../images/defaultPostImg.jpg";
+import Animator from "../animator/Animator"
 
 const Posts = () => {
   const [pageNumber, setPageNumber] = useState(1);
@@ -13,6 +14,7 @@ const Posts = () => {
   // it will call this fxn when it's the last element
   const lastPostElementRef = useCallback(
     node => {
+        Animator.animate()
       if (loading) return;
       // disconnect previous ref so we can reset it
       if (refObserver.current) refObserver.current.disconnect();
@@ -35,7 +37,7 @@ const Posts = () => {
     const posterName = post.postedBy ? post.postedBy.name : " Unknown";
 
     return (
-      <div className="card">
+      <div className="card animator">
         <img
           src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
           alt={post.title}
