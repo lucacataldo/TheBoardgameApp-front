@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import DefaultProfileImg from "../images/avatar.png";
 import Table from "react-bootstrap/Table";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDice } from "@fortawesome/free-solid-svg-icons";
 
 class ProfileTabs extends Component {
   

@@ -67,11 +67,26 @@
   border: 1px solid #414d59;
 }
 
-.modal-header,
-.modal-footer {
-  border: 1px solid #414d59;
+.eventTag-blue {
+  background-color: #0275d8 !important;
 }
 
-.modal {
-  color: #dad7d7;
+.eventTag-red {
+  background-color: #d9534f !important;
+}
+
+.eventTag-yellow {
+  background-color: #f0ad4e !important;
+}
+
+.eventTag-green {
+  background-color: #5cb85c !important;
+}
+
+.eventTag-lightBlue {
+  background-color: #5bc0de !important;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
 }

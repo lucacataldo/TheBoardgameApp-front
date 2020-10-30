@@ -3,21 +3,35 @@ import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import BgListPrice from "../boardgame/BgListPrice";
 import Button from "react-bootstrap/Button";
-import ConfirmRequestModal from "./ConfirmRequestModal";
+import ConfirmRequestModal from "./modals/ConfirmRequestModal";
 import { getUserId } from "../user/apiUser";
-import { getGuruCollection } from "../boardgame/apiBoardgame";
+import {
+  getGuruCollection,
+  getAtlasBoardgameId
+} from "../boardgame/apiBoardgame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faExchangeAlt, faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import { ListGroup, ListGroupItem, FormGroup, Label, Input, InputGroup, InputGroupAddon, Alert } from 'reactstrap';
+import {
+  faMinus,
+  faSearch,
+  faExchangeAlt
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  ListGroup,
+  ListGroupItem,
+  FormGroup,
+  Label,
+  Input,
+  InputGroupAddon,
+  Alert
+} from "reactstrap";
 import { Link } from "react-router-dom";
-
 
 class TradeRequestContainer extends React.Component {
   state = {
     redirectToHome: false,
     foundUser: false,
     selectGameAlert: false,
-    selectGameMsg: '',
+    selectGameMsg: "",
     isLoading: true,
     valueMin: 0,
     valueMax: 9999,
@@ -27,18 +41,16 @@ class TradeRequestContainer extends React.Component {
     searchedUserPrice: 0,
     show: false,
     tradeData: {
-      userID: '',
+      userID: "",
       userTradeList: [],
       userTotalPrice: 0,
-      searchedUserID: '',
+      searchedUserID: "",
       searchedUser: "",
       searchedUserTotalPrice: 0,
       searchedUserTradeList: [],
       notes: ""
     }
-  }
-
-
+  };
 
   //needs to be updated to new methdology
   UNSAFE_componentWillMount() {
@@ -47,19 +59,21 @@ class TradeRequestContainer extends React.Component {
     this.setState(prevState => ({
       tradeData: { ...prevState.tradeData, userID: isAuthenticated().user._id }
     }));
-
   }
 
   async loadUserBoardgameData(user) {
-
-    await getUserId(user).then(id => {
-      console.log(id);
-      getGuruCollection(id).then(bgList => {
-        this.setState({ userBoardgames: bgList, isLoading: false });
+    await getUserId(user)
+      .then(id => {
+        console.log(id);
+        getGuruCollection(id).then(bgList => {
+          console.log(bgList);
+          let filteredBgList = bgList.filter(bg => bg.forTrade === true);
+          this.setState({ userBoardgames: filteredBgList, isLoading: false });
+        });
       })
-    }).catch(err => {
-      console.log(err);
-    })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   showModal = e => {
@@ -67,43 +81,63 @@ class TradeRequestContainer extends React.Component {
   };
 
   loadSearchedUserBoardgameData(user) {
-
-    getUserId(user).then((id) => {
-      if (!id) {
-        document.getElementById("searchbar").classList.add("is-invalid");
-
-      } else {
-        getGuruCollection(id).then(bgList => {
-          if (bgList !== undefined)
+    getUserId(user)
+      .then(id => {
+        if (!id) {
+          document.getElementById("searchbar").classList.add("is-invalid");
+        } else {
+          getGuruCollection(id).then(bgList => {
+            if (bgList !== undefined) {
+              console.log("Could not find boardgame collection.");
+            }
+            // Filter currently not working, it should filter out identical games from both lists
             if (document.getElementById("filterMatching").checked === true) {
-              console.log("CHECKED")
+              console.log("CHECKED");
               console.log(bgList);
-              bgList = bgList.filter(val => !this.state.userBoardgames.includes(val));
-              let userBoardgames = this.state.userBoardgames.filter(val => !bgList.includes(val));
+              bgList = bgList.filter(
+                val => !this.state.userBoardgames.includes(val)
+              );
+              let userBoardgames = this.state.userBoardgames.filter(
+                val => !bgList.includes(val)
+              );
+              let filteredBgList = userBoardgames.filter(
+                bg => bg.forTrade === true
+              );
               this.setState(prevState => ({
-                tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, userBoardgames: userBoardgames, isLoading: false, foundUser: TextTrackCue
+                tradeData: {
+                  ...prevState.tradeData,
+                  searchedUserID: id,
+                  searchedUser: user
+                },
+                searchedUserBoardgames: filteredBgList,
+                userBoardgames: userBoardgames,
+                isLoading: false,
+                foundUser: TextTrackCue
               }));
-
             } else {
               console.log("FILTER NOT CHECKED");
               try {
+                let filteredBgList = bgList.filter(bg => bg.forTrade === true);
                 this.setState(prevState => ({
-                  tradeData: { ...prevState.tradeData, searchedUserID: id, searchedUser: user }, searchedUserBoardgames: bgList, isLoading: false, foundUser: true
+                  tradeData: {
+                    ...prevState.tradeData,
+                    searchedUserID: id,
+                    searchedUser: user
+                  },
+                  searchedUserBoardgames: filteredBgList,
+                  isLoading: false,
+                  foundUser: true
                 }));
               } catch (e) {
                 console.log(e);
               }
-
             }
-
-        })
-      }
-
-
-    }).catch(err => {
-      console.log(err);
-    })
-
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   handleAddBoardgame(event) {
@@ -111,104 +145,80 @@ class TradeRequestContainer extends React.Component {
     if (event.currentTarget.id === "myList") {
       try {
         let available = document.getElementById("myList");
-        let price = document.getElementById("bgSetPrice");
-        let condition = document.getElementById("conditionSelect2");
-        var number = parseFloat(price.value).toFixed(2);
+        let name = available.options[available.selectedIndex].value;
+        let MSRP = "";
+        getAtlasBoardgameId(name)
+          .then(boardgame => {
+            console.log(boardgame.games[0].msrp);
+            MSRP = boardgame.games[0].msrp;
+            var ID = available.options[available.selectedIndex].id;
+            const values = { id: ID, name: name, price: MSRP };
+            const trades = this.state.tradeData.userTradeList;
+            const tradeItem = Object.create(values);
+            trades.push(tradeItem);
+            available.removeChild(available.options[available.selectedIndex]);
 
-        if (available.options[available.selectedIndex] === undefined) {
-          throw "Please select a game";
-        }
-        else if (condition.value === "") {
-          throw "No condition was selected.";
-        }
-        var ID = available.options[available.selectedIndex].id;
-        const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
-        const trades = this.state.tradeData.userTradeList;
-        const tradeItem = Object.create(values);
-        trades.push(tradeItem);
-        available.removeChild(available.options[available.selectedIndex]);
+            let total =
+              parseFloat(this.state.tradeData.userTotalPrice) +
+              parseFloat(MSRP);
 
+            this.setState(prevState => ({
+              tradeData: {
+                ...prevState.tradeData,
+                userTradeList: trades,
+                userTotalPrice: total.toFixed(2)
+              }
+            }));
+          })
+          .catch(err => {
+            console.log(err);
+          });
 
-        let total = parseFloat(this.state.tradeData.userTotalPrice) + parseFloat(number);
-
-        this.setState(prevState => ({
-          tradeData: {
-            ...prevState.tradeData,
-            userTradeList: trades,
-            userTotalPrice: total.toFixed(2)
-          }
-        }));
         /*Consider using this for state purposes...
         SOLUTION: make Database calls using ID to refill array with item.
          let bg = this.state.userBoardgames;
          bg = bg.filter((element) => element._id !== ID);
        this.setState({userBoardgames:bg, userTradeList: trades, userTotalPrice: total.toFixed(2) }); */
 
-        document.getElementById("conditionSelect2").selectedIndex = 0;
-
         return true;
-
       } catch (e) {
-        if (e === "Please select a game") {
-          document.getElementById("myList").classList.add("is-invalid");
-          window.setTimeout(() => { document.getElementById("myList").classList.remove("is-invalid"); }, 3000)
 
-        }
-        if (e === "No condition was selected.") {
-          document.getElementById("conditionSelect2").classList.add("is-invalid");
-        }
-
-        this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
-          window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
-        });
         console.log(e);
       }
     } else {
       try {
-        let available = document.getElementById("yourList");
-        let price = document.getElementById("bgSetPrice2");
-        let condition = document.getElementById("conditionSelect");
+        let available = document.getElementById("searchedUserList");
+        let name = available.options[available.selectedIndex].value;
 
-        if (available.options[available.selectedIndex] === undefined) {
-          throw "Please select a game";
-        }
-        else if (condition.value === "") {
-          throw "No condition was selected.";
-        }
-        let number = parseFloat(price.value).toFixed(2);
-        let ID = available.options[available.selectedIndex].id;
-        const values = { id: ID, name: available.options[available.selectedIndex].value, price: number, condition: condition.value }
+        let MSRP = "";
+        getAtlasBoardgameId(name).then(boardgame => {
+          console.log(boardgame.games[0].msrp);
+          MSRP = boardgame.games[0].msrp;
+          var ID = available.options[available.selectedIndex].id;
+          const values = { id: ID, name: name, price: MSRP };
+          const trades = this.state.tradeData.searchedUserTradeList;
+          const tradeItem = Object.create(values);
+          trades.push(tradeItem);
+          available.removeChild(available.options[available.selectedIndex]);
 
-        const trades = this.state.tradeData.searchedUserTradeList;
-        const tradeItem = Object.create(values);
-        trades.push(tradeItem);
-        available.removeChild(available.options[available.selectedIndex]);
-        let total = parseFloat(this.state.tradeData.searchedUserTotalPrice) + parseFloat(number);
+          let total =
+            parseFloat(this.state.tradeData.searchedUserTotalPrice) +
+            parseFloat(MSRP);
 
-        this.setState(prevState => ({ tradeData: { ...prevState.tradeData, searchedUserTradeList: trades, searchedUserTotalPrice: total.toFixed(2) } }));
-        document.getElementById("conditionSelect").selectedIndex = 0;
-        return true;
-
-      } catch (e) {
-        if (e === "Please select a game") {
-          document.getElementById("yourList").classList.add("is-invalid");
-          window.setTimeout(() => { document.getElementById("yourList").classList.remove("is-invalid"); }, 3000)
-
-        }
-        if (e === "No condition was selected.") {
-          document.getElementById("conditionSelect").classList.add("is-invalid");
-
-        }
-
-        this.setState({ selectGameAlert: true, selectGameMsg: e }, () => {
-          window.setTimeout(() => { this.setState({ selectGameAlert: false }) }, 3000)
+          this.setState(prevState => ({
+            tradeData: {
+              ...prevState.tradeData,
+              searchedUserTradeList: trades,
+              searchedUserTotalPrice: total.toFixed(2)
+            }
+          }));
         });
+        return true;
+      } catch (e) {
+
         console.log(e);
       }
     }
-
-
-
   }
   handleRemoveBoardgame(event) {
     try {
@@ -216,16 +226,26 @@ class TradeRequestContainer extends React.Component {
 
       const foundItem = trades.find(item => item.id === event.currentTarget.id);
 
-      const removeItem = trades.filter(item => item.id !== event.currentTarget.id);
+      const removeItem = trades.filter(
+        item => item.id !== event.currentTarget.id
+      );
       var available = document.getElementById("myList");
-      var element = document.createElement('option');
+      var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
       element.appendChild(document.createTextNode(foundItem.name));
       available.appendChild(element);
 
       let parsedPrice = foundItem.price;
-      let total = parseFloat(this.state.tradeData.userTotalPrice) - parseFloat(parsedPrice);
-      this.setState(prevState => ({ tradeData: { ...prevState.tradeData, userTradeList: removeItem, userTotalPrice: total.toFixed(2) } }));
+      let total =
+        parseFloat(this.state.tradeData.userTotalPrice) -
+        parseFloat(parsedPrice);
+      this.setState(prevState => ({
+        tradeData: {
+          ...prevState.tradeData,
+          userTradeList: removeItem,
+          userTotalPrice: total.toFixed(2)
+        }
+      }));
       return true;
     } catch (e) {
       console.log(e);
@@ -235,17 +255,27 @@ class TradeRequestContainer extends React.Component {
     try {
       const trades = this.state.tradeData.searchedUserTradeList;
       const foundItem = trades.find(item => item.id === event.currentTarget.id);
-      const removeItem = trades.filter(item => item.id !== event.currentTarget.id);
+      const removeItem = trades.filter(
+        item => item.id !== event.currentTarget.id
+      );
       console.log(foundItem);
-      var available = document.getElementById("yourList");
-      var element = document.createElement('option');
+      var available = document.getElementById("searchedUserList");
+      var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
       element.appendChild(document.createTextNode(foundItem.name));
       available.appendChild(element);
 
       let parsedPrice = foundItem.price;
-      let total = parseFloat(this.state.tradeData.searchedUserTotalPrice) - parseFloat(parsedPrice);
-      this.setState(prevState => ({ tradeData: { ...prevState.tradeData, searchedUserTradeList: removeItem, searchedUserTotalPrice: total.toFixed(2) } }));
+      let total =
+        parseFloat(this.state.tradeData.searchedUserTotalPrice) -
+        parseFloat(parsedPrice);
+      this.setState(prevState => ({
+        tradeData: {
+          ...prevState.tradeData,
+          searchedUserTradeList: removeItem,
+          searchedUserTotalPrice: total.toFixed(2)
+        }
+      }));
       return true;
     } catch (e) {
       console.log(e);
@@ -254,21 +284,18 @@ class TradeRequestContainer extends React.Component {
 
   onChangeSearchBar = () => {
     document.getElementById("searchbar").classList.remove("is-invalid");
-  }
+  };
 
   onChangeCondition = () => {
-
     document.getElementById("conditionSelect").classList.remove("is-invalid");
-  }
+  };
   onChangeCondition2 = () => {
-
     document.getElementById("conditionSelect2").classList.remove("is-invalid");
-  }
+  };
   handleSearchButton(event) {
     var inputValue = document.getElementById("searchbar").value;
     console.log(inputValue);
     this.loadSearchedUserBoardgameData(inputValue);
-
   }
 
   //handles price change up till the decimal, extra validation toFixed(2) is used to round decimals to 2 digits.
@@ -276,225 +303,277 @@ class TradeRequestContainer extends React.Component {
     let { value, min, max } = event.target;
     value = Math.max(Number(min), Math.min(Number(max), Number(value)));
     this.setState({ price: value });
-
   }
   handleSearchedUserPriceChange(event) {
     let { value, min, max } = event.target;
     value = Math.max(Number(min), Math.min(Number(max), Number(value)));
     this.setState({ searchedUserPrice: value });
-
   }
 
   clear = () => {
-    this.setState(prevState => ({ tradeData: { ...prevState.tradeData, userTradeList: [], searchedUserTradeList: [] } }));
-  }
-
+    this.setState(prevState => ({
+      tradeData: {
+        ...prevState.tradeData,
+        userTradeList: [],
+        searchedUserTradeList: []
+      }
+    }));
+  };
 
   render() {
     return (
       <div className="container-fluid">
         <div className="row my-3 justify-content-center">
           {/* BgSidebar is col-sm-3 */}
-          <TradesSideBar
-          />
+          <TradesSideBar />
           <div className="col-sm-9 col-md-9 col-lg-9">
             <div className="row">
               <div className="col-12 px-0">
                 <h4>Make a Trade</h4>
-
               </div>
 
               <div className=" col-12 form-inline py-2 px-0">
                 <FormGroup className="col-12">
-
-                  <Input id='searchbar' onChange={this.onChangeSearchBar} placeholder="Search..." />
-
+                  <Input
+                    id="searchbar"
+                    onChange={this.onChangeSearchBar}
+                    placeholder="Search..."
+                  />
                   <InputGroupAddon addonType="append">
-                    <Button variant="primary" className="rounded" onClick={this.handleSearchButton.bind(this)}><FontAwesomeIcon icon={faSearch}></FontAwesomeIcon></Button>
+                    <Button
+                      variant="primary"
+                      className="rounded"
+                      onClick={this.handleSearchButton.bind(this)}
+                    >
+                      <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                    </Button>
                   </InputGroupAddon>
                   &nbsp;
-                  <Input id="clear" type="button" className="btn btn-info rounded block" onClick={this.clear.bind(this)} value="Clear" />
-
-                  <div className="invalid-feedback">
-                    User does not exist.
-                  </div>
+                  <Input
+                    id="clear"
+                    type="button"
+                    className="btn btn-info rounded block"
+                    onClick={this.clear.bind(this)}
+                    value="Clear"
+                  />
+                  <div className="invalid-feedback">User does not exist.</div>
                 </FormGroup>
 
                 <FormGroup className="pl-4 pt-1">
-
                   <span>
-
                     <Label check>
                       <Input id="filterMatching" type="checkbox" />
-                      Filter Matching Games
-              </Label>
+                      Filter Matching Games *WIP
+                    </Label>
                   </span>
-
                 </FormGroup>
-
-
               </div>
-
             </div>
             {/* START Recipient trade list */}
-            {!this.state.foundUser ?
+            {!this.state.foundUser ? (
               <div className="row">
-                <div className="col-6">
-                </div>
-              </div> :
+                <div className="col-6"></div>
+              </div>
+            ) : (
               <div>
+                <div className="text-info">
+                  ***Lists will only show games you have set to wantToTrade in
+                  BoardgameGeek***
+                </div>
                 <div className="row bg-white">
-                  {this.state.selectGameAlert ? <div className="col-12 px-0"><Alert color="warning" >{this.state.selectGameMsg}</Alert></div> : null}
-         
-                  <div className="col-6">
+                  {this.state.selectGameAlert ? (
+                    <div className="col-12 px-0">
+                      <Alert color="warning">{this.state.selectGameMsg}</Alert>
+                    </div>
+                  ) : null}
 
+                  <div className="col-6">
                     <div className="col-12">
                       <h3>Your List ({this.state.userBoardgames.length})</h3>
                     </div>
                     <br />
                     <div className="col-12 form-group ">
                       <div className="form-group">
-                        <BgListPrice bgData={this.state.userBoardgames} listID="myList" addBoardgame={this.handleAddBoardgame.bind(this)}/>
+                        <BgListPrice
+                          bgData={this.state.userBoardgames}
+                          listID="myList"
+                          addBoardgame={this.handleAddBoardgame.bind(this)}
+                        />
                       </div>
-                      <FormGroup row>
-
-                        <div className="col">
-                          <InputGroup>
-                            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-                            <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handlePriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice" value={this.state.price} />
-                          </InputGroup>
-                        </div>
-
-                        <div className="col">
-                          <Input type="select" defaultValue={""} onChange={this.onChangeCondition2} name="select" id="conditionSelect2" required>
-                            <option value="" disabled hidden>Boardgame Condition</option>
-                            <option>Excellent</option>
-                            <option>Good</option>
-                            <option>Fair</option>
-                            <option>Poor</option>
-                          </Input>
-                          <div className="invalid-feedback">
-                            Please provide a valid Selection.
-      </div>
-                        </div>
-                      </FormGroup>
-
-
-
                     </div>
                     <div className="col-12">
-
                       <div className="form-group">
-                        <label >To Trade:</label>
+                        <label>To Trade:</label>
                         <ListGroup id="tradedToYou">
-                          {this.state.tradeData.userTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle" onClick={this.handleRemoveBoardgame.bind(this)}>
-                            {item.name.length < 30 ?
-                              item.name : item.name.substring(0, 30) + '...'}  |  ${item.price}
-                            <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon>
-                            <br />
-                            {(function () {
-                              switch (item.condition) {
-                                case 'Excellent':
-                                  return <span className="badge badge-success float-left">{item.condition}</span>;
-                                case 'Good':
-                                  return <span className="badge badge-primary float-left">{item.condition}</span>;
-                                case 'Fair':
-                                  return <span className="badge badge-warning float-left">{item.condition}</span>;
-                                case 'Poor':
-                                  return <span className="badge badge-danger float-left">{item.condition}</span>;
-                                default:
-                                  return null;
-                              }
-                            })()}</ListGroupItem>)}
+                          {this.state.tradeData.userTradeList.map(item => (
+                            <ListGroupItem
+                              className="float-left font-weight-bold"
+                              key={item.id}
+                              id={item.id}
+                              onClick={this.handleRemoveBoardgame.bind(this)}
+                            >
+                              <FontAwesomeIcon
+                                className="align-middle cursor-pointer"
+                                style={{ float: "left" }}
+                                color="red"
+                                size="lg"
+                                icon={faMinus}
+                              ></FontAwesomeIcon>
+                              &nbsp;
+                              {item.name.length < 40
+                                ? item.name
+                                : item.name.substring(0, 40) + "..."}{" "}
+                              <h4 className="float-right">
+                                MSRP:
+                                {item.price === "0.00"
+                                  ? "N/A"
+                                  : "$" + item.price}
+                              </h4>
+                              <br />
+                              {(function() {
+                                switch (item.condition) {
+                                  case "Excellent":
+                                    return (
+                                      <span className="badge badge-success float-left">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Good":
+                                    return (
+                                      <span className="badge badge-primary float-left">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Fair":
+                                    return (
+                                      <span className="badge badge-warning float-left">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Poor":
+                                    return (
+                                      <span className="badge badge-danger float-left">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  default:
+                                    return null;
+                                }
+                              })()}
+                            </ListGroupItem>
+                          ))}
                         </ListGroup>
-                        <h3>Total Value: ${this.state.tradeData.userTotalPrice}</h3>
+                        <h3 className="float-right">
+                          Total Value: ${this.state.tradeData.userTotalPrice}
+                        </h3>
                       </div>
                     </div>
                   </div>
 
+                  {this.state.searchedUserBoardgames.length > 0 ? (
+                    <div className="col-6">
+                      <Link to={`/user/${this.state.tradeData.searchedUserID}`}>
+                        <h3>
+                          {this.state.tradeData.searchedUser
+                            .charAt(0)
+                            .toUpperCase() +
+                            this.state.tradeData.searchedUser.slice(1)}
+                          's List ({this.state.searchedUserBoardgames.length})
+                        </h3>
+                      </Link>
 
-                  <div className="col-6">
-                    <Link to={`/user/${this.state.tradeData.searchedUserID}`}>
-                      <h3>{this.state.tradeData.searchedUser.charAt(0).toUpperCase() + this.state.tradeData.searchedUser.slice(1)}'s List ({this.state.searchedUserBoardgames.length})</h3>
-                    </Link>
+                      <br />
+                      <div className="col-12 form-group">
+                        <BgListPrice
+                          bgData={this.state.searchedUserBoardgames}
+                          listID="searchedUserList"
+                          addBoardgame={this.handleAddBoardgame.bind(this)}
+                        />
+                      </div>
 
-                    <br />
-                    <div className="col-12 ">
-                      <BgListPrice bgData={this.state.searchedUserBoardgames} listID="yourList" addBoardgame={this.handleAddBoardgame.bind(this)} />
-                      <FormGroup row className="pt-2">
-                        <div className="col">
-                          <InputGroup>
-                            <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-                            <Input type="number" step="0.01" max={this.state.valueMax} min={this.state.valueMin} onChange={this.handleSearchedUserPriceChange.bind(this)} placeholder="Set Price" id="bgSetPrice2" value={this.state.searchedUserPrice} />
-                          </InputGroup>
+                      <div className="col-12">
+                        <div className="form-group">
+                          <label>To Trade:</label>
+                          <ListGroup id="tradedToMe">
+                            {this.state.tradeData.searchedUserTradeList.map(
+                              item => (
+                                <ListGroupItem
+                                  key={item.id}
+                                  id={item.id}
+                                  className="align-middle font-weight-bold"
+                                  onClick={this.handleRemoveUserBoardgame.bind(
+                                    this
+                                  )}
+                                >
+                                  <FontAwesomeIcon
+                                    className="align-middle cursor-pointer"
+                                    style={{ float: "left" }}
+                                    color="red"
+                                    size="lg"
+                                    icon={faMinus}
+                                  ></FontAwesomeIcon>
+                                  &nbsp;
+                                  {item.name.length < 40
+                                    ? item.name
+                                    : item.name.substring(0, 40) + "..."}
+                                  <h4 className="float-right">
+                                    MSRP:
+                                    {item.price === "0.00"
+                                      ? "N/A"
+                                      : "$" + item.price}
+                                  </h4>
+                                </ListGroupItem>
+                              )
+                            )}
+                          </ListGroup>
+                          <h3 className="float-right">
+                            Total Value: $
+                            {this.state.tradeData.searchedUserTotalPrice}
+                          </h3>
                         </div>
-
-                        <div className="col">
-
-                          <Input type="select" defaultValue={""} onChange={this.onChangeCondition} name="select" id="conditionSelect" className="has-error" required>
-                            <option value="" disabled hidden>Boardgame Condition</option>
-                            <option>Excellent</option>
-                            <option>Good</option>
-                            <option>Fair</option>
-                            <option>Poor</option>
-                          </Input>
-                          <div className="invalid-feedback">
-                            Please provide a valid Selection.
-      </div>
-                        </div>
-                      </FormGroup>
-
+                      </div>
                     </div>
-
-
-                    <div className="col-12">
-                      <label >To Trade:</label>
-                      <ListGroup id="tradedToMe">
-                        {this.state.tradeData.searchedUserTradeList.map(item => <ListGroupItem key={item.id} id={item.id} className="align-middle font-weight-bold" onClick={this.handleRemoveUserBoardgame.bind(this)}>
-
-                          {item.name.length < 30 ?
-                            item.name : item.name.substring(0, 30) + '...'}  |  ${item.price}
-                          <FontAwesomeIcon className="align-middle cursor-pointer" style={{ float: "right" }} color="red" size="lg" icon={faMinusCircle}></FontAwesomeIcon>
-                          <br />
-                          {(function () {
-                            switch (item.condition) {
-                              case 'Excellent':
-                                return <span className="badge badge-success float-left">{item.condition}</span>;
-                              case 'Good':
-                                return <span className="badge badge-primary float-left">{item.condition}</span>;
-                              case 'Fair':
-                                return <span className="badge badge-warning float-left">{item.condition}</span>;
-                              case 'Poor':
-                                return <span className="badge badge-danger float-left">{item.condition}</span>;
-                              default:
-                                return null;
-                            }
-                          })()}
-
-                        </ListGroupItem>)}
-                      </ListGroup>
-                      <h3>Total Value: ${this.state.tradeData.searchedUserTotalPrice}</h3>
+                  ) : (
+                    <div>
+                      <h3>
+                        <Link
+                          to={`/user/${this.state.tradeData.searchedUserID}`}
+                        >
+                          {this.state.tradeData.searchedUser
+                            .charAt(0)
+                            .toUpperCase() +
+                            this.state.tradeData.searchedUser.slice(1)}
+                        </Link>{" "}
+                        does not have any games for trade.
+                      </h3>
                     </div>
-                  </div>
-
-
+                  )}
                 </div>
-                <ConfirmRequestModal tradeData={this.state.tradeData} onClose={this.showModal} show={this.state.show} ></ConfirmRequestModal>
 
-
+                <div className="row bg-dark p-3">
+                  <div className="offset-5">
+                    <button
+                      className="btn btn-success"
+                      onClick={e => {
+                        this.showModal();
+                      }}
+                    >
+                      Review Trade
+                      <br />
+                      <FontAwesomeIcon
+                        size="lg"
+                        icon={faExchangeAlt}
+                      ></FontAwesomeIcon>
+                    </button>
+                  </div>
+                </div>
+                <ConfirmRequestModal
+                  tradeData={this.state.tradeData}
+                  onClose={this.showModal}
+                  show={this.state.show}
+                ></ConfirmRequestModal>
               </div>
-            }
-            <div className="row bg-dark p-3">
-
-              <div className="offset-5">
-                <button className="btn btn-success" onClick={e => {
-                  this.showModal();
-                }}>Review Trade<br /><FontAwesomeIcon size="lg" icon={faExchangeAlt}></FontAwesomeIcon></button>
-
-
-              </div>
-            </div>
-
+            )}
           </div>
         </div>
       </div>

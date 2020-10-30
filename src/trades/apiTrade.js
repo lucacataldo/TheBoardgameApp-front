@@ -36,6 +36,22 @@ export const createTrade = (token,trade) => {
         })
 };
 
+export const deleteTrade = (token, tradeId) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/trade/delete/${tradeId}`, {
+        method: "DELETE",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            console.log(response);
+            return response.json(); 
+        })
+        .catch(err => console.log(err));
+};
+
 export const getAllTradeRequests = () => {
 
     return fetch(`${process.env.REACT_APP_API_URL}/trades`, {
@@ -53,9 +69,26 @@ export const getAllTradeRequests = () => {
 
 ;}
 
-export const getAllTradeRequestsById = (id) => {
+export const getAllTradeRequestsById = (userId) => {
 
-    return fetch(`${process.env.REACT_APP_API_URL}/trades/by/${id}`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/trades/by/${userId}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': "application/json"
+        }
+    })
+        .then(response => response.json())         
+        .catch(err =>{
+            console.log(err);
+        
+        })
+
+
+;}
+
+export const getTradeRequestById = (tradeId) => {
+
+    return fetch(`${process.env.REACT_APP_API_URL}/trade/by/${tradeId}`, {
         method: "GET",
         headers: {
             'Content-Type': "application/json"

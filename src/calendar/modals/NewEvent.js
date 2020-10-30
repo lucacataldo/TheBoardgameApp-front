@@ -1,67 +1,44 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-
 import EventForm from "./EventForm";
 import { isAuthenticated } from "../../auth";
 
-class NewEvent extends Component {
-  constructor() {
-    super();
-    this.state = {
-      event: {
-        id: "",
-        title: "",
-        allDay: false,
-        startDate: new Date(),
-        endDate: new Date(),
-        owner: "",
-        bgColor: "",
-      },
-    };
-  }
+const NewEvent = (props) => {
+  const [event, setEvent] = useState({
+    title: "",
+    allDay: false,
+    startDate: new Date(),
+    endDate: new Date(),
+    owner: isAuthenticated().user._id,
+    bgColor: "eventTag-Blue",
+  });
+  const { userId, showModal, handleCloseModal } = props;
 
-  componentDidMount() {
-    const userId = this.props.userId;
-    if (
-      isAuthenticated().user._id !== userId &&
-      isAuthenticated().user.role !== "admin"
-    ) {
-      //if not owner view only
-    }
-  }
-
-  reset() {
-    this.setState({
-      event: {
-        title: "",
-        allDay: false,
-        startDate: new Date(),
-        endDate: new Date(),
-        owner: "",
-        bgColor: "",
-      },
+  const reset = () => {
+    setEvent({
+      title: "",
+      allDay: false,
+      startDate: new Date(),
+      endDate: new Date(),
+      owner: isAuthenticated().user._id,
+      bgColor: "eventTag-Blue",
     });
-  }
-
-  closeModal = () => {
-    this.reset();
   };
 
-  render() {
-    const { event } = this.state;
-    return (
-      <>
-        <EventForm
-          modalId="add-event"
-          modalTitle="Add Event"
-          eventInfo={{
-            event,
-          }}
-          userId={this.props.userId}
-          closeModal={this.closeModal}
-        />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <EventForm
+        modalId="add-event"
+        modalTitle="Add Event"
+        eventInfo={{
+          event,
+        }}
+        userId={userId}
+        resetModal={reset}
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+      />
+    </>
+  );
+};
 export default NewEvent;
