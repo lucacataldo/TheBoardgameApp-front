@@ -7,6 +7,7 @@ import DeleteUser from "./DeleteUser";
 import FollowProfileButton from "./FollowProfileButton";
 import ProfileTabs from "./ProfileTabs";
 import { getPostsByUserId } from "../post/apiPost";
+import Animator from "../animator/Animator"
 
 
 class Profile extends Component {
@@ -38,6 +39,7 @@ class Profile extends Component {
     componentDidMount() {
         const userId = this.props.match.params.userId;
         this.initProfile(userId);
+        Animator.animate();
     };
 
     componentWillReceiveProps(props) {
@@ -90,7 +92,7 @@ class Profile extends Component {
 
         return (
             <div className="container">
-                <div className="row">
+                <div className="row animator">
                     <div className="col-lg-4">
                         <div className="row mt-5 justify-content-center">
                             <img

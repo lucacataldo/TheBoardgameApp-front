@@ -6,6 +6,7 @@ import TradeResponse from "./TradeResponse";
 import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
 import { getAllTradeRequestsById } from "./apiTrade";
+import Animator from "../animator/Animator";
 class Trades extends React.Component {
   constructor() {
     super();
@@ -31,6 +32,8 @@ class Trades extends React.Component {
       isAuthenticated().user.role !== "admin"
     ) {
       this.setState({ redirectToHome: true });
+    } else{
+        Animator.animate()
     }
   }
 
@@ -45,15 +48,13 @@ class Trades extends React.Component {
           <TradesSideBar
             highlight= "Trades"
           />
-          <div className="col-sm-6 col-lg-6">
-          <h4>My Trades</h4>
-          <TradeRequest trades={this.state.tradeRequests}/>
-          <br/>
-          <TradeResponse trades={this.state.tradeResponses}/>
-          <br/>
-          <TradePending/>
-
-          
+          <div className="col-sm-6 col-lg-6 animator">
+            <h4>My Trades</h4>
+            <TradeRequest trades={this.state.tradeRequests}/>
+            <br/>
+            <TradeResponse trades={this.state.tradeResponses}/>
+            <br/>
+            <TradePending/>
           </div>
         </div>
       </div>
