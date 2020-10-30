@@ -8,13 +8,22 @@
 }
 
 .list-group-item{
-    transition: all 0.4s ease;
     border-radius: 0px !important;
 }
 
 .list-group-item.active {
-    box-shadow: -5px 0px 0px $primary;
-    background: $primary;
+    animation: active 0.3s ease forwards;
+}
+
+@keyframes active{
+    from{
+        box-shadow: none;
+        background: none
+    }
+    to{
+        box-shadow: -5px 0px 0px $primary;
+        background: $primary;
+    }
 }
 
 a:any-link{
