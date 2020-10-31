@@ -2,7 +2,6 @@ import React from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import TradeRequest from "./TradeRequest";
-import TradeResponse from "./TradeResponse";
 import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
 import { getAllTradeRequestsById, deleteTrade } from "./apiTrade";
@@ -79,9 +78,17 @@ class Trades extends React.Component {
             <TradeRequest
               trades={this.state.tradeRequests}
               onClickDelete={this.onClickRemoveTrade.bind(this)}
+              header="Waiting for Response"
+              deleteText="Remove"
             />
             <br />
-            <TradeResponse trades={this.state.tradeResponses} />
+            <TradeRequest
+              trades={this.state.tradeResponses}
+              onClickDelete={this.onClickRemoveTrade.bind(this)}
+              header="Response Needed"
+              deleteText="Reject"
+              successButton="Accept"
+            />
             <br />
             <TradePending />
           </div>
