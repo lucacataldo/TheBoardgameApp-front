@@ -147,7 +147,7 @@ class SettingUser extends Component {
         <Form>
           <div className="row">
             <div className="col-md-12 my-2">
-              <h4 className="text-muted">Personal Details</h4>
+              <h4>Personal Details</h4>
             </div>
           </div>
           <div className="form-group row">
@@ -222,7 +222,7 @@ class SettingUser extends Component {
           </div>
           <div className="row">
             <div className="col-md-12 my-2">
-              <h4 className="text-muted">Change Password</h4>
+              <h4>Change Password</h4>
             </div>
           </div>
           <div className="form-group row">
@@ -334,7 +334,7 @@ class SettingUser extends Component {
               <SettingSidebar highlight="UserSetting" userId={id} />
               <div className="col-sm-9">
                 <div className="card">
-                  <div className="card-body text-dark">
+                  <div className="card-body">
                     <div className="row">
                       <div className="col-md-12">
                         <h2>Basic Information</h2>

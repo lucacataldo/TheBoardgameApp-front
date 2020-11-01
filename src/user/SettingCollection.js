@@ -178,7 +178,7 @@ class SettingCollection extends Component {
               <SettingSidebar highlight="Boardgame" userId={id} />
               <div className="col-sm-9">
                 <div className="card">
-                  <div className="card-body text-dark">
+                  <div className="card-body">
                     <div className="row">
                       <div className="col-md-12">
                         <h2>Boardgamegeek Information</h2>
