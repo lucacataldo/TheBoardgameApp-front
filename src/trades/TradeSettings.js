@@ -2,6 +2,7 @@ import React from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import { Redirect } from "react-router-dom";
+import Animator from "../animator/Animator";
 class TradeSettings extends React.Component {
   constructor() {
     super();
@@ -16,6 +17,8 @@ class TradeSettings extends React.Component {
       isAuthenticated().user.role !== "admin"
     ) {
       this.setState({ redirectToHome: true });
+    } else{
+        Animator.animate()
     }
   }
 
@@ -30,11 +33,9 @@ class TradeSettings extends React.Component {
           <TradesSideBar
             highlight= "TradeSettings"
           />
-           <div className="col-sm-6 col-lg-6">
-          <h4>Trade Settings</h4>
-
-          
-          </div>
+            <div className="col-sm-6 col-lg-6 animator">
+                <h4>Trade Settings</h4>
+            </div>
         </div>
       </div>
     );

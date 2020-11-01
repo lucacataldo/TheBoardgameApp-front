@@ -8,6 +8,8 @@ import { getEventsByUserId } from "./apiCalendar";
 import { isAuthenticated } from "../auth";
 import { EventContext } from "../context/EventContext";
 
+import Animator from "../animator/Animator";
+
 const CalContainer = (props) => {
   const userId = props.match.params.userId;
   const [redirectTo, setRedirectTo] = useState(false);
@@ -24,6 +26,7 @@ const CalContainer = (props) => {
         setEvents(data);
       }
     });
+    Animator.animate()
   }, [userId]);
 
   return (
@@ -32,7 +35,7 @@ const CalContainer = (props) => {
         <Redirect to={`/404`} />
       ) : (
         <EventContext.Provider value={eventValues}>
-          <div className="wrapper calContainer">
+          <div className="wrapper calContainer animator">
             <div className="container-fluid">
               <div className="row">
                 <div className="col-12">

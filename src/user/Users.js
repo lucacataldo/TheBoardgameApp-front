@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { getUsers } from "./apiUser";
 import DefaultProfileImg from "../images/avatar.png";
-
+import Animator from "../animator/Animator";
 class Users extends Component {
     constructor() {
         super();
@@ -18,6 +18,7 @@ class Users extends Component {
                 console.log(data.error);
             } else {
                 this.setState({ users: data });
+                Animator.animate();
             }
         });
     }
@@ -26,7 +27,7 @@ class Users extends Component {
         <div className="row">
             {users.map((user, i) => (
             <Link to={`/user/${user._id}`} >
-                <div className="card col-md-12" key={i}>
+                <div className="card col-md-12 animator" key={i}>
                     <div className="card-body">
                         <img
                             className="img-thumbnail card-img-top"

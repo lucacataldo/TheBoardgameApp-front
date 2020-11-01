@@ -2,10 +2,10 @@ import React from "react";
 import { isAuthenticated } from "../auth";
 import TradesSideBar from "./TradesSideBar";
 import TradeRequest from "./TradeRequest";
-import TradeResponse from "./TradeResponse";
 import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
 import { getAllTradeRequestsById, deleteTrade } from "./apiTrade";
+import Animator from "../animator/Animator";
 class Trades extends React.Component {
   constructor() {
     super();
@@ -38,6 +38,8 @@ class Trades extends React.Component {
       isAuthenticated().user.role !== "admin"
     ) {
       this.setState({ redirectToHome: true });
+    } else{
+        Animator.animate()
     }
   }
 
@@ -71,14 +73,22 @@ class Trades extends React.Component {
         <div className="row my-3 justify-content-center">
           {/* BgSidebar is col-sm-3 */}
           <TradesSideBar highlight="Trades" />
-          <div className="col-sm-6 col-lg-6">
+          <div className="col-sm-6 col-lg-6 animator">
             <h4>My Trades</h4>
             <TradeRequest
               trades={this.state.tradeRequests}
               onClickDelete={this.onClickRemoveTrade.bind(this)}
+              header="Waiting for Response"
+              deleteText="Remove"
             />
             <br />
-            <TradeResponse trades={this.state.tradeResponses} />
+            <TradeRequest
+              trades={this.state.tradeResponses}
+              onClickDelete={this.onClickRemoveTrade.bind(this)}
+              header="Response Needed"
+              deleteText="Reject"
+              successButton="Accept"
+            />
             <br />
             <TradePending />
           </div>

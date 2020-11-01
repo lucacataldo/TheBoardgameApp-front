@@ -1,6 +1,6 @@
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faEye, faTimes, faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes, faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import ViewTradeRequestModal from "./modals/ViewTradeRequestModal";
 import {getTradeRequestById} from "./apiTrade"
 import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
@@ -43,7 +43,7 @@ class TradeRequest extends React.Component {
                   show={this.state.show}
             
                 ></ViewTradeRequestModal> */}
-            <div className="card-header">Waiting for Response</div>
+            <div className="card-header">{this.props.header}</div>
             
         <div className="card-body">
         {this.props.trades.map(trade=>{
@@ -51,7 +51,7 @@ class TradeRequest extends React.Component {
                 return (
                   <div key={trade._id}>
     <Button color="primary" id={"toggle".concat(trade._id)} className="col-12" style={{ marginBottom: '1rem' }}>
-       <img className="float-left rounded-circle" src="https://picsum.photos/100" alt="displaypic"/>
+       <img className="float-left rounded-circle" src="https://picsum.photos/75" alt="displaypic"/>
                
                 
      <div className="float-left pt-3 pl-3"><a className="font-weight-bold h5 text-white" href={'user/' + trade.tradeReceiver._id}>{trade.tradeReceiver.name} </a>
@@ -79,7 +79,11 @@ class TradeRequest extends React.Component {
             </div>
             
           </div>
-          <button type="button" onClick={()=> this.props.onClickDelete(trade._id)} className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Delete</button>
+          <button type="button" onClick={()=> this.props.onClickDelete(trade._id)} className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> {this.props.deleteText}</button>
+              
+          {this.props.successButton === "Accept" ? 
+          <button type="button" onClick={()=> this.props.onClickDelete(trade._id)} className="btn btn-success float-right mr-2"><FontAwesomeIcon icon={faCheck} />{this.props.successButton}</button>
+        : null}
         </CardBody> 
       </Card>
      

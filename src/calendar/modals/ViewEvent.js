@@ -1,10 +1,10 @@
 import React from "react";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Modal } from "react-bootstrap";
 
+import moment from "moment";
 const ViewEvent = (props) => {
-  const { modalId, event, showEvent, handleCloseModal, sameDate } = props;
+  const { event, modalId } = props;
   const getColor = (color) => {
     switch (color) {
       case "eventTag-blue":
@@ -23,58 +23,88 @@ const ViewEvent = (props) => {
   };
 
   let formatDate;
-  if (sameDate) {
-    formatDate = event.allDay ? (
-      <>{event.startDate}</>
-    ) : (
-      <>
-        {event.startDate} - {event.endDate}
-      </>
-    );
+  if (moment(event.startDate).isSame(event.endDate, "day")) {
+    formatDate =
+      event.allDay ||
+      moment(event.startDate).isSame(event.endDate, "minute") ? (
+        <> {moment(event.startDate).format("MMM Do YYYY hh:mm A")}</>
+      ) : (
+        <>
+          {moment(event.startDate).format("MMM Do YYYY hh:mm A")} -{" "}
+          {moment(event.endDate).format("hh:mm A")}
+        </>
+      );
   } else {
     formatDate = (
       <>
-        from {event.startDate} <br /> to {event.endDate}
+        {moment(event.startDate).format("MMM Do YYYY hh:mm A")}
+        <br /> to {moment(event.endDate).format("MMM Do YYYY hh:mm A")}
       </>
     );
   }
 
   return (
     <>
-      <Modal id={modalId} show={showEvent} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>{event.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="container-fluid">
-            <div className="row ">
-              <div className="col-1">
-                <span
-                  className="fa fa-square align-middle"
-                  style={{ color: getColor(event.bgColor) }}
-                ></span>
-              </div>
-              <div className="col-11 text-wrap text-left">{formatDate}</div>
+      <div
+        className="modal fade"
+        id={modalId}
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="eventViewModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="eventViewModalLabel">
+                {event.title}
+              </h5>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-            <div className="row">
-              <div className="col-1">
-                <span className="fa fa-address-book"></span>{" "}
+            <div className="modal-body">
+              {" "}
+              <div className="container-fluid">
+                <div className="row ">
+                  <div className="col-1">
+                    <span
+                      className="fa fa-square align-middle"
+                      style={{ color: getColor(event.bgColor) }}
+                    ></span>
+                  </div>
+                  <div className="col-11 text-wrap text-left">{formatDate}</div>
+                </div>
+                <div className="row">
+                  <div className="col-1">
+                    <span className="fa fa-address-book"></span>{" "}
+                  </div>
+                  <div className="col-11 text-wrap text-left">
+                    {event.owner.name}
+                  </div>
+                </div>
               </div>
-              <div className="col-11 text-wrap text-left">
-                {event.owner.name}
-              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" className="btn btn-primary">
+                Save changes
+              </button>
             </div>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleCloseModal}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </div>
+      </div>
     </>
   );
 };
