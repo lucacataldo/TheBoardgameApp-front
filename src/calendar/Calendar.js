@@ -8,7 +8,7 @@ import ViewEvent from "./modals/ViewEvent";
 const localizer = momentLocalizer(moment);
 
 const MyCalendar = () => {
-  const { events } = useContext(EventContext);
+  const { events, setSelectedEvent } = useContext(EventContext);
   const [event, setEvent] = useState({
     title: "",
     allDay: false,
@@ -27,6 +27,7 @@ const MyCalendar = () => {
   }
   const onEventClick = (event) => {
     setEvent(event);
+    setSelectedEvent(event);
   };
 
   return (
