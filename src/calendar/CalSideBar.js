@@ -1,20 +1,21 @@
-import React, { useContext, useState } from "react";
-import { Button } from "react-bootstrap";
+import React, { useContext } from "react";
 import NewEvent from "./modals/NewEvent";
 import { isAuthenticated } from "../auth";
 import { EventContext } from "../context/EventContext";
-
+import EditEvent from "./modals/EditEvent";
 const SideBar = (props) => {
   const { events } = useContext(EventContext);
-  const [showModal, setShowModal] = useState(false);
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
   return (
     <div className="col-lg-3 col-xl-2">
       {isAuthenticated().user._id === props.userId ? (
-        <Button className="btn btn-primary btn-block" onClick={handleShowModal}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          data-toggle="modal"
+          data-target="#add-event"
+        >
           Create Event
-        </Button>
+        </button>
       ) : (
         ""
       )}
@@ -31,11 +32,8 @@ const SideBar = (props) => {
             ))
           : "No events added"}
       </div>
-      <NewEvent
-        userId={props.userId}
-        showModal={showModal}
-        handleCloseModal={handleCloseModal}
-      />
+      <NewEvent userId={props.userId} />
+      <EditEvent />
     </div>
   );
 };

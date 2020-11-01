@@ -83,7 +83,6 @@ class SettingUser extends Component {
   componentDidMount() {
     this.userData = new FormData();
     const userId = this.props.match.params.userId;
-    console.log("userid " + userId);
     if (
       isAuthenticated().user._id !== userId &&
       isAuthenticated().user.role !== "admin"

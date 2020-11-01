@@ -12,7 +12,7 @@ const NewEvent = (props) => {
     owner: isAuthenticated().user._id,
     bgColor: "eventTag-Blue",
   });
-  const { userId, showModal, handleCloseModal } = props;
+  const { userId } = props;
 
   const reset = () => {
     setEvent({
@@ -35,8 +35,6 @@ const NewEvent = (props) => {
         }}
         userId={userId}
         resetModal={reset}
-        showModal={showModal}
-        handleCloseModal={handleCloseModal}
       />
     </>
   );
