@@ -17,3 +17,10 @@
   bottom: 10;
   background-color: rgba(255, 255, 255, 0.75);
 }
+
+.listThumbnail {
+    float: left;
+    width:  50px;
+    height: 50px;
+    object-fit: cover;
+}
