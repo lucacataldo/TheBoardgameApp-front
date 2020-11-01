@@ -76,7 +76,7 @@ case "Fair":
     element.innerText = condition;
     if (element.classList.contains("badge-success"))
     element.classList.replace("badge-success","badge-warning");
-    else if (element.classList.contains("primary-warning"))
+    else if (element.classList.contains("badge-primary"))
     element.classList.replace("badge-primary","badge-warning");
     else if (element.classList.contains("badge-danger"))
     element.classList.replace("badge-danger","badge-warning");
@@ -119,7 +119,7 @@ default:
                   />
                   &nbsp;{item.boardgame.title}
                   <br />
-                  <span id= {"conditionBadge-" + item._id} className="badge badge-success ml-2 float-left ">
+                  <span id= {"conditionBadge-" + item._id} className=" col-1 badge badge-success ml-2 float-left ">
                     Excellent
                   </span>
                 <span className="float-left ml-5">Select:</span>
