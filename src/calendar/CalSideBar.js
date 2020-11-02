@@ -3,14 +3,16 @@ import NewEvent from "./modals/NewEvent";
 import { isAuthenticated } from "../auth";
 import { EventContext } from "../context/EventContext";
 import EditEvent from "./modals/EditEvent";
+import ViewEvent from "./modals/ViewEvent";
 const SideBar = (props) => {
-  const { events } = useContext(EventContext);
+  const { events, setSelectedEvent } = useContext(EventContext);
+
   return (
     <div className="col-lg-3 col-xl-2">
       {isAuthenticated().user._id === props.userId ? (
         <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-primary btn-block"
           data-toggle="modal"
           data-target="#add-event"
         >
@@ -26,14 +28,18 @@ const SideBar = (props) => {
               <div
                 key={event._id}
                 className={`external-event ${event.bgColor}`}
+                onClick={() => setSelectedEvent(event)}
+                data-toggle="modal"
+                data-target="#viewEventModal"
               >
                 {event.title}
               </div>
             ))
           : "No events added"}
       </div>
-      <NewEvent userId={props.userId} />
+      <NewEvent />
       <EditEvent />
+      <ViewEvent />
     </div>
   );
 };

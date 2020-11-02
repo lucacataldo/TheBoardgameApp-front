@@ -1,22 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { EventContext } from "../context/EventContext";
-import ViewEvent from "./modals/ViewEvent";
 
 const localizer = momentLocalizer(moment);
 
 const MyCalendar = () => {
   const { events, setSelectedEvent } = useContext(EventContext);
-  const [event, setEvent] = useState({
-    title: "",
-    allDay: false,
-    startDate: "",
-    endDate: "",
-    owner: "",
-    bgColor: "eventTag-Blue",
-  });
 
   function Event({ event }) {
     return (
@@ -26,7 +17,6 @@ const MyCalendar = () => {
     );
   }
   const onEventClick = (event) => {
-    setEvent(event);
     setSelectedEvent(event);
   };
 
@@ -48,7 +38,6 @@ const MyCalendar = () => {
           }}
         />
       </div>
-      <ViewEvent event={event} modalId="viewEventModal" />
     </>
   );
 };
