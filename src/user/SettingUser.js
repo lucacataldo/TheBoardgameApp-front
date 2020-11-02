@@ -62,7 +62,6 @@ class SettingUser extends Component {
   init = (userId) => {
     const token = isAuthenticated().token;
     getUser(userId, token).then((data) => {
-      console.log(data);
       if (data.error) {
         this.setState({ redirectToProfile: true });
       } else {

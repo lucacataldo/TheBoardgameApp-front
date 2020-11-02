@@ -39,7 +39,7 @@ class SettingCollection extends Component {
         this.setState({
           user: {
             id: data._id,
-            bggUsername: data.bggUsername,
+            bggUsername: data.bggUsername == undefined ? "" : data.bggUsername,
           },
         });
       }

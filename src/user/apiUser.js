@@ -1,146 +1,144 @@
-
-
 export const getUserId = (username) => {
-
-    return fetch(`${process.env.REACT_APP_API_URL}/user/find/${username}`, {
-        method: "GET"
+  return fetch(`${process.env.REACT_APP_API_URL}/user/find/${username}`, {
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson.user._id;
     })
-        .then((response) => response.json())
-        .then((responseJson) =>{
-          return responseJson.user._id
-        })
-        .catch(err =>{
-             console.log(err);
-             return false;
-        })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 };
 
 export const getUser = (userId, token) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
-        method: "GET",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        }
+  return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 export const getUsers = () => {
-    return fetch(`${process.env.REACT_APP_API_URL}/users`, {
-        method: "GET"
+  return fetch(`${process.env.REACT_APP_API_URL}/users`, {
+    method: "GET",
+  })
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err)); 
+    .catch((err) => console.log(err));
 };
 
 export const removeUser = (userId, token) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
-        method: "DELETE",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        }
+  return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json(); 
-        })
-        .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 export const updateUser = (userId, token, user) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
-        method: "PUT",
-        headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: user
+  return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: user,
+  })
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 export const updateBggBoardgamesByUsername = (userId, token, bggUsername) => {
-    console.log("update api", bggUsername);
-    return fetch(`${process.env.REACT_APP_API_URL}/user/bgg/${bggUsername}&${userId}`, {
-        method: "PUT",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ bggUsername })
+  return fetch(
+    `${process.env.REACT_APP_API_URL}/user/bgg/${bggUsername}&${userId}`,
+    {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ bggUsername }),
+    }
+  )
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 export const updateLocalStorUser = (userData, next) => {
-    if (typeof window !== "undefined") {
-        if (localStorage.getItem("jwt")) {
-            let auth = JSON.parse(localStorage.getItem("jwt"));
-            auth.user = userData.user;
-            localStorage.setItem("jwt", JSON.stringify(auth));
-            next();
-        }
+  if (typeof window !== "undefined") {
+    if (localStorage.getItem("jwt")) {
+      let auth = JSON.parse(localStorage.getItem("jwt"));
+      auth.user = userData.user;
+      localStorage.setItem("jwt", JSON.stringify(auth));
+      next();
     }
+  }
 };
 
 export const followUser = (userId, token, followId) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/user/follow`, {
-        method: "PUT",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ userId, followId })
+  return fetch(`${process.env.REACT_APP_API_URL}/user/follow`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ userId, followId }),
+  })
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 export const unfollowUser = (userId, token, unfollowId) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/user/unfollow`, {
-        method: "PUT",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ userId, unfollowId })
+  return fetch(`${process.env.REACT_APP_API_URL}/user/unfollow`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ userId, unfollowId }),
+  })
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
-
 export const findPeople = (userId, token) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/user/findpeople/${userId}`, {
-        method: "GET",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        }
+  return fetch(`${process.env.REACT_APP_API_URL}/user/findpeople/${userId}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
     })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
