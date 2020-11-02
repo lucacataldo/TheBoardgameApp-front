@@ -10,7 +10,7 @@ const NewEvent = (props) => {
     startDate: new Date(),
     endDate: new Date(),
     owner: isAuthenticated().user._id,
-    bgColor: "eventTag-Blue",
+    bgColor: "eventTag-blue",
   });
   const { userId } = props;
 
@@ -21,7 +21,7 @@ const NewEvent = (props) => {
       startDate: new Date(),
       endDate: new Date(),
       owner: isAuthenticated().user._id,
-      bgColor: "eventTag-Blue",
+      bgColor: "eventTag-blue",
     });
   };
 
