@@ -1,8 +1,7 @@
 import React from "react";
-
 import "react-datepicker/dist/react-datepicker.css";
-
 import moment from "moment";
+
 const ViewEvent = (props) => {
   const { event, modalId } = props;
   const getColor = (color) => {
@@ -53,7 +52,7 @@ const ViewEvent = (props) => {
         aria-labelledby="eventViewModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog" role="document">
+        <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="eventViewModalLabel">
@@ -98,8 +97,14 @@ const ViewEvent = (props) => {
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary">
-                Save changes
+              <button
+                type="button"
+                data-dismiss="modal"
+                data-toggle="modal"
+                data-target="#edit-event"
+                className="btn btn-primary"
+              >
+                Edit Event
               </button>
             </div>
           </div>

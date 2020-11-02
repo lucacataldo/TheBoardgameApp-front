@@ -59,9 +59,10 @@ export const updateEvent = (eventId, token, event) => {
     method: "PUT",
     headers: {
       Accept: "application/json",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: event,
+    body: JSON.stringify(event),
   })
     .then((response) => {
       return response.json();

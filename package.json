@@ -16,6 +16,7 @@
     "formik": "^2.1.4",
     "google-auth-library": "^5.9.2",
     "gsap": "^3.5.1",
+    "jquery": "^3.5.1",
     "match-sorter": "^4.0.2",
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",

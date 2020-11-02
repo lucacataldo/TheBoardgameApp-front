@@ -14,10 +14,12 @@ const CalContainer = (props) => {
   const userId = props.match.params.userId;
   const [redirectTo, setRedirectTo] = useState(false);
   const [events, setEvents] = useState([]);
-  const eventValues = useMemo(() => ({ events, setEvents }), [
-    events,
-    setEvents,
-  ]);
+  const [selectedEvent, setSelectedEvent] = useState([]);
+  const eventValues = useMemo(
+    () => ({ events, setEvents, selectedEvent, setSelectedEvent }),
+    [events, selectedEvent]
+  );
+
   useEffect(() => {
     getEventsByUserId(userId, isAuthenticated().token).then((data) => {
       if (data.error) {
@@ -26,7 +28,7 @@ const CalContainer = (props) => {
         setEvents(data);
       }
     });
-    Animator.animate()
+    Animator.animate();
   }, [userId]);
 
   return (
