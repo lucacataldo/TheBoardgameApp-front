@@ -1,9 +1,37 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 
+import { EventContext } from "../../context/EventContext";
+import { isAuthenticated } from "../../auth";
+
 const ViewEvent = (props) => {
-  const { event, modalId } = props;
+  const { selectedEvent } = useContext(EventContext);
+
+  const [event, setEvent] = useState({
+    _id: "",
+    title: "",
+    allDay: false,
+    startDate: new Date(),
+    endDate: new Date(),
+    owner: isAuthenticated().user._id,
+    bgColor: "eventTag-Blue",
+  });
+
+  useEffect(() => {
+    if (selectedEvent.length !== 0) {
+      setEvent({
+        _id: selectedEvent._id,
+        title: selectedEvent.title,
+        allDay: selectedEvent.allDay,
+        startDate: new Date(selectedEvent.startDate),
+        endDate: new Date(selectedEvent.endDate),
+        owner: selectedEvent.owner,
+        bgColor: selectedEvent.bgColor,
+      });
+    }
+  }, [selectedEvent]);
+
   const getColor = (color) => {
     switch (color) {
       case "eventTag-blue":
@@ -21,32 +49,35 @@ const ViewEvent = (props) => {
     }
   };
 
-  let formatDate;
-  if (moment(event.startDate).isSame(event.endDate, "day")) {
-    formatDate =
-      event.allDay ||
-      moment(event.startDate).isSame(event.endDate, "minute") ? (
-        <> {moment(event.startDate).format("MMM Do YYYY hh:mm A")}</>
-      ) : (
+  const formatingDate = () => {
+    let formatDate;
+    if (moment(event.startDate).isSame(event.endDate, "day")) {
+      formatDate =
+        event.allDay ||
+        moment(event.startDate).isSame(event.endDate, "minute") ? (
+          <> {moment(event.startDate).format("MMM Do YYYY hh:mm A")}</>
+        ) : (
+          <>
+            {moment(event.startDate).format("MMM Do YYYY hh:mm A")} -{" "}
+            {moment(event.endDate).format("hh:mm A")}
+          </>
+        );
+    } else {
+      formatDate = (
         <>
-          {moment(event.startDate).format("MMM Do YYYY hh:mm A")} -{" "}
-          {moment(event.endDate).format("hh:mm A")}
+          {moment(event.startDate).format("MMM Do YYYY hh:mm A")}
+          <br /> to {moment(event.endDate).format("MMM Do YYYY hh:mm A")}
         </>
       );
-  } else {
-    formatDate = (
-      <>
-        {moment(event.startDate).format("MMM Do YYYY hh:mm A")}
-        <br /> to {moment(event.endDate).format("MMM Do YYYY hh:mm A")}
-      </>
-    );
-  }
+    }
+    return formatDate;
+  };
 
   return (
     <>
       <div
         className="modal fade"
-        id={modalId}
+        id="viewEventModal"
         tabIndex="-1"
         role="dialog"
         aria-labelledby="eventViewModalLabel"
@@ -77,7 +108,9 @@ const ViewEvent = (props) => {
                       style={{ color: getColor(event.bgColor) }}
                     ></span>
                   </div>
-                  <div className="col-11 text-wrap text-left">{formatDate}</div>
+                  <div className="col-11 text-wrap text-left">
+                    {formatingDate()}
+                  </div>
                 </div>
                 <div className="row">
                   <div className="col-1">

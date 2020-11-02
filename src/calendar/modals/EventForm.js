@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
@@ -23,7 +23,8 @@ const EventInfoValidation = Yup.object().shape({
 
 const EventForm = (props) => {
   const { modalId, modalTitle, eventInfo, resetModal } = props;
-  const { events, setEvents } = useContext(EventContext);
+  const { events, setEvents, selectedEvent } = useContext(EventContext);
+  useEffect(() => {}, [selectedEvent, events]);
   const [eventColor, setEventColor] = useState("#0275d8");
   const submitFunction = (eventData) => {
     const userId = isAuthenticated().user._id;
@@ -50,7 +51,7 @@ const EventForm = (props) => {
           const eIndex = events.findIndex((e) => {
             return e._id === data._id;
           });
-          editedEvents[eIndex] = { ...editedEvents[eIndex], data };
+          editedEvents[eIndex] = data;
           setEvents(editedEvents);
         }
       });
@@ -85,6 +86,7 @@ const EventForm = (props) => {
         return;
     }
   };
+
   return (
     <>
       <div
