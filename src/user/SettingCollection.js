@@ -39,7 +39,7 @@ class SettingCollection extends Component {
         this.setState({
           user: {
             id: data._id,
-            bggUsername: data.bggUsername,
+            bggUsername: data.bggUsername === undefined ? "" : data.bggUsername,
           },
         });
       }
@@ -71,8 +71,7 @@ class SettingCollection extends Component {
               if (data.error) {
                 this.setState({
                   alertStatus: "danger",
-                  alertMsg:
-                    "Unable to update information. Please try again later.",
+                  alertMsg: data.error,
                 });
               } else if (isAuthenticated().user.role === "admin") {
                 this.setState({
