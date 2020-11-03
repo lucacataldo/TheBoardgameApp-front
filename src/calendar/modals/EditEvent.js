@@ -24,7 +24,7 @@ const EditEvent = (props) => {
         allDay: selectedEvent.allDay,
         startDate: new Date(selectedEvent.startDate),
         endDate: new Date(selectedEvent.endDate),
-        owner: isAuthenticated().user._id,
+        owner: selectedEvent.owner,
         bgColor: selectedEvent.bgColor,
       });
     }

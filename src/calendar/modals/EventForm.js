@@ -9,7 +9,7 @@ import { faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/js/bootstrap.min.js";
 import $ from "jquery";
 
-import { createEvent, updateEvent } from "../apiCalendar";
+import { createEvent, getEventsByUserId, updateEvent } from "../apiCalendar";
 import { isAuthenticated } from "../../auth";
 import { EventContext } from "../../context/EventContext";
 
@@ -35,9 +35,9 @@ const EventForm = (props) => {
         if (data.error) {
           console.log("error");
         } else {
-          let userEvents = [...events];
-          userEvents.push(data);
-          setEvents(userEvents);
+          getEventsByUserId(userId, token).then((data) => {
+            setEvents(data);
+          });
         }
         resetModal();
       });
@@ -47,12 +47,9 @@ const EventForm = (props) => {
         if (data.error) {
           console.log("error");
         } else {
-          let editedEvents = [...events];
-          const eIndex = events.findIndex((e) => {
-            return e._id === data._id;
+          getEventsByUserId(userId, token).then((data) => {
+            setEvents(data);
           });
-          editedEvents[eIndex] = data;
-          setEvents(editedEvents);
         }
       });
       $("[data-dismiss='modal']").click();
