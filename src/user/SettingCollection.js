@@ -69,6 +69,7 @@ class SettingCollection extends Component {
           updateBggBoardgamesByUsername(userId, token, values.bggUsername).then(
             (data) => {
               if (data.error) {
+                console.log(data.error);
                 this.setState({
                   alertStatus: "danger",
                   alertMsg:
