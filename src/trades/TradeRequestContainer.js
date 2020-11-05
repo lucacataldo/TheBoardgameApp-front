@@ -77,6 +77,7 @@ class TradeRequestContainer extends React.Component {
   }
 
   showModal = e => {
+    console.log(this.state.tradeData);
     this.setState({ show: !this.state.show });
   };
 
@@ -145,14 +146,14 @@ class TradeRequestContainer extends React.Component {
     if (event.currentTarget.id === "myList") {
       try {
         let available = document.getElementById("myList");
-        let name = available.options[available.selectedIndex].value;
+        let name = available.options[available.selectedIndex].value.split('--');
         let MSRP = "";
-        getAtlasBoardgameId(name)
+        getAtlasBoardgameId(name[0])
           .then(boardgame => {
             console.log(boardgame.games[0].msrp);
             MSRP = boardgame.games[0].msrp;
             var ID = available.options[available.selectedIndex].id;
-            const values = { id: ID, name: name, price: MSRP };
+            const values = { id: ID, name: name, price: MSRP, condition: name[1] };
             const trades = this.state.tradeData.userTradeList;
             const tradeItem = Object.create(values);
             trades.push(tradeItem);
@@ -188,14 +189,13 @@ class TradeRequestContainer extends React.Component {
     } else {
       try {
         let available = document.getElementById("searchedUserList");
-        let name = available.options[available.selectedIndex].value;
-
+        let name = available.options[available.selectedIndex].value.split('--');
         let MSRP = "";
-        getAtlasBoardgameId(name).then(boardgame => {
+        getAtlasBoardgameId(name[0]).then(boardgame => {
           console.log(boardgame.games[0].msrp);
           MSRP = boardgame.games[0].msrp;
           var ID = available.options[available.selectedIndex].id;
-          const values = { id: ID, name: name, price: MSRP };
+          const values = { id: ID, name: name, price: MSRP, condition: name[1] };
           const trades = this.state.tradeData.searchedUserTradeList;
           const tradeItem = Object.create(values);
           trades.push(tradeItem);
