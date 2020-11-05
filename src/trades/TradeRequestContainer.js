@@ -153,7 +153,7 @@ class TradeRequestContainer extends React.Component {
             console.log(boardgame.games[0].msrp);
             MSRP = boardgame.games[0].msrp;
             var ID = available.options[available.selectedIndex].id;
-            const values = { id: ID, name: name, price: MSRP };
+            const values = { id: ID, name: name, price: MSRP, condition: name[1] };
             const trades = this.state.tradeData.userTradeList;
             const tradeItem = Object.create(values);
             trades.push(tradeItem);
@@ -190,13 +190,12 @@ class TradeRequestContainer extends React.Component {
       try {
         let available = document.getElementById("searchedUserList");
         let name = available.options[available.selectedIndex].value.split('--');
-
         let MSRP = "";
         getAtlasBoardgameId(name[0]).then(boardgame => {
           console.log(boardgame.games[0].msrp);
           MSRP = boardgame.games[0].msrp;
           var ID = available.options[available.selectedIndex].id;
-          const values = { id: ID, name: name, price: MSRP };
+          const values = { id: ID, name: name, price: MSRP, condition: name[1] };
           const trades = this.state.tradeData.searchedUserTradeList;
           const tradeItem = Object.create(values);
           trades.push(tradeItem);
