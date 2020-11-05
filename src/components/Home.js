@@ -29,14 +29,6 @@ class Home extends React.Component {
     render() {
         return (
             <div className="container-fluid">
-                {/* <div className="homeNav">
-                    <NavLink to="/signin" className="btn btn-outline-secondary rounded-pill py-1">
-                        Sign In
-                    </NavLink>
-                    <NavLink to="/signup" className="btn btn-primary rounded-pill py-1 mx-2">
-                        Sign Up
-                    </NavLink>
-                </div> */}
                 <div className="row homeOne position-fixed">
                     <svg className="homeSplash animator" width="552.661" height="86.798" viewBox="0 0 552.661 86.798">
                         <defs>
@@ -90,13 +82,6 @@ class Home extends React.Component {
                     </div>
                 </div>
             </div>
-            // <div className="bgImage mx-auto my-auto d-flex justify-content-center"  >
-            //     <div className="mx-auto my-auto text-center col-6">
-            //         <img className="align-items-center justify-content-center" src={`${BgLogo}`} alt="Boardgame Guru Logo" />
-            //         <h2 style={{ color: "white" }}> The Boardgame Guru</h2>
-            //         <p style={{ color: "white" }}>This all-in-one boardgame website is under development. Find out more once it's done!'</p>
-            //     </div>
-            // </div >
         )
     }
 }
