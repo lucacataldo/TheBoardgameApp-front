@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -27,8 +27,8 @@ const Signin = props => {
       <div className="bgImage">
         <Alert type={alertStatus} message={alertMsg} visible={alertVisible} />
         <div className="h-100 my-auto d-flex justify-content-center">
-          <div className="my-auto mx-3 col-lg-4 col-md-5 col-sm-11 signInOutDiv">
-            <h2 className="text-center">Sign In</h2>
+          <div className="my-auto mx-3 col-lg-4 col-md-5 col-sm-11 signInOutDiv shadow">
+            <h2 className="text-center font-weight-bold">Sign In</h2>
             <SocialLogins title="Sign in" />
             <div className="or-seperator">
               <i>or</i>
