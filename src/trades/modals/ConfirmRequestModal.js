@@ -117,8 +117,8 @@ export default class ConfirmRequestModal extends React.Component {
                     return (
                       <tr key={item.id}>
                         <td>{item.name}</td>
-                        <td>null</td>
-                        <td>null</td>
+                        <td>{item.price}</td>
+                        <td>{item.condition}</td>
                       </tr>
                     );
                   })}

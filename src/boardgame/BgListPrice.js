@@ -89,7 +89,7 @@ console.log(event.target.value);
  <Input type="select" name="selectMulti"  multiple size="15" id={this.props.listID} onDoubleClick={(e)=>this.handleDoubleClick(e)} required>
    
            {items.map((bg,i)=>{
-               return <option id={bg._id} key={bg._id}>{bg.boardgame.title}</option>
+               return <option id={bg._id} key={bg._id}>{bg.boardgame.title} -- {bg.condition ? bg.condition : "N/A"}</option>
            })}
             </Input>
 
