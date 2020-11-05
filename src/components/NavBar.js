@@ -6,9 +6,9 @@ import BgLogo from "../images/BgLogo.png";
 class NavBar extends React.Component {
   render() {
     return (
-      <nav className="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark sticky-top">
+      <nav className="navbar navbar-icon-top navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
         <div className="container-fluid">
-          <NavLink className="navbar-brand" to="/posts">
+         <NavLink className="navbar-brand" to={isAuthenticated() ? "/posts" : "/"}>
             <img src={BgLogo} width="20" height="20" alt="" /> Boardgame Guru
           </NavLink>
           <button
@@ -180,7 +180,7 @@ class NavBar extends React.Component {
                         title="Sign Out"
                         aria-label="Sign Out"
                         onClick={() =>
-                          signout(() => this.props.history.push("/"))
+                            signout(() => this.props.history.push("/"))
                         }
                         style={{ cursor: "pointer" }}
                       >
