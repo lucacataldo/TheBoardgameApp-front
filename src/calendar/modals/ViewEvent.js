@@ -24,6 +24,7 @@ const ViewEvent = (props) => {
         _id: selectedEvent._id,
         title: selectedEvent.title,
         allDay: selectedEvent.allDay,
+        description: selectedEvent.description,
         startDate: new Date(selectedEvent.startDate),
         endDate: new Date(selectedEvent.endDate),
         owner: selectedEvent.owner,
@@ -65,8 +66,8 @@ const ViewEvent = (props) => {
     } else {
       formatDate = (
         <>
-          {moment(event.startDate).format("MMM Do YYYY hh:mm A")}
-          <br /> to {moment(event.endDate).format("MMM Do YYYY hh:mm A")}
+          From {moment(event.startDate).format("MMM Do YYYY hh:mm A")}
+          <br /> To {moment(event.endDate).format("MMM Do YYYY hh:mm A")}
         </>
       );
     }
@@ -114,6 +115,14 @@ const ViewEvent = (props) => {
                 </div>
                 <div className="row">
                   <div className="col-1">
+                    <span className="fa fa-file"></span>
+                  </div>
+                  <div className="col-11 text-wrap text-left">
+                    {event.description}
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-1">
                     <span className="fa fa-address-book"></span>{" "}
                   </div>
                   <div className="col-11 text-wrap text-left">
@@ -125,19 +134,19 @@ const ViewEvent = (props) => {
             <div className="modal-footer">
               <button
                 type="button"
+                data-dismiss="modal"
+                data-toggle="modal"
+                data-target="#edit-event"
+                className="btn btn-warning"
+              >
+                Edit Event
+              </button>
+              <button
+                type="button"
                 className="btn btn-secondary"
                 data-dismiss="modal"
               >
                 Close
-              </button>
-              <button
-                type="button"
-                data-dismiss="modal"
-                data-toggle="modal"
-                data-target="#edit-event"
-                className="btn btn-primary"
-              >
-                Edit Event
               </button>
             </div>
           </div>
