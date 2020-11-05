@@ -39,3 +39,6 @@ body{
     font-size: 0.75rem;
   }
 }
+
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}
