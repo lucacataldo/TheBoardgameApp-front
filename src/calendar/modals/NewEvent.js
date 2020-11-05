@@ -9,6 +9,7 @@ const NewEvent = (props) => {
     allDay: false,
     startDate: new Date(),
     endDate: new Date(),
+    description: "",
     owner: isAuthenticated().user._id,
     bgColor: "eventTag-blue",
   });
@@ -20,6 +21,7 @@ const NewEvent = (props) => {
       allDay: false,
       startDate: new Date(),
       endDate: new Date(),
+      description: "",
       owner: isAuthenticated().user._id,
       bgColor: "eventTag-blue",
     });

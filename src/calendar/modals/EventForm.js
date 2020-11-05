@@ -141,6 +141,26 @@ const EventForm = (props) => {
                         className="invalid-feedback"
                       />
                     </div>
+                    <div className="form-group">
+                      <label className="control-label">Description</label>
+                      <Field
+                        className={
+                          getIn(errors, "description") &&
+                          getIn(touched, "description")
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
+                        placeholder="Tell people what your event is about"
+                        type="text"
+                        name="description"
+                        component="textarea"
+                      />
+                      <ErrorMessage
+                        component="div"
+                        name="description"
+                        className="invalid-feedback"
+                      />
+                    </div>
                     <div className="form-check">
                       <Field
                         className="form-check-input"
