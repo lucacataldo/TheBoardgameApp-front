@@ -40,7 +40,7 @@ class TradePending extends React.Component {
             <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
             <button type="button" className="btn btn-success mx-2 float-right"><FontAwesomeIcon icon={faCheck} /> Completed</button>
             <button type="button" className="btn btn-info mx-2 float-right"><FontAwesomeIcon icon={faCommentDots} /> Chat</button>
-            <button type="button" className="btn btn-primary mx-2 float-right"><FontAwesomeIcon icon={faEye} /> View</button>
+
             </div>        
         </div>
 
@@ -57,7 +57,6 @@ class TradePending extends React.Component {
             <button type="button" className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> Cancel</button>
             <button type="button" className="btn btn-success mx-2 float-right"><FontAwesomeIcon icon={faCheck} /> Completed</button>
             <button type="button" className="btn btn-info mx-2 float-right"><FontAwesomeIcon icon={faCommentDots} /> Chat</button>
-            <button type="button" className="btn btn-primary mx-2 float-right"><FontAwesomeIcon icon={faEye} /> View</button>
             </div>        
         </div>
         
