@@ -72,6 +72,7 @@ class TradeRequest extends React.Component {
           </div>
           
           </div>
+          <hr/>
           <div className="row">
             <div className="col">
               <h4>Notes:</h4>

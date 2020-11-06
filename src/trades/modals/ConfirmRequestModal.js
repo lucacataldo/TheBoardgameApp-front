@@ -38,7 +38,7 @@ export default class ConfirmRequestModal extends React.Component {
         bottom: "100px",
         left: "15%",
         position: "absolute",
-        right: "100px",
+        right: "25%",
         top: "100px",
         width: "80%",
         height: "80%"
@@ -80,24 +80,45 @@ export default class ConfirmRequestModal extends React.Component {
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Condition</th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.props.tradeData.userTradeList.map(item => {
                     return (
                       <tr key={item.id}>
-                        <td>{item.name}</td>
-                        <td>{item.price}</td>
-                        <td>{item.condition}</td>
+                        <td>{item.name} {(function() {
+                                switch (item.condition) {
+                                  case "Excellent":
+                                    return (
+                                      <span className="badge badge-success float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Good":
+                                    return (
+                                      <span className="badge badge-primary float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Fair":
+                                    return (
+                                      <span className="badge badge-warning float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Poor":
+                                    return (
+                                      <span className="badge badge-danger float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  default:
+                                    return null;
+                                }
+                              })()}</td>
                       </tr>
                     );
                   })}
-                  <tr>
-                    <th>Total Value:</th>
-                    <td colSpan="2">${this.props.tradeData.userTotalPrice}</td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -108,24 +129,46 @@ export default class ConfirmRequestModal extends React.Component {
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Condition</th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.props.tradeData.searchedUserTradeList.map(item => {
                     return (
                       <tr key={item.id}>
-                        <td>{item.name}</td>
-                        <td>{item.price}</td>
-                        <td>{item.condition}</td>
+                        <td>{item.name} {(function() {
+                                switch (item.condition) {
+                                  case "Excellent":
+                                    return (
+                                      <span className="badge badge-success float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Good":
+                                    return (
+                                      <span className="badge badge-primary float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Fair":
+                                    return (
+                                      <span className="badge badge-warning float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  case "Poor":
+                                    return (
+                                      <span className="badge badge-danger float-right">
+                                        {item.condition}
+                                      </span>
+                                    );
+                                  default:
+                                    return null;
+                                }
+                              })()}</td>
                       </tr>
                     );
                   })}
-                  <tr>
-                    <th>Total Value:</th>
-                    <td colSpan="2">$null</td>
-                  </tr>
+
                 </tbody>
               </table>
             </div>
