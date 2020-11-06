@@ -2,6 +2,7 @@
 function replacer(key,value){
     if(key === "userTradeList" || key === "searchedUserTradeList"){
         let list = [];
+        console.log(value);
             for(var i =0; i< value.length;i++){
                 let obj = {};
                 obj.name=value[i].name;

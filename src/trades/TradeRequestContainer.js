@@ -146,14 +146,20 @@ class TradeRequestContainer extends React.Component {
     if (event.currentTarget.id === "myList") {
       try {
         let available = document.getElementById("myList");
-        let name = available.options[available.selectedIndex].value.split('--');
+        let name = available.options[available.selectedIndex].value.split(" -- ");
+        //using RegEx because trim is not working
+        let condition = name[1];
         let MSRP = "";
         getAtlasBoardgameId(name[0])
           .then(boardgame => {
-            console.log(boardgame.games[0].msrp);
             MSRP = boardgame.games[0].msrp;
             var ID = available.options[available.selectedIndex].id;
-            const values = { id: ID, name: name, price: MSRP, condition: name[1] };
+            const values = {
+              id: ID,
+              name: name[0],
+              price: MSRP,
+              condition: condition
+            };
             const trades = this.state.tradeData.userTradeList;
             const tradeItem = Object.create(values);
             trades.push(tradeItem);
@@ -162,7 +168,7 @@ class TradeRequestContainer extends React.Component {
             let total =
               parseFloat(this.state.tradeData.userTotalPrice) +
               parseFloat(MSRP);
-
+            console.log(trades);
             this.setState(prevState => ({
               tradeData: {
                 ...prevState.tradeData,
@@ -183,19 +189,24 @@ class TradeRequestContainer extends React.Component {
 
         return true;
       } catch (e) {
-
         console.log(e);
       }
     } else {
       try {
         let available = document.getElementById("searchedUserList");
-        let name = available.options[available.selectedIndex].value.split('--');
+        let name = available.options[available.selectedIndex].value.split(" -- ");
+        //using RegEx because trim is not working
+        let condition = name[1];
         let MSRP = "";
         getAtlasBoardgameId(name[0]).then(boardgame => {
-          console.log(boardgame.games[0].msrp);
           MSRP = boardgame.games[0].msrp;
           var ID = available.options[available.selectedIndex].id;
-          const values = { id: ID, name: name, price: MSRP, condition: name[1] };
+          const values = {
+            id: ID,
+            name: name[0],
+            price: MSRP,
+            condition: condition
+          };
           const trades = this.state.tradeData.searchedUserTradeList;
           const tradeItem = Object.create(values);
           trades.push(tradeItem);
@@ -215,7 +226,6 @@ class TradeRequestContainer extends React.Component {
         });
         return true;
       } catch (e) {
-
         console.log(e);
       }
     }
@@ -232,7 +242,9 @@ class TradeRequestContainer extends React.Component {
       var available = document.getElementById("myList");
       var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
-      element.appendChild(document.createTextNode(foundItem.name));
+      element.appendChild(
+        document.createTextNode(foundItem.name[0] + "--" + foundItem.name[1])
+      );
       available.appendChild(element);
 
       let parsedPrice = foundItem.price;
@@ -262,7 +274,9 @@ class TradeRequestContainer extends React.Component {
       var available = document.getElementById("searchedUserList");
       var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
-      element.appendChild(document.createTextNode(foundItem.name));
+      element.appendChild(
+        document.createTextNode(foundItem.name[0] + "--" + foundItem.name[1])
+      );
       available.appendChild(element);
 
       let parsedPrice = foundItem.price;
@@ -409,10 +423,10 @@ class TradeRequestContainer extends React.Component {
                             <ListGroupItem
                               className="float-left font-weight-bold"
                               key={item.id}
-                              id={item.id}
-                              onClick={this.handleRemoveBoardgame.bind(this)}
                             >
                               <FontAwesomeIcon
+                                id={item.id}
+                                onClick={this.handleRemoveBoardgame.bind(this)}
                                 className="align-middle cursor-pointer"
                                 style={{ float: "left" }}
                                 color="red"
@@ -464,7 +478,7 @@ class TradeRequestContainer extends React.Component {
                           ))}
                         </ListGroup>
                         <h3 className="float-right">
-                          Total Value: ${this.state.tradeData.userTotalPrice}
+                          Value: ${this.state.tradeData.userTotalPrice}
                         </h3>
                       </div>
                     </div>
@@ -499,13 +513,13 @@ class TradeRequestContainer extends React.Component {
                               item => (
                                 <ListGroupItem
                                   key={item.id}
-                                  id={item.id}
                                   className="align-middle font-weight-bold"
-                                  onClick={this.handleRemoveUserBoardgame.bind(
-                                    this
-                                  )}
                                 >
                                   <FontAwesomeIcon
+                                    id={item.id}
+                                    onClick={this.handleRemoveUserBoardgame.bind(
+                                      this
+                                    )}
                                     className="align-middle cursor-pointer"
                                     style={{ float: "left" }}
                                     color="red"
@@ -527,7 +541,7 @@ class TradeRequestContainer extends React.Component {
                             )}
                           </ListGroup>
                           <h3 className="float-right">
-                            Total Value: $
+                            Value: $
                             {this.state.tradeData.searchedUserTotalPrice}
                           </h3>
                         </div>
