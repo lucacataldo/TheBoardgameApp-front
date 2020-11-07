@@ -1,7 +1,6 @@
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes, faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
-import ViewTradeRequestModal from "./modals/ViewTradeRequestModal";
 import {getTradeRequestById} from "./apiTrade"
 import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
 
@@ -30,6 +29,21 @@ class TradeRequest extends React.Component {
        });
       
     };
+
+    badgeBgRender = (condition) => {
+      switch (condition) {
+        case "Excellent":
+          return "badge-success"
+        case "Good":
+          return "badge-primary"
+        case "Fair":
+          return "badge-warning"
+        case "Poor":
+          return "badge-danger"
+        default:
+          return null;
+      }
+    }
       
     render() {
         return (
@@ -65,10 +79,10 @@ class TradeRequest extends React.Component {
         <CardBody>
           <div className="row">
           <div className='col'><h4>Wants:</h4>
-          {trade.tradeWants.map(game=> <p key={game._id}>{game.name}</p>)}
+          {trade.tradeWants.map(game=> <p key={game._id}>{game.name} <span className={`badge ${this.badgeBgRender(game.condition)} float-right mt-1`}>{game.condition === 'N/A' ? null: game.condition}</span></p>)}
           </div>
           <div className='col'><h4>Offer:</h4>
-          {trade.tradeOffer.map(game=> <p key={game._id}>{game.name}</p>)}
+          {trade.tradeOffer.map(game=> <p key={game._id}>{game.name} <span className={`badge ${this.badgeBgRender(game.condition)} float-right mt-1`}>{game.condition === 'N/A' ? null: game.condition}</span></p>)}
           </div>
           
           </div>

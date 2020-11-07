@@ -1,7 +1,7 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faEye, faCheck, faTimes, faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 
 
 class TradePending extends React.Component {
