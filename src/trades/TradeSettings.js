@@ -50,72 +50,63 @@ class TradeSettings extends React.Component {
       Animator.animate();
     }
   }
+
+
   onClickCondition = (e, listID) => {
     let condition = e.target.value;
-    let element = document.getElementById("conditionBadge-".concat(listID));
 
-    switch (condition) {
-      case "Excellent":
-        element.innerText = condition;
-        if (element.classList.contains("badge-primary"))
-          element.classList.replace("badge-primary", "badge-success");
-        else if (element.classList.contains("badge-warning"))
-          element.classList.replace("badge-warning", "badge-success");
-        else if (element.classList.contains("badge-danger"))
-          element.classList.replace("badge-danger", "badge-success");
-        else if (element.classList.contains("badge-info"))
-          element.classList.replace("badge-info", "badge-success");
-        break;
-      case "Good":
-        element.innerText = condition;
-        if (element.classList.contains("badge-success"))
-          element.classList.replace("badge-success", "badge-primary");
-        else if (element.classList.contains("badge-warning"))
-          element.classList.replace("badge-warning", "badge-primary");
-        else if (element.classList.contains("badge-danger"))
-          element.classList.replace("badge-danger", "badge-primary");
-        else if (element.classList.contains("badge-info"))
-          element.classList.replace("badge-info", "badge-primary");
-        break;
-      case "Fair":
-        element.innerText = condition;
-        if (element.classList.contains("badge-success"))
-          element.classList.replace("badge-success", "badge-warning");
-        else if (element.classList.contains("badge-primary"))
-          element.classList.replace("badge-primary", "badge-warning");
-        else if (element.classList.contains("badge-danger"))
-          element.classList.replace("badge-danger", "badge-warning");
-        else if (element.classList.contains("badge-info"))
-          element.classList.replace("badge-info", "badge-warning");
-        break;
-      case "Poor":
-        element.innerText = condition;
-        if (element.classList.contains("badge-success"))
-          element.classList.replace("badge-success", "badge-danger");
-        else if (element.classList.contains("badge-primary"))
-          element.classList.replace("badge-primary", "badge-danger");
-        else if (element.classList.contains("badge-warning"))
-          element.classList.replace("badge-warning", "badge-danger");
-        else if (element.classList.contains("badge-info"))
-          element.classList.replace("badge-info", "badge-danger");
-        break;
-      default:
-        return "";
-    }
+    let group = document.querySelectorAll(`.btn-group[data-id='${listID}'] button`)
+
+    group.forEach(el => {
+      console.log(el);
+      if (el.classList.contains("btn-primary")) {
+        el.classList.replace("btn-primary", "btn-outline-primary")
+      }
+    })
+
+    e.target.classList.replace("btn-outline-primary", "btn-primary")
   };
 
-  onClickUpdate = () => {
+  onClickUpdate = (e) => {
     let data = this.state.userBoardgames;
-    data.forEach(bg=>{
-     bg.condition = document.getElementById("conditionBadge-".concat(bg._id)).innerText;
-     bg.price = 5;
+    data.forEach(bg => {
+      bg.condition = document.querySelector(`.btn-group[data-id='${bg._id}'] .btn-primary`).innerText;
+      bg.price = 5;
     })
     console.log("DATA");
     console.log(data);
     updateUserBoardgames(this.state.userID, data).then(success => {
+      document.getElementById("output").innerText = "saved"
       return success;
     });
   };
+
+  badgeBgRender = (condition) => {
+    switch (condition) {
+      case "Excellent":
+        return "badge-success"
+        break;
+      case "Good":
+        return "badge-primary"
+        break;
+      case "Fair":
+        return "badge-warning"
+        break;
+      case "Poor":
+        return "badge-danger"
+        break;
+      default:
+        break;
+    }
+  }
+
+  renderCondition = (expected, condition) => {
+    if (expected == condition) {
+      return "btn-primary"
+    } else {
+      return "btn-outline-primary"
+    }
+  }
 
   render() {
     const { redirectToHome } = this.state;
@@ -128,118 +119,76 @@ class TradeSettings extends React.Component {
           <TradesSideBar highlight="TradeSettings" />
           <div className="col-sm-6 col-lg-6 animator">
             <h4>Trade Settings</h4>
-
             <ListGroup id="tradedToYou">
               {this.state.userBoardgames.map(item => (
                 <ListGroupItem
-                  className="float-left font-weight-bold"
+                  className="font-weight-bold d-flex justify-content-between align-items-center"
                   key={item.boardgame._id}
                   id={item.boardgame.id}
                 >
-                  <img
-                    className="img-thumbnail listThumbnail"
-                    src={item.boardgame.imgThumbnail}
-                    alt="thumbnail"
-                  />
-                  &nbsp;{item.boardgame.title}
-                  <br />
-                  {(function() {
-                    switch (item.condition) {
-                      case "Excellent":
-                        return (
-                          <span
-                            id={"conditionBadge-" + item._id}
-                            className="col-1 badge badge-success float-left"
-                          >
-                            {item.condition}
-                          </span>
-                        );
-                      case "Good":
-                        return (
-                          <span
-                            id={"conditionBadge-" + item._id}
-                            className="col-1 badge badge-primary float-left"
-                          >
-                            {item.condition}
-                          </span>
-                        );
-                      case "Fair":
-                        return (
-                          <span
-                            id={"conditionBadge-" + item._id}
-                            className="col-1 badge badge-warning float-left"
-                          >
-                            {item.condition}
-                          </span>
-                        );
-                      case "Poor":
-                        return (
-                          <span
-                            id={"conditionBadge-" + item._id}
-                            className="col-1 badge badge-danger float-left"
-                          >
-                            {item.condition}
-                          </span>
-                        );
-                      default:
-                        return (
-                          <span
-                            id={"conditionBadge-" + item._id}
-                            className="col-1 badge badge-info float-left"
-                          >
-                            Not set
-                          </span>
-                        );
-                    }
-                  })()}
-                  <span className="float-left ml-5">Select:</span>
-                  <div className="mt-2">
-                    <button
-                      value="Excellent"
-                      onClick={e => {
-                        this.onClickCondition(e, item._id);
-                      }}
-                      className="btn btn-success mx-1 float-left cursor-pointer"
-                    >
-                      Excellent
-                    </button>
-                    <button
-                      value="Good"
-                      onClick={e => {
-                        this.onClickCondition(e, item._id);
-                      }}
-                      className="btn btn-primary mx-1 float-left cursor-pointer"
-                    >
-                      Good
-                    </button>
-                    <button
-                      value="Fair"
-                      onClick={e => {
-                        this.onClickCondition(e, item._id);
-                      }}
-                      className="btn btn-warning mx-1 float-left cursor-pointer"
-                    >
-                      Fair
-                    </button>
-                    <button
-                      value="Poor"
-                      onClick={e => {
-                        this.onClickCondition(e, item._id);
-                      }}
-                      className="btn btn-danger mx-1 float-left cursor-pointer"
-                    >
-                      Poor
-                    </button>
+                  <div>
+                    <img
+                      className="img-thumbnail listThumbnail"
+                      src={item.boardgame.imgThumbnail}
+                      alt="thumbnail"
+                    />
+                    <span>{item.boardgame.title}</span>
                   </div>
+
+                  <div className="d-flex justify-content-center align-items-center">
+                    <div class="btn-group" data-id={item._id}>
+                      <button
+                        value="Excellent"
+                        onClick={e => {
+                          this.onClickCondition(e, item._id);
+                        }}
+                        className={`btn ${this.renderCondition('Excellent', item.condition)} cursor-pointer`}
+                      >
+                        Excellent
+                    	</button>
+                      <button
+                        value="Good"
+                        onClick={e => {
+                          this.onClickCondition(e, item._id);
+                        }}
+                        className={`btn ${this.renderCondition('Good', item.condition)} cursor-pointer`}
+                      >
+                        Good
+                    	</button>
+                      <button
+                        value="Fair"
+                        onClick={e => {
+                          this.onClickCondition(e, item._id);
+                        }}
+                        className={`btn ${this.renderCondition('Fair', item.condition)} cursor-pointer`}
+                      >
+                        Fair
+                    	</button>
+                      <button
+                        value="Poor"
+                        onClick={e => {
+                          this.onClickCondition(e, item._id);
+                        }}
+                        className={`btn ${this.renderCondition('Poor', item.condition)} cursor-pointer`}
+                      >
+                        Poor
+                    	</button>
+                    </div>
+
+                  </div>
+
                 </ListGroupItem>
               ))}
             </ListGroup>
             <button
-              className="btn btn-secondary float-right"
-              onClick={this.onClickUpdate}
+              className="btn btn-success mt-2 float-right"
+              onClick={e => {
+                this.onClickUpdate(e)
+              }}
             >
               Update
             </button>
+            <div className="float-right mx-5" id="output"></div>
           </div>
         </div>
       </div>
