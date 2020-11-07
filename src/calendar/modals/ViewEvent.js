@@ -113,17 +113,21 @@ const ViewEvent = (props) => {
                     {formatingDate()}
                   </div>
                 </div>
+                {event.description ? (
+                  <div className="row">
+                    <div className="col-1">
+                      <span className="fa fa-file"></span>
+                    </div>
+                    <div className="col-11 text-wrap text-left">
+                      {event.description}
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
                 <div className="row">
                   <div className="col-1">
-                    <span className="fa fa-file"></span>
-                  </div>
-                  <div className="col-11 text-wrap text-left">
-                    {event.description}
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-1">
-                    <span className="fa fa-address-book"></span>{" "}
+                    <span className="fa fa-address-book"></span>
                   </div>
                   <div className="col-11 text-wrap text-left">
                     {event.owner.name}
