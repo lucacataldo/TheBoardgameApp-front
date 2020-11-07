@@ -68,7 +68,7 @@ class TradeRequest extends React.Component {
        <img className="float-left rounded-circle" src="https://picsum.photos/75" alt="displaypic"/>
                
                 
-     <div className="float-left pt-3 pl-3"><a className="font-weight-bold h5 text-white" href={'user/' + trade.tradeReceiver._id}>{trade.tradeReceiver.name} </a>
+     <div className="float-left pt-3 pl-3"><a className="font-weight-bold h5 text-white" href={'user/' + trade.tradeReceiver._id}>{this.props.header === 'Waiting for Response' ? trade.tradeReceiver.name : trade.tradeSender.name} </a>
                     <br/>
                     <small>{trade.tradeWants.length} games</small></div>
 <div className="float-right text-white">{new Date(trade.createdDate).toISOString().slice(0,10)}</div>
@@ -97,7 +97,7 @@ class TradeRequest extends React.Component {
           <button type="button" onClick={()=> this.props.onClickDelete(trade._id)} className="btn btn-danger float-right"><FontAwesomeIcon icon={faTimes} /> {this.props.deleteText}</button>
               
           {this.props.successButton === "Accept" ? 
-          <button type="button" onClick={()=> this.props.onClickDelete(trade._id)} className="btn btn-success float-right mr-2"><FontAwesomeIcon icon={faCheck} />{this.props.successButton}</button>
+          <button type="button" onClick={()=> this.props.onClickAccept(trade._id)} className="btn btn-success float-right mr-2"><FontAwesomeIcon icon={faCheck} />{this.props.successButton}</button>
         : null}
         </CardBody> 
       </Card>

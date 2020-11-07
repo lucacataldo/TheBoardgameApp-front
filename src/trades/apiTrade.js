@@ -103,3 +103,20 @@ export const getTradeRequestById = (tradeId) => {
 
 
 ;}
+
+export const updateTradeStatus = (token, tradeId, status) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/trade/update/${tradeId}`, {
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({"status": status})
+    })
+        .then(response => {
+            console.log(response);
+            return response.json(); 
+        })
+        .catch(err => console.log(err));
+};
