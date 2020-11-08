@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/js/bootstrap.min.js";
 import $ from "jquery";
-
 import { createEvent, getEventsByUserId, updateEvent } from "../apiCalendar";
 import { isAuthenticated } from "../../auth";
 import { EventContext } from "../../context/EventContext";
@@ -94,7 +93,10 @@ const EventForm = (props) => {
         aria-labelledby="eventLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog modal-dialog-centered" role="document">
+        <div
+          className="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="eventLabel">
@@ -123,175 +125,181 @@ const EventForm = (props) => {
               {({ touched, errors, values, isSubmitting, setFieldValue }) => (
                 <Form>
                   <div className="modal-body">
-                    <div className="form-group">
-                      <label className="control-label">Event Title</label>
-                      <Field
-                        className={
-                          getIn(errors, "title") && getIn(touched, "title")
-                            ? "form-control is-invalid"
-                            : "form-control"
-                        }
-                        placeholder="Enter Title"
-                        type="text"
-                        name="title"
-                      />
-                      <ErrorMessage
-                        component="div"
-                        name="title"
-                        className="invalid-feedback"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="control-label">Description</label>
-                      <Field
-                        className={
-                          getIn(errors, "description") &&
-                          getIn(touched, "description")
-                            ? "form-control is-invalid"
-                            : "form-control"
-                        }
-                        placeholder="Tell people what your event is about"
-                        type="text"
-                        name="description"
-                        component="textarea"
-                      />
-                      <ErrorMessage
-                        component="div"
-                        name="description"
-                        className="invalid-feedback"
-                      />
-                    </div>
-                    <div className="form-check">
-                      <Field
-                        className="form-check-input"
-                        type="checkbox"
-                        name="allDay"
-                        id="allDayEventChkBox"
-                        checked={values.allDay}
-                        value={values.allDay}
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="allDayEventChkBox"
-                      >
-                        All-day event? (optional)
-                      </label>
-                    </div>
-                    <div className="form-group">
-                      <label>Start</label>
-                      <div className="row">
-                        <div className="col-md-12">
-                          <DatePicker
-                            showTimeSelect
-                            minDate={new Date()}
-                            timeIntervals={15}
-                            dateFormat="MMM d, yyyy h:mm aa"
-                            name="startDate"
-                            className="form-control"
-                            selected={values.startDate}
-                            onChange={(date) => {
-                              if (isAfter(date, values.endDate)) {
-                                setFieldValue("endDate", date);
-                              }
-                              setFieldValue("startDate", date);
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <ErrorMessage
-                        component="div"
-                        name="startDate"
-                        className="invalid-feedback"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>End</label>
-                      <div className="row">
-                        <div className="col-md-12">
-                          {!values.allDay ? (
-                            <DatePicker
-                              showTimeSelect
-                              timeIntervals={1}
-                              dateFormat="MMM d, yyyy h:mm aa"
-                              minDate={values.startDate}
-                              className="form-control"
-                              selected={
-                                isAfter(values.endDate, values.startDate) ||
-                                isSameDay(values.endDate, values.startDate)
-                                  ? values.endDate
-                                  : values.startDate
-                              }
-                              name="endDate"
-                              onChange={(date) =>
-                                setFieldValue("endDate", date)
-                              }
-                            />
-                          ) : (
-                            <DatePicker
-                              className="form-control"
-                              dateFormat="MMM d, yyyy"
-                              minDate={values.startDate}
-                              selected={values.endDate}
-                              name="endDate"
-                              onChange={(date) =>
-                                setFieldValue("endDate", date)
-                              }
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <ErrorMessage
-                        component="div"
-                        name="endDate"
-                        className="invalid-feedback"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="control-label">
-                        Choose Event Color
-                      </label>
-                      <div className="input-group mb-3">
-                        <div className="input-group-prepend ">
-                          <label className="input-group-text" htmlFor="bgColor">
-                            <FontAwesomeIcon
-                              icon={faCalendarWeek}
-                              style={{ color: eventColor }}
-                            />
-                          </label>
-                        </div>
+                    <div className="container-fluid">
+                      <div className="form-group row">
+                        <label className="col-form-label col-lg-2">Title</label>
                         <Field
-                          as="select"
-                          className="form-control form-white"
-                          name="bgColor"
-                          onClick={() => {
-                            getColor(values.bgColor);
-                          }}
-                        >
-                          <option value="eventTag-blue">Blue</option>
-                          <option value="eventTag-yellow"> Yellow</option>
-                          <option value="eventTag-green"> Green</option>
-                          <option value="eventTag-red"> Red</option>
-                          <option value="eventTag-lightBlue">Light Blue</option>
-                        </Field>
+                          className={
+                            getIn(errors, "title") && getIn(touched, "title")
+                              ? "form-control is-invalid  col-lg-10"
+                              : "form-control  col-lg-10"
+                          }
+                          placeholder="Enter Title"
+                          type="text"
+                          name="title"
+                        />
+                        <ErrorMessage
+                          component="div"
+                          name="title"
+                          className="offset-lg-2 offset-sm-3 invalid-feedback"
+                        />
+                      </div>
+                      <div className="form-group row">
+                        <label className="col-form-label col-lg-2">
+                          Description
+                        </label>
+                        <Field
+                          className={
+                            getIn(errors, "description") &&
+                            getIn(touched, "description")
+                              ? "form-control is-invalid col-lg-10"
+                              : "form-control col-lg-10"
+                          }
+                          placeholder="Tell people what your event is about"
+                          type="text"
+                          name="description"
+                          component="textarea"
+                        />
+                        <ErrorMessage
+                          component="div"
+                          name="description"
+                          className="invalid-feedback offset-lg-2"
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <div className="row">
+                          <label className="col-form-label col-12 col-md-12 col-lg-2">
+                            Time
+                          </label>
+
+                          <div className="col-12 col-md-5 col-lg-5 pl-0 pr-0 pr-md-2 ">
+                            <DatePicker
+                              minDate={new Date()}
+                              dateFormat="EEEE MMM d, yyyy"
+                              name="startDate"
+                              className="form-control"
+                              selected={values.startDate}
+                              onChange={(date) => {
+                                setFieldValue("endDate", date);
+                                setFieldValue("startDate", date);
+                              }}
+                            />
+                          </div>
+                          <div className="col-5 col-md-3 col-lg-2 px-0 mt-2 mt-md-0">
+                            <DatePicker
+                              timeIntervals={15}
+                              dateFormat="h:mm aa"
+                              showTimeSelect
+                              showTimeSelectOnly
+                              name="startDate"
+                              className="form-control"
+                              selected={values.startDate}
+                              onChange={(date) => {
+                                if (isAfter(date, values.endDate)) {
+                                  setFieldValue("endDate", date);
+                                }
+                                setFieldValue("startDate", date);
+                              }}
+                            />
+                          </div>
+                          <div className="col-2 col-md-1 col-lg-1 px-0 mt-2 mt-md-0 text-center align-self-center ">
+                            <span className="fa fa-minus "></span>
+                          </div>
+                          <div className="col-lg-2 col-md-3 col-5 px-0 mt-2 mt-md-0">
+                            <DatePicker
+                              timeIntervals={15}
+                              minTime={values.startDate}
+                              maxTime={new Date(values.startDate).setHours(
+                                23,
+                                59
+                              )}
+                              dateFormat="h:mm aa"
+                              showTimeSelect
+                              showTimeSelectOnly
+                              name="endDate"
+                              className="form-control"
+                              selected={values.endDate}
+                              onChange={(date) => {
+                                setFieldValue("endDate", date);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <div className="row">
+                          <div className="form-check offset-lg-2">
+                            <Field
+                              className="form-check-input"
+                              type="checkbox"
+                              name="allDay"
+                              id="allDayEventChkBox"
+                              checked={values.allDay}
+                              value={values.allDay}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="allDayEventChkBox"
+                            >
+                              All-day event? (optional)
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-group row">
+                        <label className="col-form-label col-lg-2 ">
+                          Event Color
+                        </label>
+                        <div className="input-group mb-3 col-lg-10 px-0">
+                          <div className="input-group-prepend ">
+                            <label
+                              className="input-group-text"
+                              htmlFor="bgColor"
+                            >
+                              <FontAwesomeIcon
+                                icon={faCalendarWeek}
+                                style={{ color: eventColor }}
+                              />
+                            </label>
+                          </div>
+                          <Field
+                            as="select"
+                            className="form-control form-white"
+                            name="bgColor"
+                            onClick={() => {
+                              getColor(values.bgColor);
+                            }}
+                          >
+                            <option value="eventTag-blue">Blue</option>
+                            <option value="eventTag-yellow"> Yellow</option>
+                            <option value="eventTag-green"> Green</option>
+                            <option value="eventTag-red"> Red</option>
+                            <option value="eventTag-lightBlue">
+                              Light Blue
+                            </option>
+                          </Field>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      className="btn btn-primary save"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Please wait..." : "Submit"}
-                    </button>
-                    <button
-                      type="button"
-                      data-dismiss="modal"
-                      id="closeModal"
-                      className="btn btn-secondary"
-                    >
-                      close
-                    </button>
+                    <div className="modal-footer">
+                      <button
+                        className="btn btn-primary save"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Please wait..." : "Submit"}
+                      </button>
+                      <button
+                        type="button"
+                        data-dismiss="modal"
+                        id="closeModal"
+                        className="btn btn-secondary"
+                      >
+                        close
+                      </button>
+                    </div>
                   </div>
                 </Form>
               )}

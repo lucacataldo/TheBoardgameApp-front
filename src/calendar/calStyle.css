@@ -35,7 +35,6 @@
 }
 
 .form-control {
-  width: 100%;
   height: calc(1.5em + 0.9rem + 2px);
   padding: 0.45rem 0.9rem;
   font-size: 0.9rem;
