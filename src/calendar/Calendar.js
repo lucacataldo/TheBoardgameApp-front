@@ -17,7 +17,16 @@ const MyCalendar = () => {
     );
   }
   const onEventClick = (event) => {
-    setSelectedEvent(event);
+    setSelectedEvent({
+      _id: event._id,
+      title: event.title,
+      allDay: event.allDay,
+      description: event.description,
+      startDate: new Date(event.startDate),
+      endDate: new Date(event.endDate),
+      owner: event.owner,
+      bgColor: event.bgColor,
+    });
   };
 
   return (

@@ -28,7 +28,18 @@ const SideBar = (props) => {
               <div
                 key={event._id}
                 className={`external-event ${event.bgColor}`}
-                onClick={() => setSelectedEvent(event)}
+                onClick={() =>
+                  setSelectedEvent({
+                    _id: event._id,
+                    title: event.title,
+                    allDay: event.allDay,
+                    description: event.description,
+                    startDate: new Date(event.startDate),
+                    endDate: new Date(event.endDate),
+                    owner: event.owner,
+                    bgColor: event.bgColor,
+                  })
+                }
                 data-toggle="modal"
                 data-target="#viewEventModal"
               >

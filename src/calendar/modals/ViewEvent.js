@@ -1,73 +1,34 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 
 import { EventContext } from "../../context/EventContext";
-import { isAuthenticated } from "../../auth";
 
 const ViewEvent = (props) => {
   const { selectedEvent } = useContext(EventContext);
 
-  const [event, setEvent] = useState({
-    _id: "",
-    title: "",
-    allDay: false,
-    startDate: new Date(),
-    endDate: new Date(),
-    owner: isAuthenticated().user._id,
-    bgColor: "eventTag-Blue",
-  });
-
-  useEffect(() => {
-    if (selectedEvent.length !== 0) {
-      setEvent({
-        _id: selectedEvent._id,
-        title: selectedEvent.title,
-        allDay: selectedEvent.allDay,
-        description: selectedEvent.description,
-        startDate: new Date(selectedEvent.startDate),
-        endDate: new Date(selectedEvent.endDate),
-        owner: selectedEvent.owner,
-        bgColor: selectedEvent.bgColor,
-      });
-    }
-  }, [selectedEvent]);
-
-  const getColor = (color) => {
-    switch (color) {
-      case "eventTag-blue":
-        return "#0275d8";
-      case "eventTag-red":
-        return "#d9534f";
-      case "eventTag-yellow":
-        return "#f0ad4e";
-      case "eventTag-green":
-        return "#5cb85c";
-      case "eventTag-lightBlue":
-        return "#5bc0de";
-      default:
-        return "#0275d8";
-    }
-  };
-
   const formatingDate = () => {
     let formatDate;
-    if (moment(event.startDate).isSame(event.endDate, "day")) {
+    if (moment(selectedEvent.startDate).isSame(selectedEvent.endDate, "day")) {
       formatDate =
-        event.allDay ||
-        moment(event.startDate).isSame(event.endDate, "minute") ? (
-          <> {moment(event.startDate).format("MMM Do YYYY hh:mm A")}</>
+        selectedEvent.allDay ||
+        moment(selectedEvent.startDate).isSame(
+          selectedEvent.endDate,
+          "minute"
+        ) ? (
+          <> {moment(selectedEvent.startDate).format("MMM Do YYYY hh:mm A")}</>
         ) : (
           <>
-            {moment(event.startDate).format("MMM Do YYYY hh:mm A")} -{" "}
-            {moment(event.endDate).format("hh:mm A")}
+            {moment(selectedEvent.startDate).format("MMM Do YYYY hh:mm A")} -{" "}
+            {moment(selectedEvent.endDate).format("hh:mm A")}
           </>
         );
     } else {
       formatDate = (
         <>
-          From {moment(event.startDate).format("MMM Do YYYY hh:mm A")}
-          <br /> To {moment(event.endDate).format("MMM Do YYYY hh:mm A")}
+          From {moment(selectedEvent.startDate).format("MMM Do YYYY hh:mm A")}
+          <br /> To{" "}
+          {moment(selectedEvent.endDate).format("MMM Do YYYY hh:mm A")}
         </>
       );
     }
@@ -88,7 +49,7 @@ const ViewEvent = (props) => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="eventViewModalLabel">
-                {event.title}
+                {selectedEvent.title}
               </h5>
               <button
                 type="button"
@@ -105,21 +66,22 @@ const ViewEvent = (props) => {
                 <div className="row ">
                   <div className="col-1">
                     <span
-                      className="fa fa-square align-middle"
-                      style={{ color: getColor(event.bgColor) }}
+                      className={
+                        "fa fa-square align-middle " + selectedEvent.bgColor
+                      }
                     ></span>
                   </div>
                   <div className="col-11 text-wrap text-left">
                     {formatingDate()}
                   </div>
                 </div>
-                {event.description ? (
+                {selectedEvent.description ? (
                   <div className="row">
                     <div className="col-1">
                       <span className="fa fa-file"></span>
                     </div>
                     <div className="col-11 text-wrap text-left">
-                      {event.description}
+                      {selectedEvent.description}
                     </div>
                   </div>
                 ) : (
@@ -130,7 +92,7 @@ const ViewEvent = (props) => {
                     <span className="fa fa-address-book"></span>
                   </div>
                   <div className="col-11 text-wrap text-left">
-                    {event.owner.name}
+                    {selectedEvent.owner.name}
                   </div>
                 </div>
               </div>

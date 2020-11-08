@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import EventForm from "./EventForm";
 import { isAuthenticated } from "../../auth";
 
+import { EventContext } from "../../context/EventContext";
 const NewEvent = (props) => {
+  const { selectedEvent, setSelectedEvent } = useContext(EventContext);
+
   const [event, setEvent] = useState({
     title: "",
     allDay: false,
@@ -32,9 +35,7 @@ const NewEvent = (props) => {
       <EventForm
         modalId="add-event"
         modalTitle="Add Event"
-        eventInfo={{
-          event,
-        }}
+        eventInfo={event}
         userId={userId}
         resetModal={reset}
       />
