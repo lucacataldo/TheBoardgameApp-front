@@ -23,7 +23,10 @@ const CalContainer = (props) => {
     endDate: new Date(),
     owner: isAuthenticated().user._id,
     bgColor: "eventTag-Blue",
+    boardgames: [],
+    tempBoardgame: "",
   });
+
   const eventValues = useMemo(
     () => ({ events, setEvents, selectedEvent, setSelectedEvent }),
     [events, selectedEvent]

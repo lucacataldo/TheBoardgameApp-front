@@ -24,6 +24,7 @@ const MyCalendar = () => {
       description: event.description,
       startDate: new Date(event.startDate),
       endDate: new Date(event.endDate),
+      boardgames: event.boardgames,
       owner: event.owner,
       bgColor: event.bgColor,
     });
