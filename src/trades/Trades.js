@@ -4,7 +4,7 @@ import TradesSideBar from "./TradesSideBar";
 import TradeRequest from "./TradeRequest";
 import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
-import { getAllTradeRequestsById, deleteTrade } from "./apiTrade";
+import { getAllTradeRequestsById, deleteTrade, updateTradeStatus } from "./apiTrade";
 import Animator from "../animator/Animator";
 class Trades extends React.Component {
   constructor() {
@@ -12,7 +12,8 @@ class Trades extends React.Component {
     this.state = {
       redirectToHome: false,
       tradeResponses: [],
-      tradeRequests: []
+      tradeRequests: [],
+      tradePending: []
     };
   }
 
@@ -20,14 +21,18 @@ class Trades extends React.Component {
     let userId = isAuthenticated().user._id;
     getAllTradeRequestsById(userId).then(data => {
       let outgoingRequests = data.filter(
-        trade => userId === trade.tradeSender._id
+        trade => userId === trade.tradeSender._id && trade.status !== "Pending"
       );
       let incomingRequests = data.filter(
-        trade => userId === trade.tradeReceiver._id
+        trade => userId === trade.tradeReceiver._id && trade.status !== "Pending"
+      );
+      let pendingRequests = data.filter(
+        trade => trade.status === "Pending"
       );
       this.setState({
         tradeResponses: incomingRequests,
-        tradeRequests: outgoingRequests
+        tradeRequests: outgoingRequests,
+        tradePending: pendingRequests
       });
     });
   }
@@ -64,6 +69,28 @@ class Trades extends React.Component {
    
   };
 
+  onClickAcceptTrade = tradeId => {
+    const token = isAuthenticated().token;
+    try{
+
+      updateTradeStatus(token, tradeId, "Pending").then(data => {
+      if (data.error) {
+        console.log(data.error);
+      }else{
+        console.log(data);
+      }
+    }); 
+    let newList = this.state.tradeRequests.filter(
+      request => request._id !== tradeId
+    );
+    this.setState({ tradePending: newList });
+    }catch(err){
+      console.error(err);
+    }
+    
+   
+  };
+
   render() {
     const { redirectToHome } = this.state;
     if (redirectToHome) return <Redirect to="/" />;
@@ -84,13 +111,14 @@ class Trades extends React.Component {
             <br />
             <TradeRequest
               trades={this.state.tradeResponses}
-              onClickDelete={this.onClickRemoveTrade.bind(this)}
+              onClickAccept={this.onClickAcceptTrade.bind(this)}
               header="Response Needed"
               deleteText="Reject"
               successButton="Accept"
             />
             <br />
-            <TradePending />
+            <TradePending
+            trades={this.state.tradePending} />
           </div>
         </div>
       </div>

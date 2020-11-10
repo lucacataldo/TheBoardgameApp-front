@@ -85,23 +85,19 @@ class TradeSettings extends React.Component {
     switch (condition) {
       case "Excellent":
         return "badge-success"
-        break;
       case "Good":
         return "badge-primary"
-        break;
       case "Fair":
         return "badge-warning"
-        break;
       case "Poor":
         return "badge-danger"
-        break;
       default:
         break;
     }
   }
 
   renderCondition = (expected, condition) => {
-    if (expected == condition) {
+    if (expected === condition) {
       return "btn-primary"
     } else {
       return "btn-outline-primary"
