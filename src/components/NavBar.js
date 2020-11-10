@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, withRouter } from "react-router-dom"; // withRouter to access history location-URL link
 import { signout, isAuthenticated } from "../auth";
 import BgLogo from "../images/BgLogo.png";
+import Notification from'./Notification';
 
 class NavBar extends React.Component {
   render() {
@@ -104,10 +105,11 @@ class NavBar extends React.Component {
                 </li>
               </ul>
             )}
-
+  <Notification/>
             <ul className="navbar-nav ">
               {!isAuthenticated() && (
                 <>
+                
                   <li className="nav-item">
                     <NavLink
                       className="nav-link"
