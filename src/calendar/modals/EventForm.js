@@ -1,13 +1,14 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
-import { isAfter, isEqual, isSameDay } from "date-fns";
+import { isAfter, isEqual } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/js/bootstrap.min.js";
 import $ from "jquery";
+
 import { createEvent, getEventsByUserId, updateEvent } from "../apiCalendar";
 import { isAuthenticated } from "../../auth";
 import { EventContext } from "../../context/EventContext";
@@ -24,7 +25,6 @@ const EventForm = (props) => {
   const { modalId, modalTitle, eventInfo, resetModal } = props;
   const { events, setEvents, selectedEvent } = useContext(EventContext);
   useEffect(() => {}, [selectedEvent, events]);
-  const [eventColor, setEventColor] = useState("#0275d8");
   const submitFunction = (eventData) => {
     const userId = isAuthenticated().user._id;
     const token = isAuthenticated().token;
@@ -60,29 +60,6 @@ const EventForm = (props) => {
     });
   };
 
-  const getColor = (color) => {
-    switch (color) {
-      case "eventTag-blue":
-        setEventColor("#0275d8");
-        return;
-      case "eventTag-red":
-        setEventColor("#d9534f");
-        return;
-      case "eventTag-yellow":
-        setEventColor("#f0ad4e");
-        return;
-      case "eventTag-green":
-        setEventColor("#5cb85c");
-        return;
-      case "eventTag-lightBlue":
-        setEventColor("#5bc0de");
-        return;
-      default:
-        setEventColor("#0275d8");
-        return;
-    }
-  };
-
   return (
     <>
       <div
@@ -113,7 +90,7 @@ const EventForm = (props) => {
             </div>
             <Formik
               enableReinitialize={true}
-              initialValues={eventInfo.event}
+              initialValues={eventInfo}
               validationSchema={EventInfoValidation}
               onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
@@ -166,13 +143,11 @@ const EventForm = (props) => {
                           className="invalid-feedback offset-lg-2"
                         />
                       </div>
-
                       <div className="form-group">
                         <div className="row">
                           <label className="col-form-label col-12 col-md-12 col-lg-2">
                             Time
                           </label>
-
                           <div className="col-12 col-md-5 col-lg-5 pl-0 pr-0 pr-md-2 ">
                             <DatePicker
                               minDate={new Date()}
@@ -247,7 +222,6 @@ const EventForm = (props) => {
                           </div>
                         </div>
                       </div>
-
                       <div className="form-group row">
                         <label className="col-form-label col-lg-2 ">
                           Event Color
@@ -260,7 +234,7 @@ const EventForm = (props) => {
                             >
                               <FontAwesomeIcon
                                 icon={faCalendarWeek}
-                                style={{ color: eventColor }}
+                                className={values.bgColor}
                               />
                             </label>
                           </div>
@@ -268,9 +242,6 @@ const EventForm = (props) => {
                             as="select"
                             className="form-control form-white"
                             name="bgColor"
-                            onClick={() => {
-                              getColor(values.bgColor);
-                            }}
                           >
                             <option value="eventTag-blue">Blue</option>
                             <option value="eventTag-yellow"> Yellow</option>

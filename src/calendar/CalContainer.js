@@ -14,7 +14,16 @@ const CalContainer = (props) => {
   const userId = props.match.params.userId;
   const [redirectTo, setRedirectTo] = useState(false);
   const [events, setEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState({
+    _id: "",
+    title: "",
+    allDay: false,
+    description: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    owner: isAuthenticated().user._id,
+    bgColor: "eventTag-Blue",
+  });
   const eventValues = useMemo(
     () => ({ events, setEvents, selectedEvent, setSelectedEvent }),
     [events, selectedEvent]
