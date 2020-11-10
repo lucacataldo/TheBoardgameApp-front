@@ -15,6 +15,8 @@ const NewEvent = (props) => {
     description: "",
     owner: isAuthenticated().user._id,
     bgColor: "eventTag-blue",
+    boardgames: [],
+    tempBoardgame: "",
   });
   const { userId } = props;
 
@@ -27,6 +29,8 @@ const NewEvent = (props) => {
       description: "",
       owner: isAuthenticated().user._id,
       bgColor: "eventTag-blue",
+      boardgames: [],
+      tempBoardgame: "",
     });
   };
 
