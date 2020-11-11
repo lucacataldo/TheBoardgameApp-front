@@ -12,7 +12,7 @@ const MyCalendar = () => {
   function Event({ event }) {
     return (
       <div data-toggle="modal" data-target="#viewEventModal">
-        <strong>{event.title}</strong>
+        {event.title}
       </div>
     );
   }

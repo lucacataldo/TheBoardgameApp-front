@@ -3,10 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import EventForm from "./EventForm";
 import { isAuthenticated } from "../../auth";
 
-import { EventContext } from "../../context/EventContext";
 const NewEvent = (props) => {
-  const { selectedEvent, setSelectedEvent } = useContext(EventContext);
-
   const [event, setEvent] = useState({
     title: "",
     allDay: false,
@@ -18,6 +15,7 @@ const NewEvent = (props) => {
     boardgames: [],
     tempBoardgame: "",
   });
+
   const { userId } = props;
 
   const reset = () => {
