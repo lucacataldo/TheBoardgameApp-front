@@ -119,3 +119,17 @@
 .react-datepicker-wrapper {
   width: 100%;
 }
+
+.eventBG_Select__multi-value:hover {
+  color: #fff;
+  background-color: #336d90 !important;
+  border-color: #306686;
+}
+.eventBG_Select__multi-value {
+  color: #fff;
+  background-color: #3d82ac !important;
+  border-color: #3d82ac;
+}
+.eventBG_Select__multi-value__label {
+  color: #fff !important;
+}

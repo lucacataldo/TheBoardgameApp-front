@@ -1,37 +1,30 @@
 import React, { useContext } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarCheck,
+  faChessKing,
+  faChessKnight,
+  faClipboard,
+  faSquare,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { EventContext } from "../../context/EventContext";
+import { isAuthenticated } from "../../auth";
 
 const ViewEvent = (props) => {
   const { selectedEvent } = useContext(EventContext);
 
   const formatingDate = () => {
-    let formatDate;
-    if (moment(selectedEvent.startDate).isSame(selectedEvent.endDate, "day")) {
-      formatDate =
-        selectedEvent.allDay ||
-        moment(selectedEvent.startDate).isSame(
-          selectedEvent.endDate,
-          "minute"
-        ) ? (
-          <> {moment(selectedEvent.startDate).format("MMM Do YYYY hh:mm A")}</>
-        ) : (
-          <>
-            {moment(selectedEvent.startDate).format("MMM Do YYYY hh:mm A")} -{" "}
-            {moment(selectedEvent.endDate).format("hh:mm A")}
-          </>
-        );
-    } else {
-      formatDate = (
-        <>
-          From {moment(selectedEvent.startDate).format("MMM Do YYYY hh:mm A")}
-          <br /> To{" "}
-          {moment(selectedEvent.endDate).format("MMM Do YYYY hh:mm A")}
-        </>
-      );
-    }
+    let formatDate = selectedEvent.allDay ? (
+      <> {moment(selectedEvent.startDate).format("dddd, MMM Do h:mm A")}</>
+    ) : (
+      <>
+        {moment(selectedEvent.startDate).format("dddd, MMM Do h:mm A")} -{" "}
+        {moment(selectedEvent.endDate).format("h:mm A")}
+      </>
+    );
     return formatDate;
   };
 
@@ -48,9 +41,6 @@ const ViewEvent = (props) => {
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="eventViewModalLabel">
-                {selectedEvent.title}
-              </h5>
               <button
                 type="button"
                 className="close"
@@ -61,33 +51,55 @@ const ViewEvent = (props) => {
               </button>
             </div>
             <div className="modal-body">
-              {" "}
               <div className="container-fluid">
-                <div className="row ">
+                <div className="row mb-2">
                   <div className="col-1">
-                    <span
-                      className={
-                        "fa fa-square align-middle " + selectedEvent.bgColor
-                      }
-                    ></span>
+                    <FontAwesomeIcon
+                      icon={faCalendarCheck}
+                      className={selectedEvent.bgColor}
+                    />
                   </div>
                   <div className="col-11 text-wrap text-left">
+                    <h5 className="mb-0">{selectedEvent.title}</h5>
                     {formatingDate()}
                   </div>
                 </div>
-                {selectedEvent.description ? (
-                  <div className="row">
+                {selectedEvent.description && (
+                  <div className="row mb-2">
                     <div className="col-1">
-                      <span className="fa fa-file"></span>
+                      <FontAwesomeIcon icon={faClipboard} />
                     </div>
                     <div className="col-11 text-wrap text-left">
                       {selectedEvent.description}
                     </div>
                   </div>
-                ) : (
-                  ""
                 )}
-                <div className="row">
+                {selectedEvent.boardgames.length > 0 && (
+                  <div className="row mb-2">
+                    <div className="col-1">
+                      <FontAwesomeIcon icon={faChessKnight} />
+                    </div>
+                    <div className="col-11 text-wrap text-left">
+                      {selectedEvent.boardgames.map((bg) => {
+                        return (
+                          <div key={bg._id}>
+                            <a
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={
+                                "https://boardgamegeek.com/boardgame/" +
+                                `${bg.bggId}`
+                              }
+                            >
+                              {bg.title}
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                <div className="row mb-2">
                   <div className="col-1">
                     <span className="fa fa-address-book"></span>
                   </div>
@@ -98,15 +110,17 @@ const ViewEvent = (props) => {
               </div>
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                data-dismiss="modal"
-                data-toggle="modal"
-                data-target="#edit-event"
-                className="btn btn-warning"
-              >
-                Edit Event
-              </button>
+              {isAuthenticated().user._id === selectedEvent.owner._id && (
+                <button
+                  type="button"
+                  data-dismiss="modal"
+                  data-toggle="modal"
+                  data-target="#edit-event"
+                  className="btn btn-warning"
+                >
+                  Edit Event
+                </button>
+              )}
               <button
                 type="button"
                 className="btn btn-secondary"
