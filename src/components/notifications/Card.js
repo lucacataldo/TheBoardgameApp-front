@@ -40,7 +40,7 @@ export default function SimpleCard(props) {
 
   return (
     <Card
-      className={(classes.root, inHover && classes.hoverStyle)}
+      className={`${classes.root} ${inHover && classes.hoverStyle}`}
       onClick={handleClickCard}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
