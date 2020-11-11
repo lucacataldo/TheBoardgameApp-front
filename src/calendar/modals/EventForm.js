@@ -1,17 +1,19 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
+import { Formik, Form, Field, ErrorMessage, getIn, FieldArray } from "formik";
 import { isAfter, isEqual } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/js/bootstrap.min.js";
 import $ from "jquery";
+import Select from "react-select";
 
 import { createEvent, getEventsByUserId, updateEvent } from "../apiCalendar";
 import { isAuthenticated } from "../../auth";
 import { EventContext } from "../../context/EventContext";
+import Alert from "../../components/Alert";
 
 const EventInfoValidation = Yup.object().shape({
   title: Yup.string()
@@ -24,11 +26,17 @@ const EventInfoValidation = Yup.object().shape({
 const EventForm = (props) => {
   const { modalId, modalTitle, eventInfo, resetModal } = props;
   const { events, setEvents, selectedEvent } = useContext(EventContext);
+  const [changeText, setChangeText] = useState(false);
+  const [filterBoardgames, setFilterBoardgames] = useState([]);
   useEffect(() => {}, [selectedEvent, events]);
+
   const submitFunction = (eventData) => {
     const userId = isAuthenticated().user._id;
     const token = isAuthenticated().token;
     eventData.allDay = isEqual(eventData.startDate, eventData.endDate);
+
+    const bg = eventData.boardgames;
+
     if (modalId === "add-event") {
       createEvent(userId, token, eventData).then((data) => {
         if (data.error) {
@@ -60,6 +68,22 @@ const EventForm = (props) => {
     });
   };
 
+  const [selectedValue, setSelectedValue] = useState([]);
+  const filterBoardgame = (value) => {
+    console.log("filter boardgame" + changeText);
+    if (changeText === true) {
+      console.log("filter value: " + value);
+      const boardgames = isAuthenticated().user.boardgames;
+      console.log(boardgames);
+      const FilterBg = boardgames.filter((bg) =>
+        bg.boardgame.title.includes(value)
+      );
+      setFilterBoardgames(FilterBg);
+    }
+  };
+  const handleChange = (e) => {
+    setSelectedValue(Array.isArray(e) ? e.map((x) => x.boardgame._id) : []);
+  };
   return (
     <>
       <div
@@ -221,6 +245,52 @@ const EventForm = (props) => {
                             </label>
                           </div>
                         </div>
+                      </div>
+                      {/* <div className="form-group row">
+                        <label className="col-form-label col-lg-2">
+                          Boardgames
+                        </label>
+                        <Field
+                          className="form-control  col-lg-10"
+                          placeholder="Add Boardgame"
+                          name="tempBoardgame"
+                          onKeyUp={(value) => {
+                            setTimeout(() => {
+                              setChangeText(true);
+                              filterBoardgame(values.tempBoardgame);
+                            }, 200);
+                            setChangeText(false);
+                          }}
+                          type="text"
+                        />
+                      </div> */}
+                      <div className="form-group row">
+                        <label className="col-form-label col-lg-2">
+                          Boardgames
+                        </label>
+                        <Select
+                          options={isAuthenticated().user.boardgames}
+                          getOptionLabel={(option) => option.boardgame.title}
+                          getOptionValue={(option) => option.boardgame._id}
+                          className="col-lg-10 px-0"
+                          isMulti={true}
+                          value={isAuthenticated().user.boardgames.filter(
+                            (obj) =>
+                              values.boardgames.includes(obj.boardgame._id)
+                          )}
+                          onChange={(value) => {
+                            // handleChange(value);
+                            setFieldValue(
+                              "boardgames",
+                              Array.isArray(value)
+                                ? value.map((x) => x.boardgame._id)
+                                : []
+                            );
+                            // setSelectedValue(Array.isArray(e) ? e.map((x) => x.boardgame._id) : []);
+                            //console.log(values.boardgames);
+                          }}
+                          placeholder="Select boardgames to play"
+                        />
                       </div>
                       <div className="form-group row">
                         <label className="col-form-label col-lg-2 ">
