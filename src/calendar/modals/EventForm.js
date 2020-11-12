@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/js/bootstrap.min.js";
 import $ from "jquery";
-import Select from "react-select";
+import Select, { components } from "react-select";
 
 import { createEvent, getEventsByUserId, updateEvent } from "../apiCalendar";
 import { isAuthenticated } from "../../auth";
@@ -62,6 +62,29 @@ const EventForm = (props) => {
       //remove the backdrop
       $(".modal-backdrop").remove();
     });
+  };
+  const MultiValueLabel = (props) => {
+    return (
+      <components.MultiValueLabel {...props}>
+        {props.data.boardgame.title}
+      </components.MultiValueLabel>
+    );
+  };
+  const formatOptionLabel = ({ boardgame }) => {
+    return (
+      <div class="row justify-content-between">
+        <div class="col text-left">{boardgame.title}</div>
+        <div class="col col-sm-auto text-right">
+          {boardgame.minPlayers === boardgame.maxPlayers ? (
+            boardgame.minPlayers
+          ) : (
+            <>
+              {boardgame.minPlayers}- {boardgame.maxPlayers}
+            </>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -226,37 +249,41 @@ const EventForm = (props) => {
                           </div>
                         </div>
                       </div>
-                      <div className="form-group row">
-                        <label className="col-form-label col-lg-2">
-                          Boardgames
-                        </label>
-                        <Select
-                          classNamePrefix="eventBG_Select"
-                          options={isAuthenticated().user.boardgames}
-                          getOptionLabel={(option) => option.boardgame.title}
-                          getOptionValue={(option) => option.boardgame._id}
-                          className="col-lg-10 px-0"
-                          isMulti={true}
-                          value={isAuthenticated().user.boardgames.filter(
-                            (obj) => {
-                              return (
-                                values.boardgames.find(
-                                  (bg) => bg["_id"] === obj.boardgame._id
-                                ) !== undefined
+                      {isAuthenticated().user.boardgames && (
+                        <div className="form-group row">
+                          <label className="col-form-label col-lg-2">
+                            Boardgames
+                          </label>
+                          <Select
+                            classNamePrefix="eventBG_Select"
+                            options={isAuthenticated().user.boardgames}
+                            components={{ MultiValueLabel }}
+                            formatOptionLabel={formatOptionLabel}
+                            getOptionValue={(option) => option.boardgame._id}
+                            className="col-lg-10 px-0"
+                            isMulti={true}
+                            value={isAuthenticated().user.boardgames.filter(
+                              (obj) => {
+                                return (
+                                  values.boardgames.find(
+                                    (bg) => bg["bggId"] === obj.boardgame.bggId
+                                  ) !== undefined
+                                );
+                              }
+                            )}
+                            onChange={(value) => {
+                              setFieldValue(
+                                "boardgames",
+                                Array.isArray(value)
+                                  ? value.map((x) => x.boardgame)
+                                  : []
                               );
-                            }
-                          )}
-                          onChange={(value) => {
-                            setFieldValue(
-                              "boardgames",
-                              Array.isArray(value)
-                                ? value.map((x) => x.boardgame)
-                                : []
-                            );
-                          }}
-                          placeholder="Select boardgames to play"
-                        />
-                      </div>
+                            }}
+                            placeholder="Select boardgames to play"
+                          />
+                        </div>
+                      )}
+
                       <div className="form-group row">
                         <label className="col-form-label col-lg-2 ">
                           Event Color
