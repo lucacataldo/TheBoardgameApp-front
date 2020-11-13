@@ -5,7 +5,7 @@ import Popover from "@material-ui/core/Popover";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Card from "./Card";
 import { cs } from "date-fns/esm/locale";
-
+//Red notification marker to be fixed with Context is implemented
 export default function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [notifications, setNotifications] = React.useState([]);
