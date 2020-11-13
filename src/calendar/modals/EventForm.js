@@ -54,6 +54,7 @@ const EventForm = (props) => {
             setEvents(data);
           });
         }
+        resetModal();
       });
       $("[data-dismiss='modal']").click();
     }
@@ -332,6 +333,7 @@ const EventForm = (props) => {
                         data-dismiss="modal"
                         id="closeModal"
                         className="btn btn-secondary"
+                        onClick={resetModal}
                       >
                         close
                       </button>

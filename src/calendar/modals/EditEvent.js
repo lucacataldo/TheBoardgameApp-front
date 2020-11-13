@@ -18,6 +18,7 @@ const EditEvent = (props) => {
       endDate: new Date(),
       owner: isAuthenticated().user._id,
       bgColor: "eventTag-Blue",
+      boardgames: [],
     });
   };
 
