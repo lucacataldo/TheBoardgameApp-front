@@ -2,14 +2,49 @@ import React from "react";
 import { NavLink, withRouter } from "react-router-dom"; // withRouter to access history location-URL link
 import { signout, isAuthenticated } from "../auth";
 import BgLogo from "../images/BgLogo.png";
-import Notification from'./notifications/Notification';
+import Notification from "./notifications/Notification";
+import { getEventsByUserId } from "../calendar/apiCalendar";
+import { getAllTradeRequestsById } from "../trades/apiTrade";
 
 class NavBar extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      notifications: this.getNotifications()
+    };
+  }
+
+  getNotifications = () => {
+    let notifications = [];
+    getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token).then(
+      event => {
+        console.log(event);
+        event.forEach(e => {
+          notifications.push({ name: e.title, type: "Event" });
+        });
+      }
+    );
+    getAllTradeRequestsById(isAuthenticated().user._id).then(trade => {
+      console.log(trade);
+      trade.forEach(t => {
+        notifications.push({
+          name: t.tradeReceiver.name,
+          type: t.status.concat(" Trade")
+        });
+      });
+    });
+
+    return notifications;
+  };
+
   render() {
     return (
       <nav className="navbar navbar-icon-top navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
         <div className="container-fluid">
-         <NavLink className="navbar-brand" to={isAuthenticated() ? "/posts" : "/"}>
+          <NavLink
+            className="navbar-brand"
+            to={isAuthenticated() ? "/posts" : "/"}
+          >
             <img src={BgLogo} width="20" height="20" alt="" /> Boardgame Guru
           </NavLink>
           <button
@@ -105,11 +140,10 @@ class NavBar extends React.Component {
                 </li>
               </ul>
             )}
-  <Notification/>
+            <Notification notificationsObj={this.state.notifications} />
             <ul className="navbar-nav ">
               {!isAuthenticated() && (
                 <>
-                
                   <li className="nav-item">
                     <NavLink
                       className="nav-link"
@@ -182,7 +216,7 @@ class NavBar extends React.Component {
                         title="Sign Out"
                         aria-label="Sign Out"
                         onClick={() =>
-                            signout(() => this.props.history.push("/"))
+                          signout(() => this.props.history.push("/"))
                         }
                         style={{ cursor: "pointer" }}
                       >

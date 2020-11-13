@@ -4,7 +4,11 @@ import TradesSideBar from "./TradesSideBar";
 import TradeRequest from "./TradeRequest";
 import TradePending from "./TradePending";
 import { Redirect } from "react-router-dom";
-import { getAllTradeRequestsById, deleteTrade, updateTradeStatus } from "./apiTrade";
+import {
+  getAllTradeRequestsById,
+  deleteTrade,
+  updateTradeStatus
+} from "./apiTrade";
 import Animator from "../animator/Animator";
 class Trades extends React.Component {
   constructor() {
@@ -13,7 +17,8 @@ class Trades extends React.Component {
       redirectToHome: false,
       tradeResponses: [],
       tradeRequests: [],
-      tradePending: []
+      tradePending: [],
+      isLoading: true
     };
   }
 
@@ -24,15 +29,15 @@ class Trades extends React.Component {
         trade => userId === trade.tradeSender._id && trade.status !== "Pending"
       );
       let incomingRequests = data.filter(
-        trade => userId === trade.tradeReceiver._id && trade.status !== "Pending"
+        trade =>
+          userId === trade.tradeReceiver._id && trade.status !== "Pending"
       );
-      let pendingRequests = data.filter(
-        trade => trade.status === "Pending"
-      );
+      let pendingRequests = data.filter(trade => trade.status === "Pending");
       this.setState({
         tradeResponses: incomingRequests,
         tradeRequests: outgoingRequests,
-        tradePending: pendingRequests
+        tradePending: pendingRequests,
+        isLoading: false
       });
     });
   }
@@ -43,52 +48,46 @@ class Trades extends React.Component {
       isAuthenticated().user.role !== "admin"
     ) {
       this.setState({ redirectToHome: true });
-    } else{
-        Animator.animate()
+    } else {
+      Animator.animate();
     }
   }
 
   onClickRemoveTrade = tradeId => {
     const token = isAuthenticated().token;
-    try{
-
+    try {
       deleteTrade(token, tradeId).then(data => {
-      console.log("inDelete");
-      if (data.error) {
-        console.log(data.error);
-      }
-    }); 
-    let newList = this.state.tradeRequests.filter(
-      request => request._id !== tradeId
-    );
-    this.setState({ tradeRequests: newList });
-    }catch(err){
+        console.log("inDelete");
+        if (data.error) {
+          console.log(data.error);
+        }
+      });
+      let newList = this.state.tradeRequests.filter(
+        request => request._id !== tradeId
+      );
+      this.setState({ tradeRequests: newList });
+    } catch (err) {
       console.error(err);
     }
-    
-   
   };
 
   onClickAcceptTrade = tradeId => {
     const token = isAuthenticated().token;
-    try{
-
+    try {
       updateTradeStatus(token, tradeId, "Pending").then(data => {
-      if (data.error) {
-        console.log(data.error);
-      }else{
-        console.log(data);
-      }
-    }); 
-    let newList = this.state.tradeRequests.filter(
-      request => request._id !== tradeId
-    );
-    this.setState({ tradePending: newList });
-    }catch(err){
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          console.log(data);
+        }
+      });
+      let newList = this.state.tradeRequests.filter(
+        request => request._id !== tradeId
+      );
+      this.setState({ tradePending: newList });
+    } catch (err) {
       console.error(err);
     }
-    
-   
   };
 
   render() {
@@ -102,23 +101,28 @@ class Trades extends React.Component {
           <TradesSideBar highlight="Trades" />
           <div className="col-sm-6 col-lg-6 animator">
             <h4>My Trades</h4>
-            <TradeRequest
-              trades={this.state.tradeRequests}
-              onClickDelete={this.onClickRemoveTrade.bind(this)}
-              header="Waiting for Response"
-              deleteText="Remove"
-            />
-            <br />
-            <TradeRequest
-              trades={this.state.tradeResponses}
-              onClickAccept={this.onClickAcceptTrade.bind(this)}
-              header="Response Needed"
-              deleteText="Reject"
-              successButton="Accept"
-            />
-            <br />
-            <TradePending
-            trades={this.state.tradePending} />
+            {this.state.isLoading ? (
+              "Loading..."
+            ) : (
+              <div>
+                <TradeRequest
+                  trades={this.state.tradeRequests}
+                  onClickDelete={this.onClickRemoveTrade.bind(this)}
+                  header="Waiting for Response"
+                  deleteText="Remove"
+                />
+                <br />
+                <TradeRequest
+                  trades={this.state.tradeResponses}
+                  onClickAccept={this.onClickAcceptTrade.bind(this)}
+                  header="Response Needed"
+                  deleteText="Reject"
+                  successButton="Accept"
+                />
+                <br />
+                <TradePending trades={this.state.tradePending} />
+              </div>
+            )}
           </div>
         </div>
       </div>

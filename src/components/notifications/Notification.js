@@ -4,37 +4,37 @@ import IconButton from "@material-ui/core/IconButton";
 import Popover from "@material-ui/core/Popover";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Card from "./Card";
-import { isAuthenticated } from "../../auth";
-import { getEventsByUserId } from "../../calendar/apiCalendar";
-import { getAllTradeRequestsById } from "../../trades/apiTrade";
+import { cs } from "date-fns/esm/locale";
 
-export default function Notification() {
+export default function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [testObj, setTestObj] = React.useState([
-    { name: "George", type: "Offer" },
-    { name: "Tom", type: "Group Event" },
-    { name: "Marley", type: "Request" }
-  ]);
-
-  const getNotifications = () => {
-    getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token).then(
-      event => {
-        console.log(event);
-      }
-    );
-    getAllTradeRequestsById(isAuthenticated().user._id).then(trade => {
-      console.log(trade);
-    });
-  };
+  const [notifications, setNotifications] = React.useState([]);
+  const [hasNew, setHasNew] = React.useState(false);
 
   useEffect(() => {
-    return () => {
-      getNotifications();
-    };
+    const local = localStorage.getItem("notifications");
+    if (local === null) {
+      setNotifications(props.notificationsObj);
+      var n = [];
+      props.notificationsObj.forEach(notify => {
+        n.push(JSON.stringify(notify));
+      });
+
+      console.log(n);
+
+      console.log(JSON.stringify(props.notificationsObj));
+      localStorage.notifications = props.notificationsObj;
+
+      setHasNew(true);
+    } else {
+      setNotifications(props.notificationsObj);
+      setHasNew(false);
+    }
   });
 
   const handleClickOpen = event => {
     setAnchorEl(event.currentTarget);
+    setHasNew(false);
   };
 
   const handleClose = value => {
@@ -47,9 +47,13 @@ export default function Notification() {
   return (
     <div>
       <IconButton aria-label="notification" onClick={handleClickOpen}>
-        <Badge badgeContent={testObj.length} color="secondary">
+        {hasNew ? (
+          <Badge badgeContent={" "} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        ) : (
           <NotificationsIcon />
-        </Badge>
+        )}
       </IconButton>
       <Popover
         id={id}
@@ -69,7 +73,7 @@ export default function Notification() {
           Notifications
         </h3>
         <div className="container">
-          {testObj.map(item => {
+          {notifications.map(item => {
             return <Card name={item.name} nType={item.type}></Card>;
           })}
         </div>
