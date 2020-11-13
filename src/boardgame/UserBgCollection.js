@@ -503,7 +503,7 @@ const UserCollection = () => {
     const token = isAuthenticated().token;
     getUser(isAuthenticated().user._id, token).then((data) => {
       if (data.error === undefined) {
-        getGuruCollection(isAuthenticated().user._id).then((bggdata) => {
+        getGuruCollection(isAuthenticated().user._id, token).then((bggdata) => {
           if (bggdata !== undefined && !bggdata.error) {
             setData(bggdata);
           }
