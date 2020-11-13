@@ -65,7 +65,7 @@ class TradeRequestContainer extends React.Component {
     await getUserId(user)
       .then(id => {
         console.log(id);
-        getGuruCollection(id).then(bgList => {
+        getGuruCollection(id, isAuthenticated().token).then(bgList => {
           console.log(bgList);
           let filteredBgList = bgList.filter(bg => bg.forTrade === true);
           this.setState({ userBoardgames: filteredBgList, isLoading: false });
@@ -87,7 +87,7 @@ class TradeRequestContainer extends React.Component {
         if (!id) {
           document.getElementById("searchbar").classList.add("is-invalid");
         } else {
-          getGuruCollection(id).then(bgList => {
+          getGuruCollection(id, isAuthenticated().token).then(bgList => {
             if (bgList !== undefined) {
               console.log("Could not find boardgame collection.");
             }
