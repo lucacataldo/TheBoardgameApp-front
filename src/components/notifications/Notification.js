@@ -17,9 +17,11 @@ export default function Notification() {
   ]);
 
   const getNotifications = () => {
-    getEventsByUserId(isAuthenticated().user._id).then(event => {
-      console.log(event);
-    });
+    getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token).then(
+      event => {
+        console.log(event);
+      }
+    );
     getAllTradeRequestsById(isAuthenticated().user._id).then(trade => {
       console.log(trade);
     });
