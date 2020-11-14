@@ -32,20 +32,29 @@ const MyCalendar = () => {
 
   return (
     <>
-      <div style={{ height: 700 }} className="col-lg-9 col-xl-10">
+      <div
+        style={{ maxHeight: "100%" }}
+        className="col-lg-9 col-xl-10 eventContainer"
+      >
         <Calendar
+          popup
           selectable
           onSelectEvent={(event) => onEventClick(event)}
           localizer={localizer}
           events={events}
-          startAccessor="startDate"
-          endAccessor="endDate"
+          startAccessor={(event) => {
+            return new Date(event.startDate);
+          }}
+          endAccessor={(event) => {
+            return new Date(event.endDate);
+          }}
           eventPropGetter={(event) => ({
             className: "mx-1 " + event.bgColor,
           })}
           components={{
             event: Event,
           }}
+          views={["month", "day"]}
         />
       </div>
     </>

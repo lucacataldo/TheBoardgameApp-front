@@ -12,7 +12,7 @@ const SideBar = (props) => {
       {isAuthenticated().user._id === props.userId ? (
         <button
           type="button"
-          className="btn btn-primary btn-block"
+          className="btn btn-primary btn-block mb-1"
           data-toggle="modal"
           data-target="#add-event"
         >
@@ -21,7 +21,7 @@ const SideBar = (props) => {
       ) : (
         ""
       )}
-      <div className="m-t-20">
+      <div className="m-t-20 d-none d-lg-block">
         <br />
         {events.length > 0
           ? events.map((event, index) => (
