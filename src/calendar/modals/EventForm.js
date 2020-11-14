@@ -20,6 +20,10 @@ const EventInfoValidation = Yup.object().shape({
     .min(2, "Title must to be more than 1 characters.")
     .max(75, "Title must be under 75 characters.")
     .matches(/^([a-zA-Z0-9 ])+$/, "Title can only contain letters and numbers"),
+  description: Yup.string().max(
+    1500,
+    "Description must be under 1500 characters."
+  ),
 });
 
 const EventForm = (props) => {
@@ -132,7 +136,9 @@ const EventForm = (props) => {
                   <div className="modal-body">
                     <div className="container-fluid">
                       <div className="form-group row">
-                        <label className="col-form-label col-lg-2">Title</label>
+                        <label className="col-form-label col-lg-2 pl-0 pl-md-2 font-weight-bold">
+                          Title
+                        </label>
                         <Field
                           className={
                             getIn(errors, "title") && getIn(touched, "title")
@@ -150,7 +156,7 @@ const EventForm = (props) => {
                         />
                       </div>
                       <div className="form-group row">
-                        <label className="col-form-label col-lg-2">
+                        <label className="col-form-label col-lg-2 pl-0 pl-md-2 font-weight-bold">
                           Description
                         </label>
                         <Field
@@ -164,6 +170,7 @@ const EventForm = (props) => {
                           type="text"
                           name="description"
                           component="textarea"
+                          rows="6"
                         />
                         <ErrorMessage
                           component="div"
@@ -173,7 +180,7 @@ const EventForm = (props) => {
                       </div>
                       <div className="form-group">
                         <div className="row">
-                          <label className="col-form-label col-12 col-md-12 col-lg-2">
+                          <label className="col-form-label col-12 col-md-12 col-lg-2 pl-0 pl-md-2 font-weight-bold">
                             Time
                           </label>
                           <div className="col-12 col-md-5 col-lg-5 pl-0 pr-0 pr-md-2 ">
@@ -189,45 +196,49 @@ const EventForm = (props) => {
                               }}
                             />
                           </div>
-                          <div className="col-5 col-md-3 col-lg-2 px-0 mt-2 mt-md-0">
-                            <DatePicker
-                              timeIntervals={15}
-                              dateFormat="h:mm aa"
-                              showTimeSelect
-                              showTimeSelectOnly
-                              name="startDate"
-                              className="form-control"
-                              selected={values.startDate}
-                              onChange={(date) => {
-                                if (isAfter(date, values.endDate)) {
-                                  setFieldValue("endDate", date);
-                                }
-                                setFieldValue("startDate", date);
-                              }}
-                            />
-                          </div>
-                          <div className="col-2 col-md-1 col-lg-1 px-0 mt-2 mt-md-0 text-center align-self-center ">
-                            <span className="fa fa-minus "></span>
-                          </div>
-                          <div className="col-lg-2 col-md-3 col-5 px-0 mt-2 mt-md-0">
-                            <DatePicker
-                              timeIntervals={15}
-                              minTime={values.startDate}
-                              maxTime={new Date(values.startDate).setHours(
-                                23,
-                                59
-                              )}
-                              dateFormat="h:mm aa"
-                              showTimeSelect
-                              showTimeSelectOnly
-                              name="endDate"
-                              className="form-control"
-                              selected={values.endDate}
-                              onChange={(date) => {
-                                setFieldValue("endDate", date);
-                              }}
-                            />
-                          </div>
+                          {!values.allDay && (
+                            <>
+                              <div className="col-5 col-md-3 col-lg-2 px-0 mt-2 mt-md-0">
+                                <DatePicker
+                                  timeIntervals={15}
+                                  dateFormat="h:mm aa"
+                                  showTimeSelect
+                                  showTimeSelectOnly
+                                  name="startDate"
+                                  className="form-control"
+                                  selected={values.startDate}
+                                  onChange={(date) => {
+                                    if (isAfter(date, values.endDate)) {
+                                      setFieldValue("endDate", date);
+                                    }
+                                    setFieldValue("startDate", date);
+                                  }}
+                                />
+                              </div>{" "}
+                              <div className="col-2 col-md-1 col-lg-1 px-0 mt-2 mt-md-0 text-center align-self-center ">
+                                <span className="fa fa-minus "></span>
+                              </div>
+                              <div className="col-lg-2 col-md-3 col-5 px-0 mt-2 mt-md-0">
+                                <DatePicker
+                                  timeIntervals={15}
+                                  minTime={values.startDate}
+                                  maxTime={new Date(values.startDate).setHours(
+                                    23,
+                                    59
+                                  )}
+                                  dateFormat="h:mm aa"
+                                  showTimeSelect
+                                  showTimeSelectOnly
+                                  name="endDate"
+                                  className="form-control"
+                                  selected={values.endDate}
+                                  onChange={(date) => {
+                                    setFieldValue("endDate", date);
+                                  }}
+                                />
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
                       <div className="form-group">
@@ -252,7 +263,7 @@ const EventForm = (props) => {
                       </div>
                       {isAuthenticated().user.boardgames && (
                         <div className="form-group row">
-                          <label className="col-form-label col-lg-2">
+                          <label className="col-form-label col-lg-2 pl-0 pl-md-2 font-weight-bold">
                             Boardgames
                           </label>
                           <Select
@@ -286,7 +297,7 @@ const EventForm = (props) => {
                       )}
 
                       <div className="form-group row">
-                        <label className="col-form-label col-lg-2 ">
+                        <label className="col-form-label col-lg-2 pl-0 pl-md-2 font-weight-bold">
                           Event Color
                         </label>
                         <div className="input-group mb-3 col-lg-10 px-0">
