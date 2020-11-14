@@ -4,7 +4,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Popover from "@material-ui/core/Popover";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Card from "./Card";
-import { cs } from "date-fns/esm/locale";
 //Red notification marker to be fixed with Context is implemented
 export default function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -30,7 +29,7 @@ export default function Notification(props) {
       setNotifications(props.notificationsObj);
       setHasNew(false);
     }
-  });
+  }, [props.notificationsObj]);
 
   const handleClickOpen = event => {
     setAnchorEl(event.currentTarget);
@@ -73,8 +72,8 @@ export default function Notification(props) {
           Notifications
         </h3>
         <div className="container">
-          {notifications.map(item => {
-            return <Card name={item.name} nType={item.type}></Card>;
+          {notifications.map((item, i) => {
+            return <Card key={i} name={item.name} nType={item.type}></Card>;
           })}
         </div>
       </Popover>

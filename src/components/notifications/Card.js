@@ -32,7 +32,6 @@ export default function SimpleCard(props) {
   const [inHover, setHover] = React.useState(false);
   const [clicked, setClicked] = React.useState(false);
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
 
   const handleClickCard = () => {
     setClicked(true);

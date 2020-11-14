@@ -52,8 +52,6 @@ class TradeSettings extends React.Component {
   }
 
   onClickCondition = (e, listID) => {
-    let condition = e.target.value;
-
     let group = document.querySelectorAll(
       `.btn-group[data-id='${listID}'] button`
     );
@@ -135,7 +133,7 @@ class TradeSettings extends React.Component {
                   </div>
 
                   <div className="d-flex justify-content-center align-items-center">
-                    <div class="btn-group" data-id={item._id}>
+                    <div className="btn-group" data-id={item._id}>
                       <button
                         value="Excellent"
                         onClick={e => {
