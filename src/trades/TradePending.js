@@ -1,12 +1,11 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
-import { UncontrolledCollapse, Button, CardBody, Card } from "reactstrap";
+import { UncontrolledCollapse } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
   faTimes,
-  faCommentDots,
-  faEye
+  faCommentDots
 } from "@fortawesome/free-solid-svg-icons";
 
 class TradePending extends React.Component {
@@ -47,47 +46,46 @@ class TradePending extends React.Component {
           {this.props.trades.map(trade => {
             return (
               <div key={trade._id}>
-                
-                  <img
-                    id={"toggle".concat(trade._id)}
-                    className="float-left rounded-circle cursor-pointer"
-                    src="https://picsum.photos/75"
-                    alt="displaypic"
-                  />
+                <img
+                  id={"toggle".concat(trade._id)}
+                  className="float-left rounded-circle cursor-pointer"
+                  src="https://picsum.photos/75"
+                  alt="displaypic"
+                />
 
-                  <div className="float-left pt-3 pl-3">
-                    <a
-                      className="font-weight-bold h5"
-                      href={"user/" + trade.tradeSender._id}
-                    >
-                      {trade.tradeSender.name}{" "}
-                    </a>
-                    <br />
-                    <small>{trade.tradeWants.length} games</small>
-                  </div>
-                  <br/>
-                  <div className="top-right">
-                    {new Date(trade.createdDate).toISOString().slice(0, 10)}
-                  </div>
-                  <button
-                    type="button"
-                    className="btn btn-info float-right rounded-circle mx-3"
+                <div className="float-left pt-3 pl-3">
+                  <a
+                    className="font-weight-bold h5"
+                    href={"user/" + trade.tradeSender._id}
                   >
-                    <FontAwesomeIcon icon={faCommentDots} />
-                  </button>   
-                  <button
-                    type="button"
-                    className="btn btn-danger float-right rounded-circle"
-                  >
-                    <FontAwesomeIcon icon={faTimes} />{" "}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-success float-right mr-3 rounded-circle"
-                  >
-                    <FontAwesomeIcon icon={faCheck} />
-                  </button>
-               
+                    {trade.tradeSender.name}{" "}
+                  </a>
+                  <br />
+                  <small>{trade.tradeWants.length} games</small>
+                </div>
+                <br />
+                <div className="top-right">
+                  {new Date(trade.createdDate).toISOString().slice(0, 10)}
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-info float-right rounded-circle mx-3"
+                >
+                  <FontAwesomeIcon icon={faCommentDots} />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger float-right rounded-circle"
+                >
+                  <FontAwesomeIcon icon={faTimes} />{" "}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-success float-right mr-3 rounded-circle"
+                >
+                  <FontAwesomeIcon icon={faCheck} />
+                </button>
+
                 {/* <button type="button"  className="btn btn-primary float-left"><FontAwesomeIcon icon={faEye} /></button> */}
 
                 <UncontrolledCollapse toggler={"#toggle".concat(trade._id)}>
