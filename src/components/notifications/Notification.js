@@ -4,6 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Popover from "@material-ui/core/Popover";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Card from "./Card";
+import { Link, withRouter } from "react-router-dom";
 //Red notification marker to be fixed with Context is implemented
 export default function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -73,7 +74,11 @@ export default function Notification(props) {
         </h3>
         <div className="container">
           {notifications.map((item, i) => {
-            return <Card key={i} name={item.name} nType={item.type}></Card>;
+            return (
+              <Link key={i} to={item.link}>
+                <Card name={item.name} nType={item.type}></Card>
+              </Link>
+            );
           })}
         </div>
       </Popover>

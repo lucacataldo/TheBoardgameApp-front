@@ -20,7 +20,11 @@ class NavBar extends React.Component {
       event => {
         console.log(event);
         event.forEach(e => {
-          notifications.push({ name: e.title, type: "Event" });
+          notifications.push({
+            name: e.title,
+            type: "Event",
+            link: "/calendar/" + isAuthenticated().user._id
+          });
         });
       }
     );
@@ -29,7 +33,8 @@ class NavBar extends React.Component {
       trade.forEach(t => {
         notifications.push({
           name: t.tradeReceiver.name,
-          type: t.status.concat(" Trade")
+          type: t.status.concat(" Trade"),
+          link: "/trades"
         });
       });
     });
