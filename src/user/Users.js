@@ -8,12 +8,12 @@ class Users extends Component {
   constructor() {
     super();
     this.state = {
-      users: []
+      users: [],
     };
   }
 
   componentDidMount() {
-    getUsers().then(data => {
+    getUsers().then((data) => {
       if (data.error) {
         console.log(data.error);
       } else {
@@ -23,19 +23,28 @@ class Users extends Component {
     });
   }
 
-  renderUsers = users => (
+  renderUsers = (users) => (
     <div className="row">
       {users.map((user, i) => (
         <Link key={i} to={`/user/${user._id}`}>
           <div className="card col-md-12 animator">
             <div className="card-body">
-              <img
-                className="img-thumbnail card-img-top"
-                style={{ height: "225px", width: "225px" }}
-                src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
-                onError={i => (i.target.src = `${DefaultProfileImg}`)}
-                alt={user.name}
-              />
+              {user.photo ? (
+                <img
+                  src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
+                  style={{ height: "225px", width: "225px" }}
+                  alt={user.name}
+                  className="img-thumbnail postsImg mx-auto d-block"
+                />
+              ) : (
+                <img
+                  className="img-thumbnail card-img-top"
+                  style={{ height: "225px", width: "225px" }}
+                  src={`${DefaultProfileImg}`}
+                  alt={user.name}
+                />
+              )}
+
               <h5 className="card-title">{user.name}</h5>
               <p className="card-text">{user.email}</p>
             </div>
