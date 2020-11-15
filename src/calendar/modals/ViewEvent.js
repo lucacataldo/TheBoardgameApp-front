@@ -69,7 +69,10 @@ const ViewEvent = (props) => {
                     <div className="col-1">
                       <FontAwesomeIcon icon={faClipboard} />
                     </div>
-                    <div className="col-11 text-wrap text-left">
+                    <div
+                      className="col-11 text-wrap text-left overflow-auto"
+                      style={{ maxHeight: "40vh" }}
+                    >
                       {selectedEvent.description}
                     </div>
                   </div>

@@ -49,16 +49,14 @@ const CalContainer = (props) => {
         <Redirect to={`/404`} />
       ) : (
         <EventContext.Provider value={eventValues}>
-          <div className="wrapper calContainer animator">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-12">
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="row">
-                        <SideBar userId={userId} />
-                        <Calendar userId={userId} />
-                      </div>
+          <div className="container-fluid calContainer animator">
+            <div className="row">
+              <div className="col-12">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row">
+                      <SideBar userId={userId} />
+                      <Calendar userId={userId} />
                     </div>
                   </div>
                 </div>
