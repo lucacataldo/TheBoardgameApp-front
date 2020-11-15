@@ -13,6 +13,10 @@ class NavBar extends React.Component {
       this.state = {
         notifications: this.getNotifications()
       };
+    } else{
+      this.state = {
+        notifications: []
+      }
     }
   }
 
@@ -142,7 +146,7 @@ class NavBar extends React.Component {
                 </li>
               </ul>
             )}
-            {(isAuthenticated().user && this.state.notifications) && (
+            {isAuthenticated().user && (
               <Notification notificationsObj={this.state.notifications} />
             )}
             <ul className="navbar-nav ">
