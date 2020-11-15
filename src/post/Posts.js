@@ -37,7 +37,7 @@ const Posts = () => {
     const posterName = post.postedBy ? post.postedBy.name : " Unknown";
 
     return (
-      <div className="card animator">
+      <div className="card animator mb-3">
         {post.photo && (
           <img
             src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
