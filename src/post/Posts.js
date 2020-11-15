@@ -2,8 +2,8 @@ import { Link, Route } from "react-router-dom";
 import React, { useState, useRef, useCallback } from "react";
 
 import useFetchMorePosts from "./useFetchMorePosts";
-import DefaultPostImg from "../images/defaultPostImg.jpg";
-import Animator from "../animator/Animator"
+
+import Animator from "../animator/Animator";
 
 const Posts = () => {
   const [pageNumber, setPageNumber] = useState(1);
@@ -13,17 +13,17 @@ const Posts = () => {
   // whenever the <div ref={lastPostElementRef} key={i}> is created,
   // it will call this fxn when it's the last element
   const lastPostElementRef = useCallback(
-    node => {
-        Animator.animate()
+    (node) => {
+      Animator.animate();
       if (loading) return;
       // disconnect previous ref so we can reset it
       if (refObserver.current) refObserver.current.disconnect();
       // take all entries available
-      refObserver.current = new IntersectionObserver(entries => {
+      refObserver.current = new IntersectionObserver((entries) => {
         // if the entry is on the page and there's more to load
         // wont keep calling api if the api provided all the items
         if (entries[0].isIntersecting && hasMore) {
-          setPageNumber(prevPageNumber => prevPageNumber + 1);
+          setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
       });
       // observe the node if its last
@@ -38,13 +38,15 @@ const Posts = () => {
 
     return (
       <div className="card animator">
-        <img
-          src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
-          alt={post.title}
-          onError={i => (i.target.src = `${DefaultPostImg}`)}
-          className="img-thumbnail postsImg mx-auto d-block"
-        />
+        {post.photo && (
+          <img
+            src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+            alt={post.title}
+            className="img-thumbnail postsImg mx-auto d-block"
+          />
+        )}
         <div className="card-body">
+          <h5 className="card-title">{post.title}</h5>
           <p className="card-text text-truncate">{post.body}</p>
         </div>
         <div className="card-footer text-muted">

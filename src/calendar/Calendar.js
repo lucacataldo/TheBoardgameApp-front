@@ -34,7 +34,7 @@ const MyCalendar = () => {
     <>
       <div
         style={{ maxHeight: "100%" }}
-        className="col-lg-9 col-xl-10 eventContainer"
+        className="col-lg-9 col-xl-10 rbcContainer"
       >
         <Calendar
           popup
