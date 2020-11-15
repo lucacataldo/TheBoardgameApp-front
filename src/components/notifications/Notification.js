@@ -4,32 +4,56 @@ import IconButton from "@material-ui/core/IconButton";
 import Popover from "@material-ui/core/Popover";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Card from "./Card";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 //Red notification marker to be fixed with Context is implemented
 export default function Notification(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notifications, setNotifications] = React.useState([]);
+  const [notifications, setNotifications] = React.useState([{}]);
   const [hasNew, setHasNew] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
     const local = localStorage.getItem("notifications");
-    if (local === null) {
-      setNotifications(props.notificationsObj);
-      var n = [];
-      props.notificationsObj.forEach(notify => {
-        n.push(JSON.stringify(notify));
-      });
 
-      console.log(n);
+    props.notificationsObj.then(result => {
+      if (local === null) {
+        setNotifications(result);
+        console.log(JSON.stringify(props.notificationsObj));
+        localStorage.setItem("notifications", JSON.stringify(result));
+        setHasNew(true);
+        setIsLoading(false);
+      } else {
+        let localNotifications = JSON.parse(local);
+        console.log(localNotifications);
+        console.log(result);
+        if (localNotifications.length === result.length) {
+          console.log("the same");
+          setHasNew(false);
+          setNotifications(localNotifications);
+          setIsLoading(false);
+        } else {
+          console.log("not the same");
 
-      console.log(JSON.stringify(props.notificationsObj));
-      localStorage.notifications = props.notificationsObj;
+          let diff = result.filter(
+            ({ id: id1 }) =>
+              !localNotifications.some(({ id: id2 }) => id2 === id1)
+          );
 
-      setHasNew(true);
-    } else {
-      setNotifications(props.notificationsObj);
-      setHasNew(false);
-    }
+          console.log(diff);
+          diff.forEach(item => {
+            localNotifications.push(item);
+          });
+
+          setHasNew(true);
+          setNotifications(localNotifications);
+          setIsLoading(false);
+          localStorage.setItem(
+            "notifications",
+            JSON.stringify(localNotifications)
+          );
+        }
+      }
+    });
   }, [props.notificationsObj]);
 
   const handleClickOpen = event => {
@@ -39,6 +63,13 @@ export default function Notification(props) {
 
   const handleClose = value => {
     setAnchorEl(null);
+  };
+
+  const handleClickCard = id => {
+    let localNotifications = JSON.parse(localStorage.getItem("notifications"));
+    let foundIdx = localNotifications.findIndex(element => element.id === id);
+    localNotifications[foundIdx].isRead = true;
+    localStorage.setItem("notifications", JSON.stringify(localNotifications));
   };
 
   const open = Boolean(anchorEl);
@@ -73,13 +104,20 @@ export default function Notification(props) {
           Notifications
         </h3>
         <div className="container">
-          {notifications.map((item, i) => {
-            return (
-              <Link key={i} to={item.link}>
-                <Card name={item.name} nType={item.type}></Card>
-              </Link>
-            );
-          })}
+          {isLoading
+            ? "Loading..."
+            : notifications.map((item, i) => {
+                return (
+                  <Link key={i} to={item.link}>
+                    <Card
+                      handleClickCard={() => handleClickCard(item.id)}
+                      isRead={item.isRead}
+                      name={item.name}
+                      nType={item.type}
+                    ></Card>
+                  </Link>
+                );
+              })}
         </div>
       </Popover>
     </div>

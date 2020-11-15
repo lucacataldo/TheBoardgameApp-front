@@ -14,31 +14,36 @@ class NavBar extends React.Component {
     };
   }
 
-  getNotifications = () => {
-    let notifications = [];
-    getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token).then(
-      event => {
-        console.log(event);
-        event.forEach(e => {
+  getNotifications = async () => {
+    var notifications = [];
+    await getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token)
+      .then(event => {
+        event.map(e => {
           notifications.push({
+            id: e._id,
             name: e.title,
             type: "Event",
-            link: "/calendar/" + isAuthenticated().user._id
+            link: "/calendar/" + isAuthenticated().user._id,
+            isRead: false
           });
         });
-      }
-    );
-    getAllTradeRequestsById(isAuthenticated().user._id).then(trade => {
-      console.log(trade);
-      trade.forEach(t => {
-        notifications.push({
-          name: t.tradeReceiver.name,
-          type: t.status.concat(" Trade"),
-          link: "/trades"
-        });
-      });
-    });
-
+      })
+      .then(
+        await getAllTradeRequestsById(isAuthenticated().user._id).then(
+          trade => {
+            trade.map(t => {
+              notifications.push({
+                id: t._id,
+                name: t.tradeReceiver.name,
+                type: t.status.concat(" Trade"),
+                link: "/trades",
+                isRead: false
+              });
+            });
+            console.log(notifications);
+          }
+        )
+      );
     return notifications;
   };
 
