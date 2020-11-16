@@ -38,6 +38,7 @@
 .chatList{
     flex-grow: 10;
     font-size: 0.7em;
+    overflow-y: auto;
 }
 
 .newChat{
