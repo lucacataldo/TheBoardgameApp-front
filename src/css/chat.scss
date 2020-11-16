@@ -1,0 +1,65 @@
+.chatCont{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 200;
+}
+
+.chatOpener{
+    font-size: 25px;
+    color: var(--primary);
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chatWindow{
+    font-size: 20px;
+    min-width: 300px;
+    height: 400px;
+    box-sizing: border-box;
+    animation: openChat 0.5s ease forwards;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.closeChat{
+    font-size: 25px;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.chatList{
+    flex-grow: 10;
+    font-size: 0.7em;
+}
+
+.newChat{
+    font-size: 20px;
+    color: var(--primary);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes openChat{
+    from{
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
