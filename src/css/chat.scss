@@ -15,11 +15,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border: solid 1px var(--primary);
 }
 
 .chatWindow{
     font-size: 20px;
-    min-width: 300px;
+    width: 300px;
     height: 400px;
     box-sizing: border-box;
     animation: openChat 0.5s ease forwards;
@@ -63,4 +64,25 @@
         opacity: 1;
         transform: translateY(0px);
     }
+}
+
+.chatMsg{
+    margin: 10px 10px;
+    box-sizing: border-box;
+    padding: 10px;
+    flex-direction: column;
+    background: var(--primary);
+    color: var(--light);
+    border: solid 1px var(--primary);
+}
+
+.chatMsg.from{
+    text-align: right;
+    background: var(--light);
+    color: var(--primary);
+}
+
+.msgTime{
+    font-size: 0.8em;
+    opacity: 0.7;
 }
