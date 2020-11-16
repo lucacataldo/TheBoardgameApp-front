@@ -59,6 +59,7 @@ class Chat extends React.Component {
           break;
 
         default:
+          alert("Something went wrong, please refresh and try again.")
           break;
       }
     }
@@ -79,7 +80,13 @@ class Chat extends React.Component {
                   {this.state.chats.map((chat, i) => {
                     return (
                       <li className="list-group-item" key={chat._id}>
-                        {chat.between[0].name} and {chat.between[1].name}
+                        {(chat.between[0]._id !== isAuthenticated().user._id) && (
+                          chat.between[0].name
+                        )} 
+                        
+                        {(chat.between[1]._id !== isAuthenticated().user._id) && (
+                          chat.between[1].name
+                        )} 
                       </li>
                     )
                   })}
