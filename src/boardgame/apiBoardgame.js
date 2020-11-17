@@ -1,3 +1,5 @@
+import { isAuthenticated } from "../auth";
+
 export const getBGCollection = (username, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/boardgame/${username}`, {
     method: "GET",
@@ -46,23 +48,29 @@ export const getBGGCounts = (username, token) => {
 };
 
 export const updateUserBoardgames = (userId, boardgameUpdate) => {
+  let token = isAuthenticated().token;
   return fetch(
     `${process.env.REACT_APP_API_URL}/boardgame/user/collection/${userId}/update`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(boardgameUpdate),
     }
   )
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json
+      } else {
+       throw {response} 
+      }
+    })
     .then((data) => {
       return data;
     })
-    .catch((err) => {
-      console.log(err);
-    });
 };
 
 export const getAtlasBoardgameId = (name) => {

@@ -40,7 +40,6 @@ const CalContainer = (props) => {
         setEvents(data);
       }
     });
-    Animator.animate();
   }, [userId]);
 
   return (
@@ -49,7 +48,7 @@ const CalContainer = (props) => {
         <Redirect to={`/404`} />
       ) : (
         <EventContext.Provider value={eventValues}>
-          <div className="container-fluid calContainer animator">
+          <div className="container-fluid calContainer">
             <div className="row">
               <div className="col-12">
                 <div className="card">
