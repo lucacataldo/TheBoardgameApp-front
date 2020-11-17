@@ -18,6 +18,16 @@
     border: solid 1px var(--primary);
 }
 
+.newMsgBadge{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: var(--danger);
+    top: 0px;
+    right: 0px;
+    border-radius: 50px;
+}
+
 .chatWindow{
     font-size: 20px;
     width: 300px;

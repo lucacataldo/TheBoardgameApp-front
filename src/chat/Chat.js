@@ -17,11 +17,8 @@ class Chat extends React.Component {
       selectedChat: {},
       user: isAuthenticated().user,
       chats: [],
+      newMessage: false,
     }
-  }
-
-  componentDidMount() {
-    this.openChatWindow()
   }
 
   openChatWindow = async () => {
@@ -75,15 +72,20 @@ class Chat extends React.Component {
       let id = this.state.selectedChat._id
       if (!id) {
         clearInterval(this.chatPoller)
-        throw 400
+        throw "Chat deselected, pausing polling..."
       }
       let chat = await apiGetChat(isAuthenticated().token, id)
-      this.setState({
-        selectedChat: chat
-      })
 
-      let list = document.querySelector(".chatList")
-      list.scrollTop = list.scrollHeight;
+      if (JSON.stringify(this.state.selectedChat) != JSON.stringify(chat)) {
+        this.setState({
+          selectedChat: chat,
+          newMessage: true
+        })
+
+        let list = document.querySelector(".chatList")
+        list.scrollTop = list.scrollHeight;
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -100,7 +102,7 @@ class Chat extends React.Component {
         chatSelected: true,
         selectedChat: chat
       })
-      
+
       this.chatPoller = setInterval(this.chatPollerFn, 5000)
 
       let list = document.querySelector(".chatList")
@@ -165,7 +167,7 @@ class Chat extends React.Component {
                     </div>
                   )}
                   {this.state.chatSelected && (
-                    <div className="cursor-pointer" onClick={this.closeChat}>
+                    <div className="cursor-pointer px-2" onClick={this.closeChat}>
                       <i className="fa fa-angle-left"></i>
                     </div>
                   )}
@@ -180,15 +182,15 @@ class Chat extends React.Component {
                       )}
                     </div>
                   )}
-                  <i className="fa fa-angle-down closeChatWindow cursor-pointer" onClick={this.closeChatWindow}></i>
+                  <i className="fa fa-angle-down closeChatWindow cursor-pointer px-2" onClick={this.closeChatWindow}></i>
                 </div>
 
 
                 {!this.state.chatSelected && (
-                  <ul className="list-group chatList my-3">
+                  <ul className="chatList my-2">
                     {this.state.chats.map((chat, i) => {
                       return (
-                        <li className="list-group-item cursor-pointer" onClick={this.getChat} key={chat._id} data-id={chat._id}>
+                        <li className="cursor-pointer" onClick={this.getChat} key={chat._id} data-id={chat._id}>
                           {(chat.between[0]._id !== isAuthenticated().user._id) && (
                             chat.between[0].name
                           )}
@@ -205,7 +207,7 @@ class Chat extends React.Component {
 
                 {/* Chat is open */}
                 {this.state.chatSelected && (
-                  <div className="chatList my-3">
+                  <div className="chatList my-2">
                     {this.state.selectedChat.messages.map((msg, i) => {
                       return (
                         <div
@@ -266,6 +268,9 @@ class Chat extends React.Component {
 
             {!this.state.isOpen && (
               <div className="chatOpener bg-white shadow-sm" onClick={this.openChatWindow}>
+                {this.state.newMessage && (
+                  <div className="newMsgBadge"></div>
+                )}
                 <i className="fa fa-comments"></i>
               </div>
             )}
