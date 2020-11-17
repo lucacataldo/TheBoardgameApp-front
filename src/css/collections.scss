@@ -15,3 +15,13 @@
 .guruCollectionTable a {
   color: #000;
 }
+
+.guruCollectionTable tbody tr {
+  line-height: 1;
+  max-height: 100px;
+}
+
+.guruCollectionTable tbody .guruNotes {
+  overflow-y: scroll;
+  max-height: 100px;
+}
