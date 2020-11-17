@@ -35,7 +35,7 @@ class BgSideBar extends React.Component {
     return (
       <>
         <div
-          className="col-md-2 col-lg-2 col-xl-2 maxSidebarWidth  justify-content-right mt-5 pt-4 d-none d-lg-block"
+          className="col-md-2 col-lg-2 col-xl-2 maxSidebarWidth pl-0 justify-content-right mt-5 pt-4 d-none d-lg-block"
           highlight={this.props.highlight}
         >
           <div className="list-group ">
