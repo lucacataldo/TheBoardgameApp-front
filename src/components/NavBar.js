@@ -9,37 +9,48 @@ import { getAllTradeRequestsById } from "../trades/apiTrade";
 class NavBar extends React.Component {
   constructor() {
     super();
-    this.state = {
-      notifications: []
-    }
-
     if (isAuthenticated().user) {
-      this.setState({
+      this.state = {
         notifications: this.getNotifications()
-      })
+      };
+    } else {
+      this.state = {
+        notifications: []
+      };
+
     }
   }
 
-  getNotifications = () => {
-    let notifications = [];
-    getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token).then(
-      event => {
-        console.log(event);
-        event.forEach(e => {
-          notifications.push({ name: e.title, type: "Event" });
+  getNotifications = async () => {
+    var notifications = [];
+    await getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token)
+      .then(event => {
+        event.map(e => {
+          notifications.push({
+            id: e._id,
+            name: e.title,
+            type: "Event",
+            link: "/calendar/" + isAuthenticated().user._id,
+            isRead: false
+          });
         });
-      }
-    );
-    getAllTradeRequestsById(isAuthenticated().user._id).then(trade => {
-      console.log(trade);
-      trade.forEach(t => {
-        notifications.push({
-          name: t.tradeReceiver.name,
-          type: t.status.concat(" Trade")
-        });
-      });
-    });
-
+      })
+      .then(
+        await getAllTradeRequestsById(isAuthenticated().user._id).then(
+          trade => {
+            trade.map(t => {
+              notifications.push({
+                id: t._id,
+                name: t.tradeReceiver.name,
+                type: t.status.concat(" Trade"),
+                link: "/trades",
+                isRead: false
+              });
+            });
+            console.log(notifications);
+          }
+        )
+      );
     return notifications;
   };
 
@@ -146,7 +157,7 @@ class NavBar extends React.Component {
                 </li>
               </ul>
             )}
-            {isAuthenticated().user && (
+            {isAuthenticated().user && this.state.notifications && (
               <Notification notificationsObj={this.state.notifications} />
             )}
             <ul className="navbar-nav ">
