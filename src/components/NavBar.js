@@ -18,7 +18,7 @@ class NavBar extends React.Component {
     //     notifications: []
     //   };
 
-    }
+    // }
   }
 
   getNotifications = async () => {
