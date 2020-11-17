@@ -8,7 +8,7 @@ import { getEventsByUserId } from "./apiCalendar";
 import { isAuthenticated } from "../auth";
 import { EventContext } from "../context/EventContext";
 
-import Animator from "../animator/Animator";
+//import Animator from "../animator/Animator";
 
 const CalContainer = (props) => {
   const userId = props.match.params.userId;

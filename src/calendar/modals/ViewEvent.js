@@ -4,10 +4,8 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarCheck,
-  faChessKing,
   faChessKnight,
   faClipboard,
-  faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { EventContext } from "../../context/EventContext";
