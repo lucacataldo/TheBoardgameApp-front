@@ -26,30 +26,29 @@ class Users extends Component {
   renderUsers = (users) => (
     <div className="row">
       {users.map((user, i) => (
-        <Link key={i} to={`/user/${user._id}`}>
-          <div className="card col-md-12 animator">
+        <div className="card col-md-4 animator">
+          <Link key={i} to={`/user/${user._id}`}>
+            {user.photo ? (
+              <img
+                src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
+                style={{ height: "225px", width: "225px" }}
+                alt={user.name}
+                className="img-thumbnail card-img-top postsImg mx-auto d-block"
+              />
+            ) : (
+              <img
+                className="img-thumbnail card-img-top postsImg mx-auto d-block"
+                style={{ height: "225px", width: "225px" }}
+                src={`${DefaultProfileImg}`}
+                alt={user.name}
+              />
+            )}
             <div className="card-body">
-              {user.photo ? (
-                <img
-                  src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
-                  style={{ height: "225px", width: "225px" }}
-                  alt={user.name}
-                  className="img-thumbnail postsImg mx-auto d-block"
-                />
-              ) : (
-                <img
-                  className="img-thumbnail card-img-top"
-                  style={{ height: "225px", width: "225px" }}
-                  src={`${DefaultProfileImg}`}
-                  alt={user.name}
-                />
-              )}
-
               <h5 className="card-title">{user.name}</h5>
               <p className="card-text">{user.email}</p>
             </div>
-          </div>
-        </Link>
+          </Link>{" "}
+        </div>
       ))}
     </div>
   );

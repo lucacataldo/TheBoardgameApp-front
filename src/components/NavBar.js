@@ -2,49 +2,49 @@ import React from "react";
 import { NavLink, withRouter } from "react-router-dom"; // withRouter to access history location-URL link
 import { signout, isAuthenticated } from "../auth";
 import BgLogo from "../images/BgLogo.png";
-import Notification from "./notifications/Notification";
+//import Notification from "./notifications/Notification";
 import { getEventsByUserId } from "../calendar/apiCalendar";
 import { getAllTradeRequestsById } from "../trades/apiTrade";
 
 class NavBar extends React.Component {
-  constructor() {
-    super();
-    // if (isAuthenticated().user) {
-    //   this.state = {
-    //     notifications: this.getNotifications()
-    //   };
-    // } else {
-    //   this.state = {
-    //     notifications: []
-    //   };
+  // constructor() {
+  //   super();
+  //   // if (isAuthenticated().user) {
+  //   //   this.state = {
+  //   //     notifications: this.getNotifications()
+  //   //   };
+  //   // } else {
+  //   //   this.state = {
+  //   //     notifications: []
+  //   //   };
 
-    // }
-  }
+  //   // }
+  // }
 
   getNotifications = async () => {
     var notifications = [];
     await getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token)
-      .then(event => {
-        event.map(e => {
+      .then((event) => {
+        event.map((e) => {
           notifications.push({
             id: e._id,
             name: e.title,
             type: "Event",
             link: "/calendar/" + isAuthenticated().user._id,
-            isRead: false
+            isRead: false,
           });
         });
       })
       .then(
         await getAllTradeRequestsById(isAuthenticated().user._id).then(
-          trade => {
-            trade.map(t => {
+          (trade) => {
+            trade.map((t) => {
               notifications.push({
                 id: t._id,
                 name: t.tradeReceiver.name,
                 type: t.status.concat(" Trade"),
                 link: "/trades",
-                isRead: false
+                isRead: false,
               });
             });
             console.log(notifications);
@@ -94,7 +94,7 @@ class NavBar extends React.Component {
                     Posts
                   </NavLink>
                 </li>
-                <li className="nav-item ">
+                {/* <li className="nav-item ">
                   <NavLink
                     className="nav-link"
                     activeClassName="selected"
@@ -102,7 +102,7 @@ class NavBar extends React.Component {
                   >
                     Users
                   </NavLink>
-                </li>
+                </li> */}
                 <li className="nav-item dropdown ">
                   <a
                     className="nav-link dropdown-toggle"
