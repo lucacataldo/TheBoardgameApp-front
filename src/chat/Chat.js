@@ -2,7 +2,7 @@ import React from "react"
 import { NavLink, withRouter } from "react-router-dom";
 import { isAuthenticated } from "../auth";
 
-import { apiCreateChat, apiGetChat, apiGetChats, apiSendChat } from "./apiChat";
+import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat } from "./apiChat";
 import moment from "moment";
 
 import "../css/chat.scss"
@@ -21,14 +21,32 @@ class Chat extends React.Component {
     }
   }
 
+  componentDidMount() {
+    apiInitSocket(isAuthenticated().token).then((ws) => {
+      ws.on("newchat", (data) => {
+        let clone = this.state.selectedChat;
+        clone.messages.push(data)
+
+        this.setState({
+          selectedChat: clone,
+          newMessage: true
+        })
+
+        let list = document.querySelector(".chatList")
+        list.scrollTop = list.scrollHeight;
+      })
+    })
+  }
+
   openChatWindow = async () => {
     this.setState({
       isOpen: true
     })
 
     try {
+      let chats = await apiGetChats(isAuthenticated().token);
       this.setState({
-        chats: await apiGetChats(isAuthenticated().token)
+        chats
       })
     } catch (error) {
       console.log(error);
@@ -67,7 +85,7 @@ class Chat extends React.Component {
 
   chatPoller = 0;
 
-  chatPollerFn = async () => {
+  /*chatPollerFn = async () => {
     try {
       let id = this.state.selectedChat._id
       if (!id) {
@@ -82,18 +100,16 @@ class Chat extends React.Component {
           newMessage: true
         })
 
-        let list = document.querySelector(".chatList")
-        list.scrollTop = list.scrollHeight;
       }
 
     } catch (error) {
       console.log(error);
     }
-  }
+  }*/
 
   getChat = async (e) => {
     try {
-      let id = e.target.dataset.id;
+      let id = e.currentTarget.dataset.id;
 
       let chat = await apiGetChat(isAuthenticated().token, id)
 
@@ -103,7 +119,7 @@ class Chat extends React.Component {
         selectedChat: chat
       })
 
-      this.chatPoller = setInterval(this.chatPollerFn, 5000)
+      // this.chatPoller = setInterval(this.chatPollerFn, 5000)
 
       let list = document.querySelector(".chatList")
       list.scrollTop = list.scrollHeight;
@@ -113,11 +129,18 @@ class Chat extends React.Component {
     }
   }
 
-  closeChat = () => {
-    this.setState({
-      chatSelected: false,
-      selectedChat: {}
-    })
+  closeChat = async () => {
+    try {
+      this.setState({
+        chatSelected: false,
+        chats: await apiGetChats(isAuthenticated().token),
+        selectedChat: {}
+      })
+    } catch (error) {
+      alert("An error occurred while getting chats, check log for more info.")
+      console.log(error);
+    }
+
   }
 
   sendChat = async () => {
@@ -125,19 +148,7 @@ class Chat extends React.Component {
       let chatId = this.state.selectedChat._id
       let message = document.getElementById("chatBox").value
 
-      let sent = await apiSendChat(chatId, message, isAuthenticated().token)
-
-      sent.from = isAuthenticated().user
-      console.log("sent\n", sent);
-
-      let clone = this.state.selectedChat;
-      clone.messages.push(sent)
-
-      this.setState({
-        selectedChat: clone
-      })
-
-      console.log(this.state.selectedChat);
+      apiSendChat(chatId, message, isAuthenticated().token)
 
       document.getElementById("chatBox").value = ""
       let list = document.querySelector(".chatList")
@@ -148,7 +159,8 @@ class Chat extends React.Component {
     }
   }
 
-  chatIsFromUser = (id) => {
+  chatIsFromUser = (from) => {
+    let id = (from._id ? from._id : from)
     return id === isAuthenticated().user._id
   }
 
@@ -173,13 +185,11 @@ class Chat extends React.Component {
                   )}
                   {this.state.chatSelected && (
                     <div className="justify-self-center">
-                      {(this.state.selectedChat.between[0]._id !== isAuthenticated().user._id) && (
-                        this.state.selectedChat.between[0].name
-                      )}
-
-                      {(this.state.selectedChat.between[1]._id !== isAuthenticated().user._id) && (
-                        this.state.selectedChat.between[1].name
-                      )}
+                      {
+                        this.state.selectedChat.between.filter(
+                          e => e._id !== isAuthenticated().user._id
+                        )[0].name
+                      }
                     </div>
                   )}
                   <i className="fa fa-angle-down closeChatWindow cursor-pointer px-2" onClick={this.closeChatWindow}></i>
@@ -187,21 +197,31 @@ class Chat extends React.Component {
 
 
                 {!this.state.chatSelected && (
-                  <ul className="chatList my-2">
+                  <div className="chatList my-2">
                     {this.state.chats.map((chat, i) => {
                       return (
-                        <li className="cursor-pointer" onClick={this.getChat} key={chat._id} data-id={chat._id}>
-                          {(chat.between[0]._id !== isAuthenticated().user._id) && (
-                            chat.between[0].name
-                          )}
+                        <div className="cursor-pointer chat p-2 rounded border border-primary my-2" onClick={this.getChat} key={chat._id} data-id={chat._id}>
+                          <div>
+                            {
+                              chat.between.filter(
+                                e => e._id !== isAuthenticated().user._id
+                              )[0].name
+                            }
+                          </div>
 
-                          {(chat.between[1]._id !== isAuthenticated().user._id) && (
-                            chat.between[1].name
-                          )}
-                        </li>
+                          <div>
+                            {chat.messages[chat.messages.length - 1] && (
+                              '"' + chat.messages[chat.messages.length - 1].message + '" '
+                            )}
+                            {chat.messages[chat.messages.length - 1] && (
+                              moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
+                            )}
+                          </div>
+
+                        </div>
                       )
                     })}
-                  </ul>
+                  </div>
                 )}
 
 
@@ -212,9 +232,11 @@ class Chat extends React.Component {
                       return (
                         <div
                           key={msg.timestamp}
-                          className={`d-flex justify-content-between rounded-lg chatMsg ${this.chatIsFromUser(msg.from._id) ? 'from' : ''}`}
+                          className={`
+                            d-flex justify-content-between rounded-lg chatMsg 
+                            ${this.chatIsFromUser(msg.from) ? 'from' : ''}`}
                         >
-                          <div>{msg.message}</div>
+                          <div className="msgText">{msg.message}</div>
                           <div className="msgTime">{moment(msg.timestamp).fromNow()}</div>
                         </div>
                       )

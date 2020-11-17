@@ -52,6 +52,10 @@
     overflow-y: auto;
 }
 
+.chatList .chat{
+    color: var(--primary);
+}
+
 .newChat{
     font-size: 20px;
     color: var(--primary);
@@ -84,6 +88,11 @@
     background: var(--primary);
     color: var(--light);
     border: solid 1px var(--primary);
+}
+
+.chatMsg .msgText{
+    overflow-wrap: break-word;
+    white-space:normal;
 }
 
 .chatMsg.from{
