@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import EventForm from "./EventForm";
 import { isAuthenticated } from "../../auth";
-
+//
 const NewEvent = (props) => {
   const [event, setEvent] = useState({
     title: "",
