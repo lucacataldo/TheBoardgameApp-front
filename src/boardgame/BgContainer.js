@@ -24,14 +24,14 @@ class BgContainer extends React.Component {
     if (redirectToHome) return <Redirect to="/" />;
 
     return (
-      <div className="container-fluid">
+      <div className="container-fluid px-0">
         <div className="row my-3 justify-content-center">
           {/* BgSidebar is col-sm-3 */}
           <BgSideBar
             highlight={this.props.sidebar}
             userId={this.props.userId}
           />
-          <div className="col-sm-9 col-md-9 col-lg-9 col-xl-9">
+          <div className="col-sm-9 col-md-9 col-lg-9 col-xl-9 pr-0 mr-0">
             {this.props.children}
           </div>
         </div>
