@@ -30,17 +30,18 @@ const useStyles = makeStyles({
 
 export default function SimpleCard(props) {
   const [inHover, setHover] = React.useState(false);
-  const [clicked, setClicked] = React.useState(false);
+  const [clicked, setClicked] = React.useState(props.isRead);
   const classes = useStyles();
 
-  const handleClickCard = () => {
+  const handleClicked = () => {
+    props.handleClickCard();
     setClicked(true);
   };
 
   return (
     <Card
       className={`${classes.root} ${inHover && classes.hoverStyle}`}
-      onClick={handleClickCard}
+      onClick={handleClicked}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
