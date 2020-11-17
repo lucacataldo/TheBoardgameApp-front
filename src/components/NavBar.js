@@ -9,14 +9,14 @@ import { getAllTradeRequestsById } from "../trades/apiTrade";
 class NavBar extends React.Component {
   constructor() {
     super();
-    if (isAuthenticated().user) {
-      this.state = {
-        notifications: this.getNotifications()
-      };
-    } else {
-      this.state = {
-        notifications: []
-      };
+    // if (isAuthenticated().user) {
+    //   this.state = {
+    //     notifications: this.getNotifications()
+    //   };
+    // } else {
+    //   this.state = {
+    //     notifications: []
+    //   };
 
     }
   }
@@ -157,9 +157,9 @@ class NavBar extends React.Component {
                 </li>
               </ul>
             )}
-            {isAuthenticated().user && this.state.notifications && (
+            {/* {isAuthenticated().user && this.state.notifications && (
               <Notification notificationsObj={this.state.notifications} />
-            )}
+            )} */}
             <ul className="navbar-nav ">
               {!isAuthenticated() && (
                 <>
