@@ -148,6 +148,10 @@ class Chat extends React.Component {
       let chatId = this.state.selectedChat._id
       let message = document.getElementById("chatBox").value
 
+      if (message.trim().length === 0) {
+        throw "Message empty."
+      }
+
       apiSendChat(chatId, message, isAuthenticated().token)
 
       document.getElementById("chatBox").value = ""
@@ -155,7 +159,6 @@ class Chat extends React.Component {
       list.scrollTop = list.scrollHeight;
     } catch (error) {
       console.log(error)
-      alert(error)
     }
   }
 
@@ -228,6 +231,9 @@ class Chat extends React.Component {
                 {/* Chat is open */}
                 {this.state.chatSelected && (
                   <div className="chatList my-2">
+                    <div className="text-center preChat">
+                      Start the conversation! Note that we may clear out messages older than 3 months from time to time.
+                    </div>
                     {this.state.selectedChat.messages.map((msg, i) => {
                       return (
                         <div
