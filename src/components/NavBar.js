@@ -33,6 +33,7 @@ class NavBar extends React.Component {
             link: "/calendar/" + isAuthenticated().user._id,
             isRead: false,
           });
+          return true;
         });
       })
       .then(
@@ -46,8 +47,8 @@ class NavBar extends React.Component {
                 link: "/trades",
                 isRead: false,
               });
+              return true;
             });
-            console.log(notifications);
           }
         )
       );
