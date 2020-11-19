@@ -1,7 +1,7 @@
 import io from "socket.io-client"
 
 let baseUrl = `${process.env.REACT_APP_API_URL}/chat`
-let ws = io(`http://localhost:8084`);
+let ws = io(process.env.REACT_APP_CHAT_URL);
 
 export const apiInitSocket = (token) => {
     return new Promise((resolve, reject)=>{

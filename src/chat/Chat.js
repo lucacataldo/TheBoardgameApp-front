@@ -35,8 +35,7 @@ class Chat extends React.Component {
           newMessage: true
         })
 
-        let list = document.querySelector(".chatList")
-        list.scrollTop = list.scrollHeight;
+        this.scrollChat()
       })
     })
   }
@@ -45,7 +44,8 @@ class Chat extends React.Component {
     try {
       this.setState({
         isOpen: true,
-        loading: "chats"
+        loading: "chats",
+        newMessage: false
       })
       let chats = await apiGetChats(isAuthenticated().token);
       this.setState({
@@ -75,6 +75,7 @@ class Chat extends React.Component {
       this.setState({
         chats: clone
       })
+      document.getElementById("usernameSearch").value = "";
     } catch (error) {
       switch (error) {
         case 400:
@@ -109,8 +110,7 @@ class Chat extends React.Component {
         loading: null
       })
 
-      let list = document.querySelector(".chatList")
-      list.scrollTop = list.scrollHeight;
+      this.scrollChat()
 
     } catch (error) {
       this.setState({
@@ -153,8 +153,7 @@ class Chat extends React.Component {
       apiSendChat(chatId, message, isAuthenticated().token)
 
       document.getElementById("chatBox").value = ""
-      let list = document.querySelector(".chatList")
-      list.scrollTop = list.scrollHeight;
+      this.scrollChat()
     } catch (error) {
       console.log(error)
     }
@@ -163,6 +162,15 @@ class Chat extends React.Component {
   chatIsFromUser = (from) => {
     let id = (from._id ? from._id : from)
     return id === isAuthenticated().user._id
+  }
+
+  scrollChat = () => {
+    try {
+      let list = document.querySelector(".chatList")
+      list.scrollTop = list.scrollHeight;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   render() {
@@ -201,7 +209,7 @@ class Chat extends React.Component {
                   <div className={`chatList my-2`}>
                     {this.state.loading === "chats" && (
                       <div className="text-center">
-                        <i class="fa fa-circle-notch loader"></i>
+                        <i className="fa fa-circle-notch loader"></i>
                       </div>
                     )}
                     {this.state.chats.map((chat, i) => {
@@ -234,7 +242,7 @@ class Chat extends React.Component {
 
                           {this.state.loading === chat._id && (
                             <div className="d-flex justify-content-center align-items-center">
-                              <i class="fa fa-circle-notch loader"></i>
+                              <i className="fa fa-circle-notch loader"></i>
                             </div>
                           )}
 
@@ -312,7 +320,7 @@ class Chat extends React.Component {
             )}
 
             {!this.state.isOpen && (
-              <div className="chatOpener bg-white shadow-sm" onClick={this.openChatWindow}>
+              <div className="chatOpener bg-white" onClick={this.openChatWindow}>
                 {this.state.newMessage && (
                   <div className="newMsgBadge"></div>
                 )}
