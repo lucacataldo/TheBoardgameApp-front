@@ -7,27 +7,27 @@ class Home extends React.Component {
     let tl = gsap.timeline();
     tl.set(".animator", {
       opacity: 0,
-      y: 50
+      y: 50,
     });
     tl.to(".animator", {
       duration: 0.6,
       opacity: 1,
       y: 0,
-      stagger: 0.07
+      stagger: 0.07,
     });
 
     tl.to(
       "#logo",
       {
         strokeDashoffset: 0,
-        duration: 2
+        duration: 2,
       },
       "-=0.6"
     );
 
     tl.to("#logo", {
       fill: "#3D82AC",
-      duration: 0.5
+      duration: 0.5,
     });
   }
   render() {
@@ -49,8 +49,8 @@ class Home extends React.Component {
                 y2="-2.286"
                 gradientUnits="objectBoundingBox"
               >
-                <stop offset="0" stop-color="#3d82ac" />
-                <stop offset="1" stop-color="#b343bf" />
+                <stop offset="0" stopColor="#3d82ac" />
+                <stop offset="1" stopColor="#b343bf" />
               </linearGradient>
             </defs>
             <g id="Splash_Logo" transform="translate(-683.88 -513.418)">

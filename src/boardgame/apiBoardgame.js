@@ -63,14 +63,13 @@ export const updateUserBoardgames = (userId, boardgameUpdate) => {
   )
     .then((response) => {
       if (response.status === 200) {
-        return response.json
-      } else {
-       throw {response} 
+        return response.json;
       }
     })
     .then((data) => {
       return data;
     })
+    .catch((err) => console.log(err));
 };
 
 export const getAtlasBoardgameId = (name) => {
