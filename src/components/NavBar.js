@@ -236,7 +236,7 @@ class NavBar extends React.Component {
                         title="Sign Out"
                         aria-label="Sign Out"
                         onClick={() =>
-                          signout(() => this.props.history.push("/"))
+                          signout(() => window.location = "/")
                         }
                         style={{ cursor: "pointer" }}
                       >
