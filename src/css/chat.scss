@@ -77,10 +77,14 @@
     transform: translateX(-3px);
 }
 
-.chatList{
+.chatList, .chatView{
     flex-grow: 10;
     font-size: 0.7em;
     overflow-y: auto;
+}
+
+.chatProfImg{
+    width: 30px;
 }
 
 .loader{
@@ -102,10 +106,6 @@
 .preChat{
     opacity: 0.4;
     font-size: 0.9em;
-}
-
-.chatList .chat{
-    color: var(--primary);
 }
 
 .newChat{
@@ -145,6 +145,14 @@
 .chatMsg .msgText{
     overflow-wrap: break-word;
     white-space:normal;
+}
+
+.msgPreview{
+    display: inline-block;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
 }
 
 .chatMsg.from{

@@ -93,7 +93,7 @@ class SocialLogins extends Component {
               onClick={renderProps.onClick}
               disabled={renderProps.disabled}
             >
-              <i className="fa fa-google" style={{ marginLeft: "5px" }} />
+              <i className="fab fa-google" style={{ marginLeft: "5px" }} />
               <span>{this.props.title} with Google</span>
             </button>
           )}
@@ -107,7 +107,7 @@ class SocialLogins extends Component {
           reauthenticate={true}
           cssClass="btn btn-primary btn-block"
           icon={
-            <i className="fa fa-facebook" style={{ marginLeft: "5px" }}></i>
+            <i className="fab fa-facebook" style={{ marginLeft: "5px" }}></i>
           }
           textButton={this.props.title + " with Facebook"}
         />

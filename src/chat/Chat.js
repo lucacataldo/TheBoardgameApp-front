@@ -5,6 +5,8 @@ import { isAuthenticated } from "../auth";
 import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat } from "./apiChat";
 import moment from "moment";
 
+import DefaultProfileImg from "../images/avatar.png";
+
 import "../css/chat.scss"
 
 
@@ -37,48 +39,65 @@ class Chat extends React.Component {
 
 
     apiInitSocket(isAuthenticated().token).then(async (ws) => {
-      this.getChats()
+      try {
+        await this.getChats()
 
-      setInterval(() => {
-        this.getChats()
-      }, 20000);
+        setInterval(() => {
+          this.getChats(true)
+        }, 20000);
 
-      ws.on("newMsg", (data) => {
-        if (!this.state.muted && (data.from !== isAuthenticated().user._id)) {
-          document.getElementById("msgDing").play()
-        }
+        ws.on("newMsg", (data) => {
+          if (!this.state.muted && (data.from !== isAuthenticated().user._id)) {
+            document.getElementById("msgDing").play()
+          }
 
-        if (this.state.chatSelected && (data._id === this.state.selectedChat._id)) {
-          let clone = this.state.selectedChat;
-          clone.messages.push(data)
-
-          this.setState({
-            selectedChat: clone
-          })
-
-          this.scrollChat()
-        } else {
-          apiGetChat(isAuthenticated().token, data._id).then((chat)=>{
-            let i = this.state.chats.findIndex(c=>c._id === chat._id)
-            let clone = this.state.chats
-            clone[i] = chat;
+          if (this.state.chatSelected && (data._id === this.state.selectedChat._id)) {
+            let clone = this.state.selectedChat;
+            clone.messages.push(data)
 
             this.setState({
-              chats: clone
+              selectedChat: clone,
             })
-          })
-          this.setState({
-            newMessage: true
-          })
-        }
 
-      })
+            if (!this.state.isOpen) {
+              this.setState({
+                newMessage: true
+              })
+            }
+
+            this.scrollChat()
+          } else {
+            apiGetChat(isAuthenticated().token, data._id).then((chat) => {
+              let i = this.state.chats.findIndex(c => c._id === chat._id)
+              let clone = this.state.chats
+              clone[i] = chat;
+
+              this.setState({
+                chats: clone
+              })
+            })
+            this.setState({
+              newMessage: true
+            })
+          }
+
+        })
+      } catch (error) {
+        console.log(error);
+      }
+
     })
   }
 
-  getChats = () => {
+  getChats = (isRefresh) => {
     return new Promise((resolve, reject) => {
       apiGetChats(isAuthenticated().token).then((chats) => {
+        if (isRefresh && (this.state.chats.length !== chats.length)) {
+          this.setState({
+            newMessage: true
+          })
+          document.getElementById("msgDing").play()
+        }
         this.setState({
           chats,
           loading: null
@@ -98,6 +117,7 @@ class Chat extends React.Component {
         newMessage: false
       })
       let chats = await this.getChats();
+      this.scrollChat()
     } catch (error) {
       this.setState({
         loading: null
@@ -211,7 +231,7 @@ class Chat extends React.Component {
 
   scrollChat = () => {
     try {
-      let list = document.querySelector(".chatList")
+      let list = document.querySelector(".chatView")
       list.scrollTop = list.scrollHeight;
     } catch (error) {
       console.log(error);
@@ -279,7 +299,19 @@ class Chat extends React.Component {
                         No chats yet!
                       </div>
                     )}
-                    {this.state.chats.map((chat, i) => {
+                    {this.state.chats.sort((a, b) => {
+                      try {
+                        let lastA = a.messages[a.messages.length - 1].timestamp
+                        let lastB = b.messages[b.messages.length - 1].timestamp
+                        if (lastA > lastB) {
+                          return -1
+                        } else {
+                          return 1
+                        }
+                      } catch (error) {
+                        return 2
+                      }
+                    }).map((chat, i) => {
                       return (
                         <div
                           className="cursor-pointer chat p-2 rounded border border-info text-info my-2 d-flex justify-content-between"
@@ -287,23 +319,33 @@ class Chat extends React.Component {
                           key={chat._id}
                           data-id={chat._id}
                         >
-                          <div>
+                          <div className="d-flex align-items-center">
+                            <img
+                              className="chatProfImg mx-3"
+                              src={`${process.env.REACT_APP_API_URL}/user/photo/${chat.between.filter(e => e._id !== isAuthenticated().user._id)[0]._id}`}
+                              onError={(e) => { e.target.onerror = null; e.target.src = `${DefaultProfileImg}` }}
+                            />
                             <div>
-                              {
-                                chat.between.filter(
-                                  e => e._id !== isAuthenticated().user._id
-                                )[0].name
-                              }
+                              <h6>
+                                {
+                                  chat.between.filter(
+                                    e => e._id !== isAuthenticated().user._id
+                                  )[0].name
+                                }
+                              </h6>
+
+                              {/* <div className="msgPreview">
+                                {chat.messages[chat.messages.length - 1] && (
+                                  '"' + chat.messages[chat.messages.length - 1].message + '" '
+                                )}
+                              </div> */}
+                              <div>
+                                {chat.messages[chat.messages.length - 1] && (
+                                  moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
+                                )}
+                              </div>
                             </div>
 
-                            <div>
-                              {chat.messages[chat.messages.length - 1] && (
-                                '"' + chat.messages[chat.messages.length - 1].message + '" '
-                              )}
-                              {chat.messages[chat.messages.length - 1] && (
-                                moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
-                              )}
-                            </div>
                           </div>
 
 
@@ -322,7 +364,7 @@ class Chat extends React.Component {
 
                 {/* Chat is open */}
                 {this.state.chatSelected && (
-                  <div className="chatList my-2">
+                  <div className="chatView my-2">
                     <div className="text-center preChat">
                       Start the conversation! Note that we may clear out messages older than 3 months from time to time.
                     </div>
