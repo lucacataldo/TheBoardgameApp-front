@@ -6,6 +6,7 @@ import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat } fr
 import moment from "moment";
 
 import "../css/chat.scss"
+import { VolumeDown } from "@material-ui/icons";
 
 
 class Chat extends React.Component {
@@ -19,23 +20,43 @@ class Chat extends React.Component {
       chats: [],
       newMessage: false,
       loading: null,
+      muted: false,
     }
   }
 
 
 
   componentDidMount() {
-    apiInitSocket(isAuthenticated().token).then((ws) => {
-      ws.on("newchat", (data) => {
-        let clone = this.state.selectedChat;
-        clone.messages.push(data)
-
+    apiInitSocket(isAuthenticated().token).then(async (ws) => {
+      apiGetChats(isAuthenticated().token).then((chats) => {
         this.setState({
-          selectedChat: clone,
-          newMessage: true
+          chats,
+          loading: null
         })
+      }).catch(err=>{
+        console.log(err);
+      })
 
-        this.scrollChat()
+      ws.on("newMsg", (data) => {
+        if (!this.state.muted) {
+          document.getElementById("msgDing").play()  
+        }
+
+        if (this.state.chatSelected && (data._id === this.state.selectedChat._id)) {
+          let clone = this.state.selectedChat;
+          clone.messages.push(data)
+
+          this.setState({
+            selectedChat: clone
+          })
+
+          this.scrollChat()
+        } else {
+          this.setState({
+            newMessage: true
+          })
+        }
+
       })
     })
   }
@@ -59,6 +80,7 @@ class Chat extends React.Component {
       console.log(error);
     }
   }
+
 
   closeChatWindow = () => {
     this.setState({
@@ -173,17 +195,28 @@ class Chat extends React.Component {
     }
   }
 
+  muteToggle = ()=>{
+    this.setState({
+      muted: !this.state.muted
+    })
+  }
+
   render() {
     return (
       <div className="chatCont">
         {isAuthenticated() && (
           <div>
+            <audio id="msgDing" src="/pop.wav" controls={false}></audio>
             {this.state.isOpen && (
               <div className="chatWindow bg-white p-3 rounded-lg border shadow-sm">
 
                 <div className="d-flex justify-content-between align-items-center">
                   {!this.state.chatSelected && (
                     <div>
+                      <i 
+                        className={`fa ${this.state.muted ? 'fa-volume-mute' : 'fa-volume-up'} p-1 mr-2 cursor-pointer text-primary`}
+                        onClick={this.muteToggle}
+                      ></i>
                       <span>Chat</span>
                     </div>
                   )}

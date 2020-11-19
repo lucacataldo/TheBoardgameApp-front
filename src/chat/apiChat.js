@@ -25,7 +25,14 @@ export const apiGetChats = async (token) => {
     if (resp.status != 200) {
         throw resp.status
     }
-    return resp.json()
+    let chats = await resp.json()
+
+    chats.forEach(chat => {
+        ws.emit("join", {
+            chatId: chat._id
+        })
+    });
+    return chats
 };
 
 export const apiCreateChat = async (who, token) => {
@@ -45,12 +52,6 @@ export const apiCreateChat = async (who, token) => {
             return response.json();
         })
 }
-
-/**
- * @function apiGetChat
- * @param {String} token 
- * @param {String} id 
- */
 
 export const apiGetChat = async (token, id) => {
     ws.emit("join", {
@@ -73,12 +74,6 @@ export const apiGetChat = async (token, id) => {
     return data
 };
 
-/**
- * 
- * @param {String} chatId 
- * @param {Object} message 
- * @param {String} token Auth token
- */
 export const apiSendChat = async (chatId, message, token) => {
     ws.emit("chat", {
         _id: chatId,
