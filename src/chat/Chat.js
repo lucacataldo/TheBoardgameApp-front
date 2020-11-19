@@ -1,12 +1,11 @@
 import React from "react"
-import { NavLink, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { isAuthenticated } from "../auth";
 
 import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat } from "./apiChat";
 import moment from "moment";
 
 import "../css/chat.scss"
-import { VolumeDown } from "@material-ui/icons";
 
 
 class Chat extends React.Component {
@@ -27,19 +26,26 @@ class Chat extends React.Component {
 
 
   componentDidMount() {
-    apiInitSocket(isAuthenticated().token).then(async (ws) => {
-      apiGetChats(isAuthenticated().token).then((chats) => {
-        this.setState({
-          chats,
-          loading: null
-        })
-      }).catch(err=>{
-        console.log(err);
+    try {
+      let muted = localStorage.getItem("muted") === "true"
+      this.setState({
+        muted
       })
+    } catch (error) {
+      console.log(error);
+    }
+
+
+    apiInitSocket(isAuthenticated().token).then(async (ws) => {
+      this.getChats()
+
+      setInterval(() => {
+        this.getChats()
+      }, 20000);
 
       ws.on("newMsg", (data) => {
-        if (!this.state.muted) {
-          document.getElementById("msgDing").play()  
+        if (!this.state.muted && (data.from !== isAuthenticated().user._id)) {
+          document.getElementById("msgDing").play()
         }
 
         if (this.state.chatSelected && (data._id === this.state.selectedChat._id)) {
@@ -52,11 +58,34 @@ class Chat extends React.Component {
 
           this.scrollChat()
         } else {
+          apiGetChat(isAuthenticated().token, data._id).then((chat)=>{
+            let i = this.state.chats.findIndex(c=>c._id === chat._id)
+            let clone = this.state.chats
+            clone[i] = chat;
+
+            this.setState({
+              chats: clone
+            })
+          })
           this.setState({
             newMessage: true
           })
         }
 
+      })
+    })
+  }
+
+  getChats = () => {
+    return new Promise((resolve, reject) => {
+      apiGetChats(isAuthenticated().token).then((chats) => {
+        this.setState({
+          chats,
+          loading: null
+        })
+        resolve(chats)
+      }).catch(err => {
+        reject(err)
       })
     })
   }
@@ -68,11 +97,7 @@ class Chat extends React.Component {
         loading: "chats",
         newMessage: false
       })
-      let chats = await apiGetChats(isAuthenticated().token);
-      this.setState({
-        chats,
-        loading: null
-      })
+      let chats = await this.getChats();
     } catch (error) {
       this.setState({
         loading: null
@@ -150,11 +175,9 @@ class Chat extends React.Component {
         chats: []
       })
 
-      let chats = await apiGetChats(isAuthenticated().token);
+      let chats = await this.getChats();
       this.setState({
-        chats,
         selectedChat: {},
-        loading: null
       })
     } catch (error) {
       alert("An error occurred while getting chats, check log for more info.")
@@ -169,7 +192,7 @@ class Chat extends React.Component {
       let message = document.getElementById("chatBox").value
 
       if (message.trim().length === 0) {
-        throw "Message empty."
+        throw new Error("Message empty.")
       }
 
       apiSendChat(chatId, message, isAuthenticated().token)
@@ -195,7 +218,10 @@ class Chat extends React.Component {
     }
   }
 
-  muteToggle = ()=>{
+  muteToggle = () => {
+
+    localStorage.setItem("muted", !this.state.muted)
+
     this.setState({
       muted: !this.state.muted
     })
@@ -210,19 +236,15 @@ class Chat extends React.Component {
             {this.state.isOpen && (
               <div className="chatWindow bg-white p-3 rounded-lg border shadow-sm">
 
-                <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex justify-content-between align-items-center text-info">
                   {!this.state.chatSelected && (
                     <div>
-                      <i 
-                        className={`fa ${this.state.muted ? 'fa-volume-mute' : 'fa-volume-up'} p-1 mr-2 cursor-pointer text-primary`}
-                        onClick={this.muteToggle}
-                      ></i>
                       <span>Chat</span>
                     </div>
                   )}
                   {this.state.chatSelected && (
-                    <div className="cursor-pointer px-2" onClick={this.closeChat}>
-                      <i className="fa fa-angle-left"></i>
+                    <div className="cursor-pointer closeChat px-2" onClick={this.closeChat}>
+                      <i className="fa fa-arrow-left"></i>
                     </div>
                   )}
                   {this.state.chatSelected && (
@@ -234,7 +256,14 @@ class Chat extends React.Component {
                       }
                     </div>
                   )}
-                  <i className="fa fa-angle-down closeChatWindow cursor-pointer px-2" onClick={this.closeChatWindow}></i>
+                  <div>
+                    <i
+                      className={`fa ${this.state.muted ? 'fa-volume-mute' : 'fa-volume-up'} chatMute p-1 mr-2 cursor-pointer`}
+                      onClick={this.muteToggle}
+                    ></i>
+                    <i className="fa fa-angle-down closeChatWindow cursor-pointer p-2" onClick={this.closeChatWindow}></i>
+                  </div>
+
                 </div>
 
 
@@ -245,10 +274,15 @@ class Chat extends React.Component {
                         <i className="fa fa-circle-notch loader"></i>
                       </div>
                     )}
+                    {this.state.chats.length < 1 && (
+                      <div className="text-center preChat py-5">
+                        No chats yet!
+                      </div>
+                    )}
                     {this.state.chats.map((chat, i) => {
                       return (
                         <div
-                          className="cursor-pointer chat p-2 rounded border border-primary my-2 d-flex justify-content-between"
+                          className="cursor-pointer chat p-2 rounded border border-info text-info my-2 d-flex justify-content-between"
                           onClick={this.getChat}
                           key={chat._id}
                           data-id={chat._id}
