@@ -18,8 +18,11 @@ class Chat extends React.Component {
       user: isAuthenticated().user,
       chats: [],
       newMessage: false,
+      loading: null,
     }
   }
+
+
 
   componentDidMount() {
     apiInitSocket(isAuthenticated().token).then((ws) => {
@@ -39,23 +42,28 @@ class Chat extends React.Component {
   }
 
   openChatWindow = async () => {
-    this.setState({
-      isOpen: true
-    })
-
     try {
+      this.setState({
+        isOpen: true,
+        loading: "chats"
+      })
       let chats = await apiGetChats(isAuthenticated().token);
       this.setState({
-        chats
+        chats,
+        loading: null
       })
     } catch (error) {
+      this.setState({
+        loading: null
+      })
       console.log(error);
     }
   }
 
   closeChatWindow = () => {
     this.setState({
-      isOpen: false
+      isOpen: false,
+      chats: [],
     })
   }
 
@@ -83,32 +91,12 @@ class Chat extends React.Component {
     }
   }
 
-  chatPoller = 0;
-
-  /*chatPollerFn = async () => {
-    try {
-      let id = this.state.selectedChat._id
-      if (!id) {
-        clearInterval(this.chatPoller)
-        throw "Chat deselected, pausing polling..."
-      }
-      let chat = await apiGetChat(isAuthenticated().token, id)
-
-      if (JSON.stringify(this.state.selectedChat) != JSON.stringify(chat)) {
-        this.setState({
-          selectedChat: chat,
-          newMessage: true
-        })
-
-      }
-
-    } catch (error) {
-      console.log(error);
-    }
-  }*/
-
   getChat = async (e) => {
     try {
+      this.setState({
+        loading: "chat"
+      })
+
       let id = e.currentTarget.dataset.id;
 
       let chat = await apiGetChat(isAuthenticated().token, id)
@@ -116,15 +104,17 @@ class Chat extends React.Component {
 
       this.setState({
         chatSelected: true,
-        selectedChat: chat
+        selectedChat: chat,
+        loading: null
       })
-
-      // this.chatPoller = setInterval(this.chatPollerFn, 5000)
 
       let list = document.querySelector(".chatList")
       list.scrollTop = list.scrollHeight;
 
     } catch (error) {
+      this.setState({
+        loading: null
+      })
       console.log(error);
     }
   }
@@ -133,8 +123,15 @@ class Chat extends React.Component {
     try {
       this.setState({
         chatSelected: false,
-        chats: await apiGetChats(isAuthenticated().token),
-        selectedChat: {}
+        loading: "chats",
+        chats: []
+      })
+
+      let chats = await apiGetChats(isAuthenticated().token);
+      this.setState({
+        chats,
+        selectedChat: {},
+        loading: null
       })
     } catch (error) {
       alert("An error occurred while getting chats, check log for more info.")
@@ -200,26 +197,45 @@ class Chat extends React.Component {
 
 
                 {!this.state.chatSelected && (
-                  <div className="chatList my-2">
+                  <div className={`chatList my-2`}>
+                    {this.state.loading === "chats" && (
+                      <div className="text-center">
+                        <i class="fa fa-circle-notch loader"></i>
+                      </div>
+                    )}
                     {this.state.chats.map((chat, i) => {
                       return (
-                        <div className="cursor-pointer chat p-2 rounded border border-primary my-2" onClick={this.getChat} key={chat._id} data-id={chat._id}>
+                        <div
+                          className="cursor-pointer chat p-2 rounded border border-primary my-2 d-flex justify-content-between"
+                          onClick={this.getChat}
+                          key={chat._id}
+                          data-id={chat._id}
+                        >
                           <div>
-                            {
-                              chat.between.filter(
-                                e => e._id !== isAuthenticated().user._id
-                              )[0].name
-                            }
+                            <div>
+                              {
+                                chat.between.filter(
+                                  e => e._id !== isAuthenticated().user._id
+                                )[0].name
+                              }
+                            </div>
+
+                            <div>
+                              {chat.messages[chat.messages.length - 1] && (
+                                '"' + chat.messages[chat.messages.length - 1].message + '" '
+                              )}
+                              {chat.messages[chat.messages.length - 1] && (
+                                moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
+                              )}
+                            </div>
                           </div>
 
-                          <div>
-                            {chat.messages[chat.messages.length - 1] && (
-                              '"' + chat.messages[chat.messages.length - 1].message + '" '
-                            )}
-                            {chat.messages[chat.messages.length - 1] && (
-                              moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
-                            )}
-                          </div>
+
+                          {this.state.loading === "chat" && (
+                            <div className="d-flex justify-content-center align-items-center">
+                              <i class="fa fa-circle-notch loader"></i>
+                            </div>
+                          )}
 
                         </div>
                       )
@@ -265,7 +281,7 @@ class Chat extends React.Component {
                     />
                     <div className="input-group-append">
                       <button className="btn btn-primary" onClick={this.createChat}>
-                        <i className="fa fa-plus"></i>
+                        <i className="fa fa-user"></i>
                       </button>
                     </div>
                   </div>
