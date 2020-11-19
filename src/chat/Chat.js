@@ -93,11 +93,12 @@ class Chat extends React.Component {
 
   getChat = async (e) => {
     try {
-      this.setState({
-        loading: "chat"
-      })
 
       let id = e.currentTarget.dataset.id;
+
+      this.setState({
+        loading: id
+      })
 
       let chat = await apiGetChat(isAuthenticated().token, id)
 
@@ -231,7 +232,7 @@ class Chat extends React.Component {
                           </div>
 
 
-                          {this.state.loading === "chat" && (
+                          {this.state.loading === chat._id && (
                             <div className="d-flex justify-content-center align-items-center">
                               <i class="fa fa-circle-notch loader"></i>
                             </div>
@@ -281,7 +282,7 @@ class Chat extends React.Component {
                     />
                     <div className="input-group-append">
                       <button className="btn btn-primary" onClick={this.createChat}>
-                        <i className="fa fa-user"></i>
+                        <i className="fa fa-user-plus"></i>
                       </button>
                     </div>
                   </div>
@@ -302,7 +303,7 @@ class Chat extends React.Component {
                     />
                     <div className="input-group-append">
                       <button className="btn btn-primary" onClick={this.sendChat}>
-                        <i className="fa fa-send"></i>
+                        <i className="fa fa-paper-plane"></i>
                       </button>
                     </div>
                   </div>
