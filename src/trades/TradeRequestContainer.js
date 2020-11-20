@@ -141,7 +141,6 @@ class TradeRequestContainer extends React.Component {
   }
 
   handleAddBoardgame(event) {
-    console.log(event.currentTarget);
     if (event.currentTarget.id === "myList") {
       try {
         let available = document.getElementById("myList");
@@ -169,7 +168,6 @@ class TradeRequestContainer extends React.Component {
             let total =
               parseFloat(this.state.tradeData.userTotalPrice) +
               parseFloat(MSRP);
-            console.log(trades);
             this.setState(prevState => ({
               tradeData: {
                 ...prevState.tradeData,
@@ -179,6 +177,9 @@ class TradeRequestContainer extends React.Component {
             }));
           })
           .catch(err => {
+            document
+              .getElementById("searchedUserList")
+              .classList.add("is-invalid");
             console.log(err);
           });
 
@@ -246,7 +247,7 @@ class TradeRequestContainer extends React.Component {
       var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
       element.appendChild(
-        document.createTextNode(foundItem.name[0] + "--" + foundItem.name[1])
+        document.createTextNode(foundItem.name + " -- " + foundItem.condition)
       );
       available.appendChild(element);
 
@@ -278,7 +279,7 @@ class TradeRequestContainer extends React.Component {
       var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
       element.appendChild(
-        document.createTextNode(foundItem.name[0] + "--" + foundItem.name[1])
+        document.createTextNode(foundItem.name + " -- " + foundItem.condition)
       );
       available.appendChild(element);
 
@@ -541,6 +542,37 @@ class TradeRequestContainer extends React.Component {
                                       ? "N/A"
                                       : "$" + item.price}
                                   </h4>
+                                  <br />
+                                  {(function() {
+                                    switch (item.condition) {
+                                      case "Excellent":
+                                        return (
+                                          <span className="badge badge-success float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      case "Good":
+                                        return (
+                                          <span className="badge badge-primary float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      case "Fair":
+                                        return (
+                                          <span className="badge badge-warning float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      case "Poor":
+                                        return (
+                                          <span className="badge badge-danger float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      default:
+                                        return null;
+                                    }
+                                  })()}
                                 </ListGroupItem>
                               )
                             )}
