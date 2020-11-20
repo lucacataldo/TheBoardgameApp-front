@@ -45,15 +45,14 @@ class TradePending extends React.Component {
         <div className="card-body">
           {this.props.trades.map(trade => {
             return (
-              <div key={trade._id}>
+              <div className="row" key={trade._id}>
                 <img
                   id={"toggle".concat(trade._id)}
-                  className="float-left rounded-circle cursor-pointer"
+                  className="col-1 float-left rounded-circle cursor-pointer p-2"
                   src="https://picsum.photos/75"
                   alt="displaypic"
                 />
-
-                <div className="float-left pt-3 pl-3">
+                <p className="col-5 pl-3 pt-3">
                   <a
                     className="font-weight-bold h5"
                     href={"user/" + trade.tradeSender._id}
@@ -62,33 +61,19 @@ class TradePending extends React.Component {
                   </a>
                   <br />
                   <small>{trade.tradeWants.length} games</small>
+                </p>
+
+                <div className="col-4 ">
+                  <div className="float-right">
+                    <button type="button" className="btn btn-success mx-2 my-3">
+                      Complete
+                    </button>
+                  </div>
                 </div>
-                <br />
-                <div className="top-right">
+                <div className="col-2">
                   {new Date(trade.createdDate).toISOString().slice(0, 10)}
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-info float-right rounded-circle mx-3"
-                >
-                  <FontAwesomeIcon icon={faCommentDots} />
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger float-right rounded-circle"
-                >
-                  <FontAwesomeIcon icon={faTimes} />{" "}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-success float-right mr-3 rounded-circle"
-                >
-                  <FontAwesomeIcon icon={faCheck} />
-                </button>
-
-                {/* <button type="button"  className="btn btn-primary float-left"><FontAwesomeIcon icon={faEye} /></button> */}
-
-                <UncontrolledCollapse toggler={"#toggle".concat(trade._id)}>
+                {/* <UncontrolledCollapse toggler={"#toggle".concat(trade._id)}>
                   <br />
                   <br />
                   <br />
@@ -132,7 +117,8 @@ class TradePending extends React.Component {
                       <p>{trade.notes}</p>
                     </div>
                   </div>
-                </UncontrolledCollapse>
+                </UncontrolledCollapse> */}
+                <hr className="col-4 bg-black" />
               </div>
             );
           })}
