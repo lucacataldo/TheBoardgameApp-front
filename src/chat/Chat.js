@@ -314,7 +314,7 @@ class Chat extends React.Component {
                     }).map((chat, i) => {
                       return (
                         <div
-                          className="cursor-pointer chat p-2 rounded border border-info text-info my-2 d-flex justify-content-between"
+                          className="cursor-pointer chat p-2 rounded border shadow-sm text-info my-2 d-flex justify-content-between"
                           onClick={this.getChat}
                           key={chat._id}
                           data-id={chat._id}
@@ -326,19 +326,13 @@ class Chat extends React.Component {
                               onError={(e) => { e.target.onerror = null; e.target.src = `${DefaultProfileImg}` }}
                             />
                             <div>
-                              <h6>
+                              <h6 className="p-0 m-0">
                                 {
                                   chat.between.filter(
                                     e => e._id !== isAuthenticated().user._id
                                   )[0].name
                                 }
                               </h6>
-
-                              {/* <div className="msgPreview">
-                                {chat.messages[chat.messages.length - 1] && (
-                                  '"' + chat.messages[chat.messages.length - 1].message + '" '
-                                )}
-                              </div> */}
                               <div>
                                 {chat.messages[chat.messages.length - 1] && (
                                   moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
