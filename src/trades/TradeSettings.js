@@ -4,7 +4,7 @@ import TradesSideBar from "./TradesSideBar";
 import { Redirect } from "react-router-dom";
 import {
   getGuruCollection,
-  updateUserBoardgames,
+  updateUserBoardgames
 } from "../boardgame/apiBoardgame";
 import { getUserId } from "../user/apiUser";
 import Animator from "../animator/Animator";
@@ -17,7 +17,7 @@ class TradeSettings extends React.Component {
       redirectToHome: false,
       userID: null,
       userBoardgames: [],
-      updateStatus: "idle",
+      updateStatus: "idle"
     };
   }
 
@@ -29,13 +29,13 @@ class TradeSettings extends React.Component {
 
   async loadUserBoardgameData(user) {
     await getUserId(user)
-      .then((id) => {
-        getGuruCollection(id, isAuthenticated().token).then((bgList) => {
-          let filteredBgList = bgList.filter((bg) => bg.forTrade === true);
+      .then(id => {
+        getGuruCollection(id, isAuthenticated().token).then(bgList => {
+          let filteredBgList = bgList.filter(bg => bg.forTrade === true);
           this.setState({ userBoardgames: filteredBgList, isLoading: false });
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }
@@ -56,7 +56,7 @@ class TradeSettings extends React.Component {
       `.btn-group[data-id='${listID}'] button`
     );
 
-    group.forEach((el) => {
+    group.forEach(el => {
       console.log(el);
       if (el.classList.contains("btn-primary")) {
         el.classList.replace("btn-primary", "btn-outline-primary");
@@ -66,9 +66,9 @@ class TradeSettings extends React.Component {
     e.target.classList.replace("btn-outline-primary", "btn-primary");
   };
 
-  onClickUpdate = (e) => {
+  onClickUpdate = e => {
     let data = this.state.userBoardgames;
-    data.forEach((bg) => {
+    data.forEach(bg => {
       bg.condition = document.querySelector(
         `.btn-group[data-id='${bg._id}'] .btn-primary`
       ).innerText;
@@ -78,23 +78,23 @@ class TradeSettings extends React.Component {
     console.log("DATA");
     console.log(data);
     this.setState({
-      updateStatus: "saving",
+      updateStatus: "saving"
     });
     updateUserBoardgames(this.state.userID, data)
-      .then((data) => {
+      .then(data => {
         this.setState({
-          updateStatus: "saved",
+          updateStatus: "saved"
         });
         return data;
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
-          updateStatus: "error",
+          updateStatus: "error"
         });
       });
   };
 
-  badgeBgRender = (condition) => {
+  badgeBgRender = condition => {
     switch (condition) {
       case "Excellent":
         return "badge-success";
@@ -126,7 +126,7 @@ class TradeSettings extends React.Component {
 
       copy[index].tags = [...new Set(copy[index].tags)];
       this.setState({
-        userBoardgames: copy,
+        userBoardgames: copy
       });
       e.target.value = "";
     }
@@ -136,7 +136,7 @@ class TradeSettings extends React.Component {
     let copy = this.state.userBoardgames;
     copy[index].tags.splice(tagIndex, 1);
     this.setState({
-      userBoardgames: copy,
+      userBoardgames: copy
     });
   };
 
@@ -166,7 +166,8 @@ class TradeSettings extends React.Component {
                     />
                     <div>
                       {item.boardgame.title}
-                      {item.tags.map((tag) => (
+                      <br />
+                      {item.tags.map(tag => (
                         <span className="badge badge-info p-1 mx-1">{tag}</span>
                       ))}
                     </div>
@@ -177,7 +178,7 @@ class TradeSettings extends React.Component {
                     <div className="btn-group mx-3" data-id={item._id}>
                       <button
                         value="Excellent"
-                        onClick={(e) => {
+                        onClick={e => {
                           this.onClickCondition(e, item._id);
                         }}
                         className={`btn ${this.renderCondition(
@@ -189,7 +190,7 @@ class TradeSettings extends React.Component {
                       </button>
                       <button
                         value="Good"
-                        onClick={(e) => {
+                        onClick={e => {
                           this.onClickCondition(e, item._id);
                         }}
                         className={`btn ${this.renderCondition(
@@ -201,7 +202,7 @@ class TradeSettings extends React.Component {
                       </button>
                       <button
                         value="Fair"
-                        onClick={(e) => {
+                        onClick={e => {
                           this.onClickCondition(e, item._id);
                         }}
                         className={`btn ${this.renderCondition(
@@ -213,7 +214,7 @@ class TradeSettings extends React.Component {
                       </button>
                       <button
                         value="Poor"
-                        onClick={(e) => {
+                        onClick={e => {
                           this.onClickCondition(e, item._id);
                         }}
                         className={`btn ${this.renderCondition(
@@ -244,7 +245,7 @@ class TradeSettings extends React.Component {
                           type="text"
                           maxLength="25"
                           minLength="1"
-                          onKeyUp={(e) => {
+                          onKeyUp={e => {
                             this.addTag(e, index);
                           }}
                         />
@@ -252,7 +253,7 @@ class TradeSettings extends React.Component {
                         {item.tags.map((tag, tagIndex) => (
                           <div
                             className="dropdown-item text-center p-0 d-flex justify-content-between align-items-center"
-                            onClick={(e) => {
+                            onClick={e => {
                               this.deleteTag(e, index, tagIndex);
                             }}
                             style={{ cursor: "pointer" }}
@@ -271,7 +272,7 @@ class TradeSettings extends React.Component {
             </ListGroup>
             <button
               className="btn btn-success mt-2 float-right"
-              onClick={(e) => {
+              onClick={e => {
                 this.onClickUpdate(e);
               }}
             >

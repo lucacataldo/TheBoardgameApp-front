@@ -27,46 +27,41 @@ import {
 import { Link } from "react-router-dom";
 
 class TradeRequestContainer extends React.Component {
-  state = {
-    redirectToHome: false,
-    foundUser: false,
-    selectGameAlert: false,
-    selectGameMsg: "",
-    isLoading: true,
-    valueMin: 0,
-    valueMax: 9999,
-    userBoardgames: [],
-    searchedUserBoardgames: [],
-    price: 0,
-    searchedUserPrice: 0,
-    show: false,
-    tradeData: {
-      userID: "",
-      userTradeList: [],
-      userTotalPrice: 0,
-      searchedUserID: "",
-      searchedUser: "",
-      searchedUserTotalPrice: 0,
-      searchedUserTradeList: [],
-      notes: ""
-    }
-  };
+  constructor(props) {
+    super(props);
 
-  //needs to be updated to new methdology
-  UNSAFE_componentWillMount() {
-    var user = isAuthenticated().user.name;
-    this.loadUserBoardgameData(user);
-    this.setState(prevState => ({
-      tradeData: { ...prevState.tradeData, userID: isAuthenticated().user._id }
-    }));
+    this.state = {
+      redirectToHome: false,
+      foundUser: false,
+      selectGameAlert: false,
+      selectGameMsg: "",
+      isLoading: true,
+      valueMin: 0,
+      valueMax: 9999,
+      userBoardgames: [],
+      searchedUserBoardgames: [],
+      price: 0,
+      searchedUserPrice: 0,
+      show: false,
+      tradeData: {
+        userID: "",
+        userTradeList: [],
+        userTotalPrice: 0,
+        searchedUserID: "",
+        searchedUser: "",
+        searchedUserTotalPrice: 0,
+        searchedUserTradeList: [],
+        notes: ""
+      }
+    };
+    this.baseTradeData = this.tradeData;
+    this.baseState = this.state;
   }
 
   async loadUserBoardgameData(user) {
     await getUserId(user)
       .then(id => {
-        console.log(id);
         getGuruCollection(id, isAuthenticated().token).then(bgList => {
-          console.log(bgList);
           let filteredBgList = bgList.filter(bg => bg.forTrade === true);
           this.setState({ userBoardgames: filteredBgList, isLoading: false });
         });
@@ -82,15 +77,19 @@ class TradeRequestContainer extends React.Component {
   };
 
   loadSearchedUserBoardgameData(user) {
+    //load logged in user's boardgames
+    this.clear();
+    this.loadUserBoardgameData(isAuthenticated().user.name);
+    this.setState(prevState => ({
+      tradeData: { ...prevState.tradeData, userID: isAuthenticated().user._id }
+    }));
+
     getUserId(user)
       .then(id => {
         if (!id) {
           document.getElementById("searchbar").classList.add("is-invalid");
         } else {
           getGuruCollection(id, isAuthenticated().token).then(bgList => {
-            if (bgList !== undefined) {
-              console.log("Could not find boardgame collection.");
-            }
             // Filter currently not working, it should filter out identical games from both lists
             if (document.getElementById("filterMatching").checked === true) {
               console.log("CHECKED");
@@ -142,11 +141,12 @@ class TradeRequestContainer extends React.Component {
   }
 
   handleAddBoardgame(event) {
-    console.log(event.currentTarget);
     if (event.currentTarget.id === "myList") {
       try {
         let available = document.getElementById("myList");
-        let name = available.options[available.selectedIndex].value.split(" -- ");
+        let name = available.options[available.selectedIndex].value.split(
+          " -- "
+        );
         //using RegEx because trim is not working
         let condition = name[1];
         let MSRP = "";
@@ -168,7 +168,6 @@ class TradeRequestContainer extends React.Component {
             let total =
               parseFloat(this.state.tradeData.userTotalPrice) +
               parseFloat(MSRP);
-            console.log(trades);
             this.setState(prevState => ({
               tradeData: {
                 ...prevState.tradeData,
@@ -178,6 +177,9 @@ class TradeRequestContainer extends React.Component {
             }));
           })
           .catch(err => {
+            document
+              .getElementById("searchedUserList")
+              .classList.add("is-invalid");
             console.log(err);
           });
 
@@ -194,7 +196,9 @@ class TradeRequestContainer extends React.Component {
     } else {
       try {
         let available = document.getElementById("searchedUserList");
-        let name = available.options[available.selectedIndex].value.split(" -- ");
+        let name = available.options[available.selectedIndex].value.split(
+          " -- "
+        );
         //using RegEx because trim is not working
         let condition = name[1];
         let MSRP = "";
@@ -243,7 +247,7 @@ class TradeRequestContainer extends React.Component {
       var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
       element.appendChild(
-        document.createTextNode(foundItem.name[0] + "--" + foundItem.name[1])
+        document.createTextNode(foundItem.name + " -- " + foundItem.condition)
       );
       available.appendChild(element);
 
@@ -275,7 +279,7 @@ class TradeRequestContainer extends React.Component {
       var element = document.createElement("option");
       element.setAttribute("id", foundItem.id);
       element.appendChild(
-        document.createTextNode(foundItem.name[0] + "--" + foundItem.name[1])
+        document.createTextNode(foundItem.name + " -- " + foundItem.condition)
       );
       available.appendChild(element);
 
@@ -308,8 +312,14 @@ class TradeRequestContainer extends React.Component {
   };
   handleSearchButton(event) {
     var inputValue = document.getElementById("searchbar").value;
-    console.log(inputValue);
     this.loadSearchedUserBoardgameData(inputValue);
+  }
+  handleEnterKey(e) {
+    let val = e.target.value;
+    if (e.key === "Enter" && val.trim().length > 0) {
+      var inputValue = document.getElementById("searchbar").value;
+      this.loadSearchedUserBoardgameData(inputValue);
+    }
   }
 
   //handles price change up till the decimal, extra validation toFixed(2) is used to round decimals to 2 digits.
@@ -325,11 +335,14 @@ class TradeRequestContainer extends React.Component {
   }
 
   clear = () => {
+    this.setState(this.baseState);
     this.setState(prevState => ({
       tradeData: {
         ...prevState.tradeData,
+        searchedUserTradeList: [],
         userTradeList: [],
-        searchedUserTradeList: []
+        searchedUserTotalPrice: 0,
+        userTotalPrice: 0
       }
     }));
   };
@@ -352,6 +365,9 @@ class TradeRequestContainer extends React.Component {
                     id="searchbar"
                     onChange={this.onChangeSearchBar}
                     placeholder="Search..."
+                    onKeyUp={e => {
+                      this.handleEnterKey(e);
+                    }}
                   />
                   <InputGroupAddon addonType="append">
                     <Button
@@ -536,6 +552,37 @@ class TradeRequestContainer extends React.Component {
                                       ? "N/A"
                                       : "$" + item.price}
                                   </h4>
+                                  <br />
+                                  {(function() {
+                                    switch (item.condition) {
+                                      case "Excellent":
+                                        return (
+                                          <span className="badge badge-success float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      case "Good":
+                                        return (
+                                          <span className="badge badge-primary float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      case "Fair":
+                                        return (
+                                          <span className="badge badge-warning float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      case "Poor":
+                                        return (
+                                          <span className="badge badge-danger float-left">
+                                            {item.condition}
+                                          </span>
+                                        );
+                                      default:
+                                        return null;
+                                    }
+                                  })()}
                                 </ListGroupItem>
                               )
                             )}
