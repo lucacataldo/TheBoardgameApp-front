@@ -77,16 +77,20 @@ class TradeRequest extends React.Component {
                   />
 
                   <div className="float-left pt-3 pl-3">
-                    <a
-                      className="font-weight-bold h5 text-white"
-                      href={"user/" + trade.tradeReceiver._id}
-                    >
-                      {this.props.header === "Waiting for Response"
-                        ? trade.tradeReceiver.name
-                        : trade.tradeSender.name}{" "}
-                    </a>
-                    <br />
-                    <small>{trade.tradeWants.length} games</small>
+                    <p>
+                      <a
+                        className="font-weight-bold h5 text-white"
+                        href={"user/" + trade.tradeReceiver._id}
+                      >
+                        {this.props.header === "Waiting for Response"
+                          ? trade.tradeReceiver.name
+                          : trade.tradeSender.name}{" "}
+                      </a>
+                      <br />
+                      <small className="float-left">
+                        {trade.tradeWants.length} games
+                      </small>
+                    </p>
                   </div>
                   <div className="float-right text-white">
                     {new Date(trade.createdDate).toISOString().slice(0, 10)}
