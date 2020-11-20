@@ -314,6 +314,13 @@ class TradeRequestContainer extends React.Component {
     var inputValue = document.getElementById("searchbar").value;
     this.loadSearchedUserBoardgameData(inputValue);
   }
+  handleEnterKey(e) {
+    let val = e.target.value;
+    if (e.key === "Enter" && val.trim().length > 0) {
+      var inputValue = document.getElementById("searchbar").value;
+      this.loadSearchedUserBoardgameData(inputValue);
+    }
+  }
 
   //handles price change up till the decimal, extra validation toFixed(2) is used to round decimals to 2 digits.
   handlePriceChange(event) {
@@ -358,6 +365,9 @@ class TradeRequestContainer extends React.Component {
                     id="searchbar"
                     onChange={this.onChangeSearchBar}
                     placeholder="Search..."
+                    onKeyUp={e => {
+                      this.handleEnterKey(e);
+                    }}
                   />
                   <InputGroupAddon addonType="append">
                     <Button
