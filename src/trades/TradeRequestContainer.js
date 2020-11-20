@@ -27,46 +27,41 @@ import {
 import { Link } from "react-router-dom";
 
 class TradeRequestContainer extends React.Component {
-  state = {
-    redirectToHome: false,
-    foundUser: false,
-    selectGameAlert: false,
-    selectGameMsg: "",
-    isLoading: true,
-    valueMin: 0,
-    valueMax: 9999,
-    userBoardgames: [],
-    searchedUserBoardgames: [],
-    price: 0,
-    searchedUserPrice: 0,
-    show: false,
-    tradeData: {
-      userID: "",
-      userTradeList: [],
-      userTotalPrice: 0,
-      searchedUserID: "",
-      searchedUser: "",
-      searchedUserTotalPrice: 0,
-      searchedUserTradeList: [],
-      notes: ""
-    }
-  };
+  constructor(props) {
+    super(props);
 
-  //needs to be updated to new methdology
-  UNSAFE_componentWillMount() {
-    var user = isAuthenticated().user.name;
-    this.loadUserBoardgameData(user);
-    this.setState(prevState => ({
-      tradeData: { ...prevState.tradeData, userID: isAuthenticated().user._id }
-    }));
+    this.state = {
+      redirectToHome: false,
+      foundUser: false,
+      selectGameAlert: false,
+      selectGameMsg: "",
+      isLoading: true,
+      valueMin: 0,
+      valueMax: 9999,
+      userBoardgames: [],
+      searchedUserBoardgames: [],
+      price: 0,
+      searchedUserPrice: 0,
+      show: false,
+      tradeData: {
+        userID: "",
+        userTradeList: [],
+        userTotalPrice: 0,
+        searchedUserID: "",
+        searchedUser: "",
+        searchedUserTotalPrice: 0,
+        searchedUserTradeList: [],
+        notes: ""
+      }
+    };
+    this.baseTradeData = this.tradeData;
+    this.baseState = this.state;
   }
 
   async loadUserBoardgameData(user) {
     await getUserId(user)
       .then(id => {
-        console.log(id);
         getGuruCollection(id, isAuthenticated().token).then(bgList => {
-          console.log(bgList);
           let filteredBgList = bgList.filter(bg => bg.forTrade === true);
           this.setState({ userBoardgames: filteredBgList, isLoading: false });
         });
@@ -82,15 +77,19 @@ class TradeRequestContainer extends React.Component {
   };
 
   loadSearchedUserBoardgameData(user) {
+    //load logged in user's boardgames
+    this.clear();
+    this.loadUserBoardgameData(isAuthenticated().user.name);
+    this.setState(prevState => ({
+      tradeData: { ...prevState.tradeData, userID: isAuthenticated().user._id }
+    }));
+
     getUserId(user)
       .then(id => {
         if (!id) {
           document.getElementById("searchbar").classList.add("is-invalid");
         } else {
           getGuruCollection(id, isAuthenticated().token).then(bgList => {
-            if (bgList !== undefined) {
-              console.log("Could not find boardgame collection.");
-            }
             // Filter currently not working, it should filter out identical games from both lists
             if (document.getElementById("filterMatching").checked === true) {
               console.log("CHECKED");
@@ -146,7 +145,9 @@ class TradeRequestContainer extends React.Component {
     if (event.currentTarget.id === "myList") {
       try {
         let available = document.getElementById("myList");
-        let name = available.options[available.selectedIndex].value.split(" -- ");
+        let name = available.options[available.selectedIndex].value.split(
+          " -- "
+        );
         //using RegEx because trim is not working
         let condition = name[1];
         let MSRP = "";
@@ -194,7 +195,9 @@ class TradeRequestContainer extends React.Component {
     } else {
       try {
         let available = document.getElementById("searchedUserList");
-        let name = available.options[available.selectedIndex].value.split(" -- ");
+        let name = available.options[available.selectedIndex].value.split(
+          " -- "
+        );
         //using RegEx because trim is not working
         let condition = name[1];
         let MSRP = "";
@@ -308,7 +311,6 @@ class TradeRequestContainer extends React.Component {
   };
   handleSearchButton(event) {
     var inputValue = document.getElementById("searchbar").value;
-    console.log(inputValue);
     this.loadSearchedUserBoardgameData(inputValue);
   }
 
@@ -325,11 +327,14 @@ class TradeRequestContainer extends React.Component {
   }
 
   clear = () => {
+    this.setState(this.baseState);
     this.setState(prevState => ({
       tradeData: {
         ...prevState.tradeData,
+        searchedUserTradeList: [],
         userTradeList: [],
-        searchedUserTradeList: []
+        searchedUserTotalPrice: 0,
+        userTotalPrice: 0
       }
     }));
   };

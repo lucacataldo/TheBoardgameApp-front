@@ -17,7 +17,6 @@ class BgListPrice extends React.Component {
   async loadBoardgameData(user) {
     await getUserId(user)
       .then(id => {
-        console.log(id);
         getGuruCollection(id, isAuthenticated().token).then(bgList => {
           this.state.bgData = bgList;
 
