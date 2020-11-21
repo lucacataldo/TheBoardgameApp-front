@@ -47,14 +47,13 @@ const Signin = props => {
                   signin(values.user)
                     .then(data => {
                       if (data.error) {
-                        console.log("Here");
                         setAlertStatus("danger");
                         setAlertMsg(data.error);
                         setAlertVible(true);
                         resetForm({});
                       } else {
                         authenticate(data, () => {
-                          history.push("/posts");
+                          window.location = "/posts"
                         });
                       }
                     })
