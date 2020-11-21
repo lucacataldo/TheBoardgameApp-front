@@ -1,0 +1,167 @@
+.chatCont{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 200;
+}
+
+.chatOpener{
+    font-size: 25px;
+    color: var(--primary);
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 1px var(--primary);
+    box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.chatOpener:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 10px rgba(0,0,0,0.1);
+}
+
+.newMsgBadge{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: var(--danger);
+    top: 0px;
+    right: 0px;
+    border-radius: 50px;
+    animation: newMsg 0.5s ease forwards;
+}
+
+@keyframes newMsg{
+    from{
+        transform: translateY(5px);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
+.chatWindow{
+    font-size: 20px;
+    width: 300px;
+    height: 400px;
+    box-sizing: border-box;
+    animation: openChat 0.5s ease forwards;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.closeChat, .closeChatWindow, .chatMute{
+    color: var(--info);
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.3s ease; 
+}
+
+.closeChat:hover, .closeChatWindow:hover, .chatMute:hover{
+    opacity: 1;
+}
+
+.closeChatWindow:hover{
+    transform: translateY(3px);
+}
+
+.closeChat:hover{
+    transform: translateX(-3px);
+}
+
+.chatList, .chatView{
+    flex-grow: 10;
+    font-size: 0.7em;
+    overflow-y: auto;
+}
+
+.chatProfImg{
+    width: 30px;
+}
+
+.loader{
+    margin: 0;
+    font-size: 25px;
+    color: var(--primary);
+    animation: loader 1s linear infinite;
+}
+
+@keyframes loader{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+.preChat{
+    opacity: 0.4;
+    font-size: 0.9em;
+}
+
+.newChat{
+    font-size: 20px;
+    color: var(--primary);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes openChat{
+    from{
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.chatMsg{
+    margin: 10px 10px;
+    box-sizing: border-box;
+    padding: 10px;
+    flex-direction: column;
+    background: var(--primary);
+    color: var(--light);
+    border: solid 1px var(--primary);
+}
+
+.chatMsg .msgText{
+    overflow-wrap: break-word;
+    white-space:normal;
+}
+
+.msgPreview{
+    display: inline-block;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+}
+
+.chatMsg.from{
+    text-align: right;
+    background: var(--light);
+    color: var(--primary);
+}
+
+.msgTime{
+    font-size: 0.8em;
+    opacity: 0.7;
+}
