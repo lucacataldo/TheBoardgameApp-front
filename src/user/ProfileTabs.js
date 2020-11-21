@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import DefaultProfileImg from "../images/avatar.png";
 import Table from "react-bootstrap/Table";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDice } from "@fortawesome/free-solid-svg-icons";
 
 class ProfileTabs extends Component {
   
@@ -13,12 +11,12 @@ class ProfileTabs extends Component {
       <div className="">
         <div className="row">
           <div className="col-md-4">
-            <h4 className="text-dark">
+            <h4>
               <strong>Followers</strong>
-              <FontAwesomeIcon icon={faDice} />
             </h4>
-            <hr />{followers < 1 ? "You have no followers yet :(" :
-            <Table hover className="bg-white">
+            <h1>{followers.length}</h1>
+            {followers < 1 ? "You have no followers yet :(" :
+            <Table hover bordered className="bg-white">
               <tbody>
                 {followers.map((person, i) => (
                   <tr key={i}>
@@ -43,11 +41,10 @@ class ProfileTabs extends Component {
           </div>
 
           <div className="col-md-4">
-            <h4 className="text-dark">
+            <h4>
               <strong>Following</strong>
-              <FontAwesomeIcon icon={faDice} />
             </h4>
-            <hr />
+            <h1>{following.length}</h1>
             {following < 1 ? "You are not currently following anyone." :
             <Table hover bordered className="bg-white">
               <tbody>
@@ -75,13 +72,12 @@ class ProfileTabs extends Component {
           </div>
 
           <div className="col-md-4">
-            <h4 className="text-dark">
+            <h4>
               <strong>Posts</strong>
-              <FontAwesomeIcon icon={faDice} />
             </h4>
-            <hr />
+            <h1>{posts.length}</h1>
             {posts < 1 ? "You have no posts yet :(" :
-            <Table hover className="bg-white">
+            <Table hover bordered className="bg-white">
               <tbody>
                 {posts.map((post, i) => (
                   <tr key={i}>

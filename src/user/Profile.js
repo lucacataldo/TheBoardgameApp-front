@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
-
 import { getUser } from "./apiUser";
 import { isAuthenticated } from "../auth";
 import DefaultProfileImg from "../images/avatar.png";
-import ProfileBanner from "../images/ProfileBG.jpeg";
 import DeleteUser from "./DeleteUser";
 import FollowProfileButton from "./FollowProfileButton";
 import ProfileTabs from "./ProfileTabs";
 import { getPostsByUserId } from "../post/apiPost";
+import Animator from "../animator/Animator"
 
 
 class Profile extends Component {
@@ -40,6 +39,7 @@ class Profile extends Component {
     componentDidMount() {
         const userId = this.props.match.params.userId;
         this.initProfile(userId);
+        Animator.animate();
     };
 
     componentWillReceiveProps(props) {
@@ -92,53 +92,84 @@ class Profile extends Component {
 
         return (
             <div className="container">
-                <div className=" pl-3 py-4 mt-3 bg-dark text-light" style={{backgroundImage: "url(" + ProfileBanner + ")", backgroundSize:"cover"}}><h3>Profile</h3></div>
-                <div className="row mx-auto py-3 bg-white">
-                    <div className="offset-2 col-md-3">
-                        <img
-                            style={{ height: "200px", width: "auto", borderRadius: "50%" }}
-                            className="img-thumbnail shadow"
-                            src={photoUrl}
-                            onError={i => (i.target.src = `${DefaultProfileImg}`)}
-                            alt={user.name}
-                        />
-                    </div>
-
-                    <div className="col-md-6 text-dark">
-                        <div className="lead mt-2">
-                            <h2>{user.name}</h2>
-                            <p>Email: {user.email}</p>
-                            <p>{`Joined ${new Date(
-                                user.createdDate
-                            ).toDateString()}`}</p>
-                        </div>
-
-                        {isAuthenticated().user &&
-                        isAuthenticated().user._id === user._id ? (
-                            <div className="d-inline-block">
-                                <Link
-                                    className="btn btn-raised btn-info mr-5"
-                                    to={`/post/create`}
-                                >
-                                    Create Post
-                                </Link>
-
-                                <Link
-                                    className="btn btn-raised btn-success mr-5"
-                                    to={`/user/edit/${user._id}`}
-                                >
-                                    Edit Profile
-                                </Link>
-                                <DeleteUser userId={user._id} />
-                            </div>
-                        ) : (
-                            <FollowProfileButton
-                                following={this.state.following}
-                                onButtonClick={this.clickFollowButton}
+                <div className="row animator">
+                    <div className="col-lg-4">
+                        <div className="row mt-5 justify-content-center">
+                            <img
+                                style={{ height: "200px", width: "auto", borderRadius: "50%"}}
+                                src={photoUrl}
+                                onError={i => (i.target.src = `${DefaultProfileImg}`)}
+                                alt={user.name}
                             />
-                        )}
+                        </div>
+                        <div className="row justify-content-center">
+                            <h1 className="mt-3 text-center">{user.name}</h1>
+                        </div>
+                        <div className="row justify-content-center">
+                            <p>
+                                {`Member Since: ${new Date(user.createdDate).toDateString()}`}
+                            </p>
+                        </div>
+                        <div className="row justify-content-center">
+                            <p> <i className="fa fa-envelope"></i> {user.email}</p>
+                        </div>
+                        {isAuthenticated().user &&
+                            isAuthenticated().user._id === user._id ? (
+                                <div className="d-flex flex-column mx-5">
+                                    <Link
+                                        className="btn btn-success"
+                                        to={`/post/create`}
+                                    >
+                                        Create Post
+                                    </Link>
+                                    <Link
+                                        className="btn btn-primary my-2"
+                                        to={`/user/edit/${user._id}`}
+                                    >
+                                        Edit Profile
+                                    </Link>
+                                    <DeleteUser userId={user._id} />
+                                </div>
+                            ) : (
+                                <div className="d-flex flex-column mx-5">
+                                    <FollowProfileButton
+                                        following={this.state.following}
+                                        onButtonClick={this.clickFollowButton}
+                                    />
+                                </div>
+                                
+                            )}
+                    </div>
+                    <div className="col-lg-8">
+                        <div className="row">
+                            <div className="col-12 my-4 text-center">
+                                <div className="card p-3">
+                                    <div className="card-body">
+                                        <ProfileTabs
+                                            followers={user.followers}
+                                            following={user.following}
+                                            posts={posts}
+                                        />
+                                    </div>
+                                </div>
+                                
 
-                        <div>
+                                {user.about ? (
+                                    <div>
+                                        <hr/>
+                                        <h4>About</h4>
+                                        <p className="lead">
+                                            {user.about}
+                                        </p>
+                                    </div>
+                                ) : (<span></span>)}
+                               
+                            </div>
+                        </div>
+                        <div className="row py-3 d-flex justify-content-center">
+
+
+
                             {isAuthenticated().user &&
                                 isAuthenticated().user.role === "admin" && (
                                     <div className="card mt-5">
@@ -159,23 +190,14 @@ class Profile extends Component {
                                         </div>
                                     </div>
                                 )}
+
+
                         </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col md-12 my-4 text-center">
-                        <hr />
-                        <p className="lead">{user.about}</p>
-                        <hr />
-
-                        <ProfileTabs
-                            followers={user.followers}
-                            following={user.following}
-                            posts={posts}
-                        />
-                    </div>
-                </div>
             </div>
+
+
         );
     }
 }

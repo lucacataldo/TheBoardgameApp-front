@@ -1,0 +1,44 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.list-group-item-dark{
+    background: $info;
+    color: $light;
+}
+
+.list-group-item{
+    border-radius: 0px !important;
+}
+
+.list-group-item.active {
+    animation: active 0.3s ease forwards;
+}
+
+@keyframes active{
+    from{
+        box-shadow: none;
+        background: none
+    }
+    to{
+        box-shadow: -5px 0px 0px $primary;
+        background: $primary;
+    }
+}
+
+a:any-link{
+    text-decoration: none;
+}
+
+body{
+    overflow-x: hidden;
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 0.75rem;
+  }
+}
+
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}

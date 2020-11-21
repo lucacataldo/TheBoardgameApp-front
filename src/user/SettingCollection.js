@@ -39,7 +39,7 @@ class SettingCollection extends Component {
         this.setState({
           user: {
             id: data._id,
-            bggUsername: data.bggUsername,
+            bggUsername: data.bggUsername === undefined ? "" : data.bggUsername,
           },
         });
       }
@@ -71,8 +71,7 @@ class SettingCollection extends Component {
               if (data.error) {
                 this.setState({
                   alertStatus: "danger",
-                  alertMsg:
-                    "Unable to update information. Please try again later.",
+                  alertMsg: data.error,
                 });
               } else if (isAuthenticated().user.role === "admin") {
                 this.setState({
@@ -121,11 +120,11 @@ class SettingCollection extends Component {
             </div>
           </div>
 
-          <div className="form-group row">
-            <div className="col-sm-3">
+          <div className="form-group row justify-content-md-end">
+            <div className="col-md-3">
               <button
                 type="submit"
-                className="btn btn-primary btn-block"
+                className="btn btn-success btn-block"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Please wait..." : "Sync"}

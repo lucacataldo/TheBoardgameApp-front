@@ -62,7 +62,6 @@ class SettingUser extends Component {
   init = (userId) => {
     const token = isAuthenticated().token;
     getUser(userId, token).then((data) => {
-      console.log(data);
       if (data.error) {
         this.setState({ redirectToProfile: true });
       } else {
@@ -83,7 +82,6 @@ class SettingUser extends Component {
   componentDidMount() {
     this.userData = new FormData();
     const userId = this.props.match.params.userId;
-    console.log("userid " + userId);
     if (
       isAuthenticated().user._id !== userId &&
       isAuthenticated().user.role !== "admin"
@@ -147,7 +145,7 @@ class SettingUser extends Component {
         <Form>
           <div className="row">
             <div className="col-md-12 my-2">
-              <h4 className="text-muted">Personal Details</h4>
+              <h4>Personal Details</h4>
             </div>
           </div>
           <div className="form-group row">
@@ -222,7 +220,7 @@ class SettingUser extends Component {
           </div>
           <div className="row">
             <div className="col-md-12 my-2">
-              <h4 className="text-muted">Change Password</h4>
+              <h4>Change Password</h4>
             </div>
           </div>
           <div className="form-group row">
@@ -278,11 +276,11 @@ class SettingUser extends Component {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3">
+          <div className="form-group row justify-content-md-end">
+            <div className="col-md-3">
               <button
                 type="submit"
-                className="btn btn-primary btn-block"
+                className="btn btn-success btn-block"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Please wait..." : "Submit"}

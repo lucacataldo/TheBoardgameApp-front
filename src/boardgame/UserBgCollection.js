@@ -69,7 +69,7 @@ const Table = ({ columns, data }) => {
   return (
     <>
       <table
-        className="table table-bordered guruCollectionTable"
+        className="table table-bordered guruCollectionTable "
         {...getTableProps()}
       >
         <thead className="thead-dark ">
@@ -329,10 +329,10 @@ const UserCollection = () => {
           <img
             src={String(value) === "" ? `${NoImg}` : String(value)}
             alt={String(value)}
-            style={{ maxWidth: "50px", maxHeight: "50px" }}
+            className="img-fluid image-thumbnail"
           />
         ),
-        className: "text-center d-none d-sm-table-cell maxColWidth-50",
+        className: "text-center d-none d-sm-table-cell maxColWidth-50 px-0",
         disableFilters: true,
       },
       {
@@ -358,7 +358,7 @@ const UserCollection = () => {
       },
       {
         Header: "Rating",
-        className: " d-none d-md-table-cell maxColWidth-50",
+        className: " d-none d-md-table-cell maxColWidth-50 text-truncate",
         headerClassName: "d-none d-md-table-cell ",
         accessor: "boardgame.avgRating",
         Cell: ({ cell: { value } }) => (
@@ -369,7 +369,7 @@ const UserCollection = () => {
       },
       {
         Header: "Players",
-        className: "maxColWidth-50",
+        className: "maxColWidth-50 text-truncate ",
         accessor: "boardgame.maxPlayers",
         Cell: ({ row: { original } }) => {
           return (
@@ -386,7 +386,7 @@ const UserCollection = () => {
       },
       {
         Header: "Play Time",
-        className: " maxColWidth-50",
+        className: " maxColWidth-50 ",
         accessor: "boardgame.maxPlayTime",
         Cell: ({ row: { original } }) => {
           return (
@@ -474,10 +474,14 @@ const UserCollection = () => {
       },
       {
         Header: "Notes",
-        className: " d-none d-sm-table-cell maxColWidth-200",
+        className:
+          " d-none d-sm-table-cell maxColWidth-200 text-wrap  overflow-auto pr-0",
         accessor: "notes",
+
         Cell: ({ row: { original } }) => {
-          return <span>{String(original.notes)}</span>;
+          return (
+            <div className=" guruNotes pr-0">{String(original.notes)}</div>
+          );
         },
         disableFilters: true,
       },
@@ -503,7 +507,7 @@ const UserCollection = () => {
     const token = isAuthenticated().token;
     getUser(isAuthenticated().user._id, token).then((data) => {
       if (data.error === undefined) {
-        getGuruCollection(isAuthenticated().user._id).then((bggdata) => {
+        getGuruCollection(isAuthenticated().user._id, token).then((bggdata) => {
           if (bggdata !== undefined && !bggdata.error) {
             setData(bggdata);
           }
@@ -592,7 +596,7 @@ const UserCollection = () => {
               </div>
             </div>
           </div> */}
-          <div className="row justify-content-center bgTable ">
+          <div className="row justify-content-center bgTable table-responsive mr-0">
             <Table columns={columns} data={data} />
           </div>
         </BgContainer>

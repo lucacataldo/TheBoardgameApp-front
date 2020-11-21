@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "../auth";
 import React from "react";
-
 import { getUser, updateUser, updateLocalStorUser } from "./apiUser";
 import DefaultProfileImg from "../images/avatar.png";
 
@@ -229,7 +228,7 @@ class SettingSideBar extends React.Component {
             />
             <button
               type="button"
-              className="btn btn-outline-info col-sm-8 my-2"
+              className="btn btn-outline-primary col-sm-8 my-2"
               data-toggle="modal"
               data-target="#updateProfileImgModal"
             >

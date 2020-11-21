@@ -67,3 +67,6 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 # TheBoardgameApp-front
+
+### MSRP Prices
+Prices are obtained from BoardgameAtlas API : https://www.boardgameatlas.com/api/docs

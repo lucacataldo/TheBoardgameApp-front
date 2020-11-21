@@ -2,13 +2,67 @@ import React from "react";
 import { NavLink, withRouter } from "react-router-dom"; // withRouter to access history location-URL link
 import { signout, isAuthenticated } from "../auth";
 import BgLogo from "../images/BgLogo.png";
+//import Notification from "./notifications/Notification";
+import { getEventsByUserId } from "../calendar/apiCalendar";
+import { getAllTradeRequestsById } from "../trades/apiTrade";
 
 class NavBar extends React.Component {
+  // constructor() {
+  //   super();
+  //   // if (isAuthenticated().user) {
+  //   //   this.state = {
+  //   //     notifications: this.getNotifications()
+  //   //   };
+  //   // } else {
+  //   //   this.state = {
+  //   //     notifications: []
+  //   //   };
+
+  //   // }
+  // }
+
+  getNotifications = async () => {
+    var notifications = [];
+    await getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token)
+      .then((event) => {
+        event.map((e) => {
+          notifications.push({
+            id: e._id,
+            name: e.title,
+            type: "Event",
+            link: "/calendar/" + isAuthenticated().user._id,
+            isRead: false,
+          });
+          return true;
+        });
+      })
+      .then(
+        await getAllTradeRequestsById(isAuthenticated().user._id).then(
+          (trade) => {
+            trade.map((t) => {
+              notifications.push({
+                id: t._id,
+                name: t.tradeReceiver.name,
+                type: t.status.concat(" Trade"),
+                link: "/trades",
+                isRead: false,
+              });
+              return true;
+            });
+          }
+        )
+      );
+    return notifications;
+  };
+
   render() {
     return (
-      <nav className="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
+      <nav className="navbar navbar-icon-top navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
         <div className="container-fluid">
-          <NavLink className="navbar-brand" to="/posts">
+          <NavLink
+            className="navbar-brand"
+            to={isAuthenticated() ? "/posts" : "/"}
+          >
             <img src={BgLogo} width="20" height="20" alt="" /> Boardgame Guru
           </NavLink>
           <button
@@ -41,7 +95,7 @@ class NavBar extends React.Component {
                     Posts
                   </NavLink>
                 </li>
-                <li className="nav-item ">
+                {/* <li className="nav-item ">
                   <NavLink
                     className="nav-link"
                     activeClassName="selected"
@@ -49,10 +103,9 @@ class NavBar extends React.Component {
                   >
                     Users
                   </NavLink>
-                </li>
+                </li> */}
                 <li className="nav-item dropdown ">
                   <a
-
                     className="nav-link dropdown-toggle"
                     href="/#"
                     id="navbarDropdownCollectionLink"
@@ -64,7 +117,7 @@ class NavBar extends React.Component {
                     Collection
                   </a>
                   <div
-                    class="dropdown-menu"
+                    className="dropdown-menu"
                     aria-labelledby="navbarDropdownCollectionLink"
                   >
                     <NavLink
@@ -92,9 +145,22 @@ class NavBar extends React.Component {
                     Trades
                   </NavLink>
                 </li>
+                <li className="nav-item ">
+                  {isAuthenticated().user && (
+                    <NavLink
+                      className="nav-link"
+                      activeClassName="selected"
+                      to={`/calendar/${isAuthenticated().user._id}`}
+                    >
+                      Calendar
+                    </NavLink>
+                  )}
+                </li>
               </ul>
             )}
-
+            {/* {isAuthenticated().user && this.state.notifications && (
+              <Notification notificationsObj={this.state.notifications} />
+            )} */}
             <ul className="navbar-nav ">
               {!isAuthenticated() && (
                 <>

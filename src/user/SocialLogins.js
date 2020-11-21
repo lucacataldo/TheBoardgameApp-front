@@ -30,19 +30,19 @@ class SocialLogins extends Component {
   constructor() {
     super();
     this.state = {
-      redirectToReferrer: false
+      redirectToReferrer: false,
     };
   }
 
-  responseGoogle = response => {
+  responseGoogle = (response) => {
     //console.log(response);
     const tokenId = response.tokenId;
     const user = {
-      tokenId: tokenId
+      tokenId: tokenId,
     };
 
-    googleLogin(user).then(data => {
-      if (data.error) {
+    googleLogin(user).then((data) => {
+      if (data === undefined || data.error) {
         console.log("Error Login. Please try again..");
       } else {
         authenticate(data, () => {
@@ -52,16 +52,16 @@ class SocialLogins extends Component {
     });
   };
 
-  responseFacebook = response => {
+  responseFacebook = (response) => {
     const { id, name, email, picture } = response;
     const user = {
       password: id,
       name: name,
       email: email,
-      imageUrl: picture.data.url
+      imageUrl: picture.data.url,
     };
-    facebookLogin(user).then(data => {
-      if (data.error) {
+    facebookLogin(user).then((data) => {
+      if (data.error || data === undefined) {
         console.log("Error Login. Please try again..");
       } else {
         authenticate(data, () => {
@@ -87,7 +87,7 @@ class SocialLogins extends Component {
           onFailure={this.responseGoogle}
           cookiePolicy={"single_host_origin"}
           icon={false}
-          render={renderProps => (
+          render={(renderProps) => (
             <button
               className="btn btn-danger btn-block"
               onClick={renderProps.onClick}

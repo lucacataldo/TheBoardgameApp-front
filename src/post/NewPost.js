@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 
 import { isAuthenticated } from "../auth";
 import { createPost } from "./apiPost";
-
+import DefaultPostImg from "../images/defaultPostImg.jpg";
 class NewPost extends Component {
   constructor() {
     super();
@@ -15,7 +15,8 @@ class NewPost extends Component {
       user: {},
       fileSize: 0,
       loading: false,
-      redirectToProfile: false
+      file: "",
+      redirectToProfile: false,
     };
   }
 
@@ -29,7 +30,7 @@ class NewPost extends Component {
     if (fileSize > 100000) {
       this.setState({
         error: "File size should be less than 100kb",
-        loading: false
+        loading: false,
       });
       return false;
     }
@@ -40,23 +41,29 @@ class NewPost extends Component {
     if (title.length > 60) {
       this.setState({
         error: "Title is limited to 60 characters",
-        loading: false
+        loading: false,
       });
       return false;
     }
     return true;
   };
 
-  handleChange = name => event => {
+  handleChange = (name) => (event) => {
     this.setState({ error: "" });
     const value = name === "photo" ? event.target.files[0] : event.target.value;
 
     const fileSize = name === "photo" ? event.target.files[0].size : 0;
+    if (name === "photo") {
+      this.setState({
+        file: URL.createObjectURL(event.target.files[0]),
+      });
+    }
+
     this.postData.set(name, value);
     this.setState({ [name]: value, fileSize });
   };
 
-  clickSubmit = event => {
+  clickSubmit = (event) => {
     event.preventDefault();
     this.setState({ loading: true });
 
@@ -64,14 +71,14 @@ class NewPost extends Component {
       const userId = isAuthenticated().user._id;
       const token = isAuthenticated().token;
 
-      createPost(userId, token, this.postData).then(data => {
+      createPost(userId, token, this.postData).then((data) => {
         if (data.error) this.setState({ error: data.error });
         else {
           this.setState({
             loading: false,
             title: "",
             body: "",
-            redirectToProfile: true
+            redirectToProfile: true,
           });
         }
       });
@@ -132,7 +139,15 @@ class NewPost extends Component {
   );
 
   render() {
-    const { title, body, user, error, loading, redirectToProfile } = this.state;
+    const {
+      title,
+      body,
+      user,
+      error,
+      loading,
+      redirectToProfile,
+      file,
+    } = this.state;
 
     if (redirectToProfile) {
       return <Redirect to={`/user/${user._id}`} />;
@@ -157,7 +172,13 @@ class NewPost extends Component {
         ) : (
           ""
         )}
-
+        <img
+          style={{ height: "200px", width: "auto" }}
+          className="img-thumbnail"
+          src={file}
+          onError={(i) => (i.target.src = `${DefaultPostImg}`)}
+          alt={title}
+        />
         {this.newPostForm(title, body)}
       </div>
     );

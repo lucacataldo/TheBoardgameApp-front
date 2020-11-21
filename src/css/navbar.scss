@@ -1,0 +1,28 @@
+.profileInitalCircle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--light);
+}
+
+.dropdown-menu {
+  right: 0;
+  left: auto;
+}
+.maxDivWidth {
+  max-width: 1200px;
+}
+
+.nav-link{
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover{
+    background: var(--light);
+}
+
+.nav-link.selected{
+    color: var(--dark) !important;
+    box-shadow: 0px 3px var(--primary);
+}   

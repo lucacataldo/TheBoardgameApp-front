@@ -1,0 +1,27 @@
+.guruCollectionTable .maxColWidth-50 {
+  max-width: 50px;
+}
+
+.guruCollectionTable .maxColWidth-175 {
+  max-width: 175px;
+}
+.guruCollectionTable .maxColWidth-200 {
+  max-width: 200px;
+}
+.guruCollectionTable td.alignCenter {
+  text-align: center;
+}
+
+.guruCollectionTable a {
+  color: #000;
+}
+
+.guruCollectionTable tbody tr {
+  line-height: 1;
+  max-height: 100px;
+}
+
+.guruCollectionTable tbody .guruNotes {
+  overflow-y: scroll;
+  max-height: 100px;
+}

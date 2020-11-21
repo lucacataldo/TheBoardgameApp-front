@@ -24,3 +24,8 @@ yarn-debug.log*
 yarn-error.log*
 
 debug.log
+.vscode/settings.json
+
+**/logs
+
+/design_files
