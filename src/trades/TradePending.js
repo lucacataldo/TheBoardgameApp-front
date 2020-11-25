@@ -1,12 +1,5 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
-import { UncontrolledCollapse } from "reactstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faTimes,
-  faCommentDots
-} from "@fortawesome/free-solid-svg-icons";
 
 class TradePending extends React.Component {
   constructor() {
