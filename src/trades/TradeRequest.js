@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getTradeRequestById } from "./apiTrade";
 import { UncontrolledCollapse, Button, CardBody, Card } from "reactstrap";
+import Helpers from "../helpers";
 
 class TradeRequest extends React.Component {
   constructor(props) {
@@ -83,8 +84,8 @@ class TradeRequest extends React.Component {
                         href={"user/" + trade.tradeReceiver._id}
                       >
                         {this.props.header === "Waiting for Response"
-                          ? trade.tradeReceiver.name
-                          : trade.tradeSender.name}{" "}
+                          ? Helpers.capitalize(trade.tradeReceiver.name)
+                          : Helpers.capitalize(trade.tradeSender.name)}{" "}
                       </a>
                       <br />
                       <small className="float-left">

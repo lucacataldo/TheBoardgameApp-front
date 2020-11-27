@@ -86,7 +86,7 @@ class TradeRequestContainer extends React.Component {
 
     getUserId(user)
       .then(id => {
-        if (!id) {
+        if (!id || user === isAuthenticated().user.name) {
           document.getElementById("searchbar").classList.add("is-invalid");
         } else {
           getGuruCollection(id, isAuthenticated().token).then(bgList => {
@@ -386,7 +386,9 @@ class TradeRequestContainer extends React.Component {
                     onClick={this.clear.bind(this)}
                     value="Clear"
                   />
-                  <div className="invalid-feedback">User does not exist.</div>
+                  <div className="invalid-feedback">
+                    User entered is not valid.
+                  </div>
                 </FormGroup>
 
                 <FormGroup className="pl-4 pt-1">
