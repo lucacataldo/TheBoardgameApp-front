@@ -1,5 +1,6 @@
 import React from "react";
 import { isAuthenticated } from "../auth";
+import Helpers from "../helpers";
 
 class TradePending extends React.Component {
   constructor() {
@@ -50,7 +51,7 @@ class TradePending extends React.Component {
                     className="font-weight-bold h5"
                     href={"user/" + trade.tradeSender._id}
                   >
-                    {trade.tradeSender.name}{" "}
+                    {Helpers.capitalize(trade.tradeSender.name)}{" "}
                   </a>
                   <br />
                   <small>{trade.tradeWants.length} games</small>
