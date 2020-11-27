@@ -5,6 +5,7 @@ import BgLogo from "../images/BgLogo.png";
 //import Notification from "./notifications/Notification";
 import { getEventsByUserId } from "../calendar/apiCalendar";
 import { getAllTradeRequestsById } from "../trades/apiTrade";
+import Helpers from "../helpers";
 
 class NavBar extends React.Component {
   // constructor() {
@@ -84,7 +85,9 @@ class NavBar extends React.Component {
                     className="nav-link"
                     activeClassName="selected"
                     to={`/user/${isAuthenticated().user._id}`}
-                  >{`${isAuthenticated().user.name}'s Profile`}</NavLink>
+                  >{`${Helpers.capitalize(
+                    isAuthenticated().user.name
+                  )}'s Profile`}</NavLink>
                 </li>
                 <li className="nav-item ">
                   <NavLink

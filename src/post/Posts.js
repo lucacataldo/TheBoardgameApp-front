@@ -2,8 +2,8 @@ import { Link, Route } from "react-router-dom";
 import React, { useState, useRef, useCallback } from "react";
 
 import useFetchMorePosts from "./useFetchMorePosts";
-
 import Animator from "../animator/Animator";
+import Helpers from "../helpers";
 
 const Posts = () => {
   const [pageNumber, setPageNumber] = useState(1);
@@ -13,17 +13,17 @@ const Posts = () => {
   // whenever the <div ref={lastPostElementRef} key={i}> is created,
   // it will call this fxn when it's the last element
   const lastPostElementRef = useCallback(
-    (node) => {
+    node => {
       Animator.animate();
       if (loading) return;
       // disconnect previous ref so we can reset it
       if (refObserver.current) refObserver.current.disconnect();
       // take all entries available
-      refObserver.current = new IntersectionObserver((entries) => {
+      refObserver.current = new IntersectionObserver(entries => {
         // if the entry is on the page and there's more to load
         // wont keep calling api if the api provided all the items
         if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((prevPageNumber) => prevPageNumber + 1);
+          setPageNumber(prevPageNumber => prevPageNumber + 1);
         }
       });
       // observe the node if its last
@@ -34,7 +34,9 @@ const Posts = () => {
 
   function renderPost(post) {
     const posterId = post.postedBy ? `/user/${post.postedBy._id}` : "";
-    const posterName = post.postedBy ? post.postedBy.name : " Unknown";
+    const posterName = post.postedBy
+      ? Helpers.capitalize(post.postedBy.name)
+      : " Unknown";
 
     return (
       <div className="card animator mb-3">
