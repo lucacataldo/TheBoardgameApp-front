@@ -2,7 +2,7 @@ import React from "react"
 import { withRouter } from "react-router-dom";
 import { isAuthenticated } from "../auth";
 
-import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat } from "./apiChat";
+import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat, apiSearchUser } from "./apiChat";
 import moment from "moment";
 
 import DefaultProfileImg from "../images/avatar.png";
@@ -22,6 +22,7 @@ class Chat extends React.Component {
       newMessage: false,
       loading: null,
       muted: false,
+      userSearchResults: []
     }
   }
 
@@ -157,6 +158,33 @@ class Chat extends React.Component {
           break;
       }
     }
+  }
+
+  searchTimeout;
+
+  searchUser = (e) => {
+    clearTimeout(this.searchTimeout)
+    this.searchTimeout = setTimeout(async () => {
+      let value = document.getElementById("usernameSearch").value;
+      if (value === "" || value === " ") {
+        this.setState({
+          userSearchResults: []
+        })
+        return 0
+      }
+      let resp = await apiSearchUser(isAuthenticated().token, value);
+      this.setState({
+        userSearchResults: resp
+      })
+    }, 500);
+  }
+
+  selectUser = (e)=>{
+    document.getElementById("usernameSearch").value = e.target.dataset.username;
+    this.createChat()
+    this.setState({
+      userSearchResults: []
+    })
   }
 
   getChat = async (e) => {
@@ -386,6 +414,17 @@ class Chat extends React.Component {
 
                 {!this.state.chatSelected && (
                   <div className="input-group">
+                    {this.state.userSearchResults.length > 0 && (
+                      <div className="usersFound bg-light rounded-lg border border-primary">
+                        {this.state.userSearchResults.map((res) => {
+                          return (
+                            <div className="result" key={res._id} data-username={res.name} onClick={this.selectUser}>
+                              {res.name}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
                     <input
                       id="usernameSearch"
                       type="text"
@@ -394,6 +433,8 @@ class Chat extends React.Component {
                       onKeyUp={(e) => {
                         if (e.key === 'Enter') {
                           this.createChat()
+                        } else {
+                          this.searchUser(e)
                         }
                       }}
                     />
