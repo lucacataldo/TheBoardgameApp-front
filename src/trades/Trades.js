@@ -25,20 +25,25 @@ class Trades extends React.Component {
   componentWillMount() {
     let userId = isAuthenticated().user._id;
     getAllTradeRequestsById(userId).then(data => {
-      let outgoingRequests = data.filter(
-        trade => userId === trade.tradeSender._id && trade.status !== "Pending"
-      );
-      let incomingRequests = data.filter(
-        trade =>
-          userId === trade.tradeReceiver._id && trade.status !== "Pending"
-      );
-      let pendingRequests = data.filter(trade => trade.status === "Pending");
-      this.setState({
-        tradeResponses: incomingRequests,
-        tradeRequests: outgoingRequests,
-        tradePending: pendingRequests,
-        isLoading: false
-      });
+      if (data) {
+        let outgoingRequests = data.filter(
+          trade =>
+            userId === trade.tradeSender._id && trade.status !== "Pending"
+        );
+        let incomingRequests = data.filter(
+          trade =>
+            userId === trade.tradeReceiver._id && trade.status !== "Pending"
+        );
+        let pendingRequests = data.filter(trade => trade.status === "Pending");
+        this.setState({
+          tradeResponses: incomingRequests,
+          tradeRequests: outgoingRequests,
+          tradePending: pendingRequests,
+          isLoading: false
+        });
+      } else {
+        this.setState({ isLoading: false });
+      }
     });
   }
 
