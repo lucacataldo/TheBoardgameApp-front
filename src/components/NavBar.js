@@ -5,6 +5,7 @@ import BgLogo from "../images/BgLogo.png";
 //import Notification from "./notifications/Notification";
 import { getEventsByUserId } from "../calendar/apiCalendar";
 import { getAllTradeRequestsById } from "../trades/apiTrade";
+import Helpers from "../helpers";
 
 class NavBar extends React.Component {
   // constructor() {
@@ -24,28 +25,28 @@ class NavBar extends React.Component {
   getNotifications = async () => {
     var notifications = [];
     await getEventsByUserId(isAuthenticated().user._id, isAuthenticated().token)
-      .then((event) => {
-        event.map((e) => {
+      .then(event => {
+        event.map(e => {
           notifications.push({
             id: e._id,
             name: e.title,
             type: "Event",
             link: "/calendar/" + isAuthenticated().user._id,
-            isRead: false,
+            isRead: false
           });
           return true;
         });
       })
       .then(
         await getAllTradeRequestsById(isAuthenticated().user._id).then(
-          (trade) => {
-            trade.map((t) => {
+          trade => {
+            trade.map(t => {
               notifications.push({
                 id: t._id,
                 name: t.tradeReceiver.name,
                 type: t.status.concat(" Trade"),
                 link: "/trades",
-                isRead: false,
+                isRead: false
               });
               return true;
             });
@@ -84,7 +85,9 @@ class NavBar extends React.Component {
                     className="nav-link"
                     activeClassName="selected"
                     to={`/user/${isAuthenticated().user._id}`}
-                  >{`${isAuthenticated().user.name}'s Profile`}</NavLink>
+                  >{`${Helpers.capitalize(
+                    isAuthenticated().user.name
+                  )}'s Profile`}</NavLink>
                 </li>
                 <li className="nav-item ">
                   <NavLink
@@ -200,10 +203,9 @@ class NavBar extends React.Component {
                         className=" profileInitalCircle text-center"
                         style={{ fontSize: "32px" }}
                       >
-                        <strong>{`${isAuthenticated().user.name.substring(
-                          0,
-                          1
-                        )}`}</strong>
+                        <strong>{`${isAuthenticated()
+                          .user.name.substring(0, 1)
+                          .toUpperCase()}`}</strong>
                       </div>
                     </a>
                     <div
@@ -235,9 +237,7 @@ class NavBar extends React.Component {
                         data-toggle="tooltip"
                         title="Sign Out"
                         aria-label="Sign Out"
-                        onClick={() =>
-                          signout(() => window.location = "/")
-                        }
+                        onClick={() => signout(() => (window.location = "/"))}
                         style={{ cursor: "pointer" }}
                       >
                         Sign Out

@@ -1,12 +1,12 @@
-export const getUserId = (username) => {
+export const getUserId = username => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/find/${username}`, {
-    method: "GET",
+    method: "GET"
   })
-    .then((response) => response.json())
-    .then((responseJson) => {
+    .then(response => response.json())
+    .then(responseJson => {
       return responseJson.user._id;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       return false;
     });
@@ -18,23 +18,23 @@ export const getUser = (userId, token) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   })
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 
 export const getUsers = () => {
   return fetch(`${process.env.REACT_APP_API_URL}/users`, {
-    method: "GET",
+    method: "GET"
   })
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 
 export const removeUser = (userId, token) => {
@@ -43,13 +43,13 @@ export const removeUser = (userId, token) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   })
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 
 export const updateUser = (userId, token, user) => {
@@ -57,14 +57,14 @@ export const updateUser = (userId, token, user) => {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
-    body: user,
+    body: user
   })
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 export const updateBggBoardgamesByUsername = (userId, token, bggUsername) => {
   return fetch(
@@ -74,15 +74,15 @@ export const updateBggBoardgamesByUsername = (userId, token, bggUsername) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ bggUsername }),
+      body: JSON.stringify({ bggUsername })
     }
   )
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 
 export const updateLocalStorUser = (userData, next) => {
@@ -102,14 +102,14 @@ export const followUser = (userId, token, followId) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ userId, followId }),
+    body: JSON.stringify({ userId, followId })
   })
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 
 export const unfollowUser = (userId, token, unfollowId) => {
@@ -118,14 +118,14 @@ export const unfollowUser = (userId, token, unfollowId) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ userId, unfollowId }),
+    body: JSON.stringify({ userId, unfollowId })
   })
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 
 export const findPeople = (userId, token) => {
@@ -134,11 +134,11 @@ export const findPeople = (userId, token) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   })
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };

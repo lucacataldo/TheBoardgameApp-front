@@ -33,10 +33,10 @@ const UserInfoValidation = Yup.object().shape({
     ),
   matchPassword: Yup.string()
     .when("password", {
-      is: (password) => password !== undefined && password.length > 0,
-      then: Yup.string().required("Please retype password"),
+      is: password => password !== undefined && password.length > 0,
+      then: Yup.string().required("Please retype password")
     })
-    .oneOf([Yup.ref("password"), null], "password doesnt match"),
+    .oneOf([Yup.ref("password"), null], "password doesnt match")
 });
 
 class SettingUser extends Component {
@@ -49,19 +49,19 @@ class SettingUser extends Component {
         email: "",
         password: "",
         matchPassword: "",
-        about: "",
+        about: ""
       },
       redirectToProfile: false,
       loading: false,
       alertStatus: "",
       alertMsg: "",
-      alertVisible: false,
+      alertVisible: false
     };
   }
 
-  init = (userId) => {
+  init = userId => {
     const token = isAuthenticated().token;
-    getUser(userId, token).then((data) => {
+    getUser(userId, token).then(data => {
       if (data.error) {
         this.setState({ redirectToProfile: true });
       } else {
@@ -72,8 +72,8 @@ class SettingUser extends Component {
             email: data.email,
             about: data.about,
             password: "",
-            matchPassword: "",
-          },
+            matchPassword: ""
+          }
         });
       }
     });
@@ -110,21 +110,21 @@ class SettingUser extends Component {
           const userId = this.props.match.params.userId;
           const token = isAuthenticated().token;
 
-          updateUser(userId, token, this.userData).then((data) => {
+          updateUser(userId, token, this.userData).then(data => {
             if (data.error) {
               this.setState({
                 loading: false,
                 alertStatus: "danger",
                 alertMsg:
                   "Unable to update information. Please try again later.",
-                alertVisible: true,
+                alertVisible: true
               });
             } else if (isAuthenticated().user.role === "admin") {
               this.setState({
                 loading: false,
                 alertStatus: "success",
                 alertMsg: "User information updated.",
-                alertVisible: true,
+                alertVisible: true
               });
             } else {
               updateLocalStorUser(data, () => {
@@ -132,7 +132,7 @@ class SettingUser extends Component {
                   loading: false,
                   alertStatus: "success",
                   alertMsg: "User information updated.",
-                  alertVisible: true,
+                  alertVisible: true
                 });
               });
             }
@@ -154,6 +154,7 @@ class SettingUser extends Component {
             </label>
             <div className="col-9">
               <Field
+                disabled
                 type="text"
                 name="name"
                 placeholder="Name"
@@ -299,7 +300,7 @@ class SettingUser extends Component {
       loading,
       alertMsg,
       alertStatus,
-      alertVisible,
+      alertVisible
     } = this.state;
 
     if (redirectToProfile) {
@@ -313,16 +314,16 @@ class SettingUser extends Component {
           active={loading}
           spinner
           styles={{
-            spinner: (base) => ({
+            spinner: base => ({
               ...base,
               width: "100px",
               "& svg circle": {
-                stroke: "rgba(0,98,204,1)",
-              },
+                stroke: "rgba(0,98,204,1)"
+              }
             }),
             wrapper: {
-              height: "100%",
-            },
+              height: "100%"
+            }
           }}
           text="Updating your profile...."
         >
