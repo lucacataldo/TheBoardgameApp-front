@@ -45,7 +45,7 @@ class Chat extends React.Component {
 
         setInterval(() => {
           this.getChats(true)
-        }, 20000);
+        }, process.env.REACT_APP_CHAT_REFRESH || 60000);
 
         ws.on("newMsg", (data) => {
           if (!this.state.muted && (data.from !== isAuthenticated().user._id)) {
@@ -90,10 +90,10 @@ class Chat extends React.Component {
     })
   }
 
-  getChats = (isRefresh) => {
+  getChats = (isRefresh = false) => {
     return new Promise((resolve, reject) => {
-      apiGetChats(isAuthenticated().token).then((chats) => {
-        if (isRefresh && (this.state.chats.length !== chats.length)) {
+      apiGetChats(isAuthenticated().token, isRefresh).then((chats) => {
+        if (isRefresh && chats.length && this.state.chats.length && (this.state.chats.length < chats.length)) {
           this.setState({
             newMessage: true
           })
@@ -172,14 +172,23 @@ class Chat extends React.Component {
         })
         return 0
       }
-      let resp = await apiSearchUser(isAuthenticated().token, value);
-      this.setState({
-        userSearchResults: resp
-      })
-    }, 500);
+      try {
+        let resp = await apiSearchUser(isAuthenticated().token, value);
+        this.setState({
+          userSearchResults: resp
+        })
+      } catch (error) {
+        if (error === 429) {
+          alert("You're doing that too often, try again soon.")
+        } else {
+          alert("Something went wrong. Please refresh and try again")
+        }
+      }
+
+    }, 200);
   }
 
-  selectUser = (e)=>{
+  selectUser = (e) => {
     document.getElementById("usernameSearch").value = e.target.dataset.username;
     this.createChat()
     this.setState({
@@ -258,11 +267,9 @@ class Chat extends React.Component {
   }
 
   scrollChat = () => {
-    try {
-      let list = document.querySelector(".chatView")
+    let list = document.querySelector(".chatView")
+    if (list) {
       list.scrollTop = list.scrollHeight;
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -342,18 +349,18 @@ class Chat extends React.Component {
                     }).map((chat, i) => {
                       return (
                         <div
-                          className="cursor-pointer chat p-2 rounded border border-info text-info my-2 d-flex justify-content-between"
+                          className="cursor-pointer chat p-2 card chat text-info d-flex justify-content-between"
                           onClick={this.getChat}
                           key={chat._id}
                           data-id={chat._id}
                         >
-                          <div className="d-flex align-items-center">
+                          <div className="d-flex align-items-center justify-content-between">
                             <img
                               className="chatProfImg mx-3"
                               src={`${process.env.REACT_APP_API_URL}/user/photo/${chat.between.filter(e => e._id !== isAuthenticated().user._id)[0]._id}`}
                               onError={(e) => { e.target.onerror = null; e.target.src = `${DefaultProfileImg}` }}
                             />
-                            <div>
+                            <div className="flex-grow-1">
                               <h6>
                                 {
                                   chat.between.filter(
@@ -361,27 +368,21 @@ class Chat extends React.Component {
                                   )[0].name
                                 }
                               </h6>
-
-                              {/* <div className="msgPreview">
-                                {chat.messages[chat.messages.length - 1] && (
-                                  '"' + chat.messages[chat.messages.length - 1].message + '" '
-                                )}
-                              </div> */}
                               <div>
                                 {chat.messages[chat.messages.length - 1] && (
                                   moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
                                 )}
                               </div>
                             </div>
-
+                            {this.state.loading === chat._id && (
+                              <div className="d-flex justify-content-center align-items-center">
+                                <i className="fa fa-circle-notch loader"></i>
+                              </div>
+                            )}
                           </div>
 
 
-                          {this.state.loading === chat._id && (
-                            <div className="d-flex justify-content-center align-items-center">
-                              <i className="fa fa-circle-notch loader"></i>
-                            </div>
-                          )}
+
 
                         </div>
                       )
@@ -428,8 +429,8 @@ class Chat extends React.Component {
                     <input
                       id="usernameSearch"
                       type="text"
-                      className="form-control border-primary"
-                      placeholder="Username to chat with"
+                      className="form-control border-primary rounded"
+                      placeholder="Start typing a username"
                       onKeyUp={(e) => {
                         if (e.key === 'Enter') {
                           this.createChat()
