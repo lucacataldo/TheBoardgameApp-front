@@ -1,3 +1,11 @@
+.alert{
+    margin-top: -50px;
+    max-width: 100%;
+    position: fixed !important;
+    animation: openChat 0.5s ease forwards;
+    z-index: 20;
+}
+
 .chatCont{
     position: fixed;
     bottom: 20px;
@@ -84,7 +92,7 @@
 }
 
 .chat{
-    transition: all 0.3s ease;
+    transition: box-shadow 0.3s ease;
     margin: 10px 5px;
 }
 
@@ -97,7 +105,10 @@
 }
 
 .chatProfImg{
+    object-fit: cover;
     width: 30px;
+    height: 30px;
+    border-radius: 30px;
 }
 
 .loader{
@@ -181,7 +192,7 @@
 
 .usersFound{
     bottom: 45px;
-    position: absolute;
+    position: absolute !important;
     width: 100%;
     min-height: 50px;
     display: flex;

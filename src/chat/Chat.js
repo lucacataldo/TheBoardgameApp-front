@@ -22,11 +22,22 @@ class Chat extends React.Component {
       newMessage: false,
       loading: null,
       muted: false,
-      userSearchResults: []
+      userSearchResults: [],
+      toastMsg: null
     }
   }
 
+  toast = (message, type = "danger") => {
+    this.setState({
+      toastMsg: { type, message }
+    })
 
+    setTimeout(() => {
+      this.setState({
+        toastMsg: null
+      })
+    }, 3000);
+  }
 
   componentDidMount() {
     try {
@@ -147,14 +158,14 @@ class Chat extends React.Component {
     } catch (error) {
       switch (error) {
         case 400:
-          alert("User not found, check spelling.")
+          this.toast("User not found, check spelling.")
           break;
         case 409:
           console.log("Chat exists, carry on...")
           break;
 
         default:
-          alert("Something went wrong, please refresh and try again.")
+          this.toast("Something went wrong, please refresh and try again.")
           break;
       }
     }
@@ -179,9 +190,9 @@ class Chat extends React.Component {
         })
       } catch (error) {
         if (error === 429) {
-          alert("You're doing that too often, try again soon.")
+          this.toast("You're doing that too often, try again soon.")
         } else {
-          alert("Something went wrong. Please refresh and try again")
+          this.toast("Something went wrong. Please refresh and try again")
         }
       }
 
@@ -237,7 +248,7 @@ class Chat extends React.Component {
         selectedChat: {},
       })
     } catch (error) {
-      alert("An error occurred while getting chats, check log for more info.")
+      this.toast("An error occurred while getting chats, check log for more info.")
       console.log(error);
     }
 
@@ -290,7 +301,11 @@ class Chat extends React.Component {
             <audio id="msgDing" src="/pop.wav" controls={false}></audio>
             {this.state.isOpen && (
               <div className="chatWindow bg-white p-3 rounded-lg border shadow-sm">
-
+                {this.state.toastMsg && (
+                  <div className={`d-flex justify-content-center align-items-center alert alert-${this.state.toastMsg.type}`}>
+                    <span style={{ fontSize: "0.8em" }}>{this.state.toastMsg.message}</span>
+                  </div>
+                )}
                 <div className="d-flex justify-content-between align-items-center text-info">
                   {!this.state.chatSelected && (
                     <div>
@@ -335,16 +350,25 @@ class Chat extends React.Component {
                       </div>
                     )}
                     {this.state.chats.sort((a, b) => {
+                      let lastA, lastB;
                       try {
-                        let lastA = a.messages[a.messages.length - 1].timestamp
-                        let lastB = b.messages[b.messages.length - 1].timestamp
-                        if (lastA > lastB) {
-                          return -1
-                        } else {
-                          return 1
-                        }
+                        lastA = new Date(a.messages[a.messages.length - 1].timestamp).getTime() 
                       } catch (error) {
-                        return 2
+                        lastA = 0
+                      }
+
+                      try {
+                        lastB = new Date(b.messages[b.messages.length - 1].timestamp).getTime() 
+                      } catch (error) {
+                        lastB = 0
+                      }
+
+                      if (lastA > lastB) {
+                        return -1
+                      } else if(lastA < lastB) {
+                        return 1
+                      } else{
+                        return 0
                       }
                     }).map((chat, i) => {
                       return (
@@ -356,7 +380,7 @@ class Chat extends React.Component {
                         >
                           <div className="d-flex align-items-center justify-content-between">
                             <img
-                              className="chatProfImg mx-3"
+                              className="chatProfImg shadow-sm mx-3"
                               src={`${process.env.REACT_APP_API_URL}/user/photo/${chat.between.filter(e => e._id !== isAuthenticated().user._id)[0]._id}`}
                               onError={(e) => { e.target.onerror = null; e.target.src = `${DefaultProfileImg}` }}
                             />
@@ -416,7 +440,7 @@ class Chat extends React.Component {
                 {!this.state.chatSelected && (
                   <div className="input-group">
                     {this.state.userSearchResults.length > 0 && (
-                      <div className="usersFound bg-light rounded-lg border border-primary">
+                      <div className="bg-white rounded-lg card usersFound">
                         {this.state.userSearchResults.map((res) => {
                           return (
                             <div className="result" key={res._id} data-username={res.name} onClick={this.selectUser}>
