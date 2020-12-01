@@ -2,7 +2,7 @@ import React from "react"
 import { withRouter } from "react-router-dom";
 import { isAuthenticated } from "../auth";
 
-import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat } from "./apiChat";
+import { apiInitSocket, apiCreateChat, apiGetChat, apiGetChats, apiSendChat, apiSearchUser } from "./apiChat";
 import moment from "moment";
 
 import DefaultProfileImg from "../images/avatar.png";
@@ -22,10 +22,22 @@ class Chat extends React.Component {
       newMessage: false,
       loading: null,
       muted: false,
+      userSearchResults: [],
+      toastMsg: null
     }
   }
 
+  toast = (message, type = "danger") => {
+    this.setState({
+      toastMsg: { type, message }
+    })
 
+    setTimeout(() => {
+      this.setState({
+        toastMsg: null
+      })
+    }, 3000);
+  }
 
   componentDidMount() {
     try {
@@ -44,7 +56,7 @@ class Chat extends React.Component {
 
         setInterval(() => {
           this.getChats(true)
-        }, 20000);
+        }, process.env.REACT_APP_CHAT_REFRESH || 60000);
 
         ws.on("newMsg", (data) => {
           if (!this.state.muted && (data.from !== isAuthenticated().user._id)) {
@@ -89,10 +101,10 @@ class Chat extends React.Component {
     })
   }
 
-  getChats = (isRefresh) => {
+  getChats = (isRefresh = false) => {
     return new Promise((resolve, reject) => {
-      apiGetChats(isAuthenticated().token).then((chats) => {
-        if (isRefresh && (this.state.chats.length !== chats.length)) {
+      apiGetChats(isAuthenticated().token, isRefresh).then((chats) => {
+        if (isRefresh && chats.length && this.state.chats.length && (this.state.chats.length < chats.length)) {
           this.setState({
             newMessage: true
           })
@@ -146,17 +158,53 @@ class Chat extends React.Component {
     } catch (error) {
       switch (error) {
         case 400:
-          alert("User not found, check spelling.")
+          this.toast("User not found, check spelling.")
           break;
         case 409:
           console.log("Chat exists, carry on...")
           break;
 
         default:
-          alert("Something went wrong, please refresh and try again.")
+          this.toast("Something went wrong, please refresh and try again.")
           break;
       }
     }
+  }
+
+  searchTimeout;
+
+  searchUser = (e) => {
+    clearTimeout(this.searchTimeout)
+    this.searchTimeout = setTimeout(async () => {
+      let value = document.getElementById("usernameSearch").value;
+      if (value === "" || value === " ") {
+        this.setState({
+          userSearchResults: []
+        })
+        return 0
+      }
+      try {
+        let resp = await apiSearchUser(isAuthenticated().token, value);
+        this.setState({
+          userSearchResults: resp
+        })
+      } catch (error) {
+        if (error === 429) {
+          this.toast("You're doing that too often, try again soon.")
+        } else {
+          this.toast("Something went wrong. Please refresh and try again")
+        }
+      }
+
+    }, 200);
+  }
+
+  selectUser = (e) => {
+    document.getElementById("usernameSearch").value = e.target.dataset.username;
+    this.createChat()
+    this.setState({
+      userSearchResults: []
+    })
   }
 
   getChat = async (e) => {
@@ -200,7 +248,7 @@ class Chat extends React.Component {
         selectedChat: {},
       })
     } catch (error) {
-      alert("An error occurred while getting chats, check log for more info.")
+      this.toast("An error occurred while getting chats, check log for more info.")
       console.log(error);
     }
 
@@ -230,11 +278,9 @@ class Chat extends React.Component {
   }
 
   scrollChat = () => {
-    try {
-      let list = document.querySelector(".chatView")
+    let list = document.querySelector(".chatView")
+    if (list) {
       list.scrollTop = list.scrollHeight;
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -255,7 +301,11 @@ class Chat extends React.Component {
             <audio id="msgDing" src="/pop.wav" controls={false}></audio>
             {this.state.isOpen && (
               <div className="chatWindow bg-white p-3 rounded-lg border shadow-sm">
-
+                {this.state.toastMsg && (
+                  <div className={`d-flex justify-content-center align-items-center alert alert-${this.state.toastMsg.type}`}>
+                    <span style={{ fontSize: "0.8em" }}>{this.state.toastMsg.message}</span>
+                  </div>
+                )}
                 <div className="d-flex justify-content-between align-items-center text-info">
                   {!this.state.chatSelected && (
                     <div>
@@ -300,32 +350,41 @@ class Chat extends React.Component {
                       </div>
                     )}
                     {this.state.chats.sort((a, b) => {
+                      let lastA, lastB;
                       try {
-                        let lastA = a.messages[a.messages.length - 1].timestamp
-                        let lastB = b.messages[b.messages.length - 1].timestamp
-                        if (lastA > lastB) {
-                          return -1
-                        } else {
-                          return 1
-                        }
+                        lastA = new Date(a.messages[a.messages.length - 1].timestamp).getTime()
                       } catch (error) {
-                        return 2
+                        lastA = 0
+                      }
+
+                      try {
+                        lastB = new Date(b.messages[b.messages.length - 1].timestamp).getTime()
+                      } catch (error) {
+                        lastB = 0
+                      }
+
+                      if (lastA > lastB) {
+                        return -1
+                      } else if (lastA < lastB) {
+                        return 1
+                      } else {
+                        return 0
                       }
                     }).map((chat, i) => {
                       return (
                         <div
-                          className="cursor-pointer chat p-2 rounded border border-info text-info my-2 d-flex justify-content-between"
+                          className="cursor-pointer chat p-2 card chat text-info d-flex justify-content-between"
                           onClick={this.getChat}
                           key={chat._id}
                           data-id={chat._id}
                         >
-                          <div className="d-flex align-items-center">
+                          <div className="d-flex align-items-center justify-content-between">
                             <img
-                              className="chatProfImg mx-3"
+                              className="chatProfImg shadow-sm mx-3"
                               src={`${process.env.REACT_APP_API_URL}/user/photo/${chat.between.filter(e => e._id !== isAuthenticated().user._id)[0]._id}`}
                               onError={(e) => { e.target.onerror = null; e.target.src = `${DefaultProfileImg}` }}
                             />
-                            <div>
+                            <div className="flex-grow-1">
                               <h6>
                                 {
                                   chat.between.filter(
@@ -333,27 +392,21 @@ class Chat extends React.Component {
                                   )[0].name
                                 }
                               </h6>
-
-                              {/* <div className="msgPreview">
-                                {chat.messages[chat.messages.length - 1] && (
-                                  '"' + chat.messages[chat.messages.length - 1].message + '" '
-                                )}
-                              </div> */}
                               <div>
                                 {chat.messages[chat.messages.length - 1] && (
                                   moment(chat.messages[chat.messages.length - 1].timestamp).fromNow()
                                 )}
                               </div>
                             </div>
-
+                            {this.state.loading === chat._id && (
+                              <div className="d-flex justify-content-center align-items-center">
+                                <i className="fa fa-circle-notch loader"></i>
+                              </div>
+                            )}
                           </div>
 
 
-                          {this.state.loading === chat._id && (
-                            <div className="d-flex justify-content-center align-items-center">
-                              <i className="fa fa-circle-notch loader"></i>
-                            </div>
-                          )}
+
 
                         </div>
                       )
@@ -386,14 +439,27 @@ class Chat extends React.Component {
 
                 {!this.state.chatSelected && (
                   <div className="input-group">
+                    {this.state.userSearchResults.length > 0 && (
+                      <div className="bg-white rounded-lg card usersFound">
+                        {this.state.userSearchResults.map((res) => {
+                          return (
+                            <div className="result" key={res._id} data-username={res.name} onClick={this.selectUser}>
+                              {res.name}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
                     <input
                       id="usernameSearch"
                       type="text"
-                      className="form-control border-primary"
-                      placeholder="Username to chat with"
+                      className="form-control border-primary rounded"
+                      placeholder="Start typing a username"
                       onKeyUp={(e) => {
                         if (e.key === 'Enter') {
                           this.createChat()
+                        } else {
+                          this.searchUser(e)
                         }
                       }}
                     />

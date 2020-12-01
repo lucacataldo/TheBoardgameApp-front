@@ -1,3 +1,12 @@
+.alert{
+    margin-top: -75px;
+    width: 100%;
+    left: 0;
+    position: fixed !important;
+    animation: openChat 0.5s ease forwards;
+    z-index: 20;
+}
+
 .chatCont{
     position: fixed;
     bottom: 20px;
@@ -83,8 +92,24 @@
     overflow-y: auto;
 }
 
+.chat{
+    transition: box-shadow 0.3s ease;
+    margin: 10px 5px;
+}
+
+.chat:hover{
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+}
+
+.chat:active{
+    border-color: var(--primary);
+}
+
 .chatProfImg{
+    object-fit: cover;
     width: 30px;
+    height: 30px;
+    border-radius: 30px;
 }
 
 .loader{
@@ -164,4 +189,30 @@
 .msgTime{
     font-size: 0.8em;
     opacity: 0.7;
+}
+
+.usersFound{
+    bottom: 45px;
+    position: absolute !important;
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 0.7em;
+}
+
+.usersFound .result{
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 5px 20px;
+    transition: all 0.2s ease;
+}
+
+.usersFound .result:hover{
+    opacity: 1;
+    box-shadow: 0px 2px 0px var(--primary);
 }

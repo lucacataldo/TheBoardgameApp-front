@@ -4,7 +4,7 @@ let baseUrl = `${process.env.REACT_APP_API_URL}/chat`
 let ws = io(process.env.REACT_APP_CHAT_URL);
 
 export const apiInitSocket = (token) => {
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
         ws.on("connect", (event) => {
             console.log('\n SOCKET OPEN \n\n');
             ws.emit("auth", {
@@ -57,7 +57,7 @@ export const apiGetChat = async (token, id) => {
     ws.emit("join", {
         chatId: id
     })
-    
+
     let resp = await fetch(`${baseUrl}/get/${id}`, {
         method: "GET",
         headers: {
@@ -70,7 +70,7 @@ export const apiGetChat = async (token, id) => {
     }
 
     let data = await resp.json()
-    
+
     return data
 };
 
@@ -80,3 +80,20 @@ export const apiSendChat = async (chatId, message, token) => {
         message
     })
 };
+
+export const apiSearchUser = async (token, name) => {
+    return fetch(`${baseUrl}/search_user`, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ name })
+    }).then(response => {
+        if (response.status != 200) {
+            throw response.status
+        }
+        return response.json();
+    })
+}
