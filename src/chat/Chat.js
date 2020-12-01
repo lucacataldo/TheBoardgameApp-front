@@ -175,25 +175,39 @@ class Chat extends React.Component {
 
   searchUser = (e) => {
     clearTimeout(this.searchTimeout)
+    this.setState({
+      loading: "searchUsers"
+    })
     this.searchTimeout = setTimeout(async () => {
       let value = document.getElementById("usernameSearch").value;
       if (value === "" || value === " ") {
         this.setState({
-          userSearchResults: []
+          userSearchResults: [],
+          loading: null,
         })
         return 0
       }
       try {
         let resp = await apiSearchUser(isAuthenticated().token, value);
         this.setState({
-          userSearchResults: resp
+          userSearchResults: resp,
+          loading: null
         })
+        if (resp.length < 1) {
+          throw 404;
+        }
       } catch (error) {
         if (error === 429) {
           this.toast("You're doing that too often, try again soon.")
+        } else if(error === 404){
+          this.toast("No users found.")
         } else {
           this.toast("Something went wrong. Please refresh and try again")
-        }
+        } 
+
+        this.setState({
+          loading: null
+        })
       }
 
     }, 200);
@@ -439,15 +453,19 @@ class Chat extends React.Component {
 
                 {!this.state.chatSelected && (
                   <div className="input-group">
-                    {this.state.userSearchResults.length > 0 && (
+                    {(this.state.userSearchResults.length > 0 || this.state.loading === "searchUsers") && (
                       <div className="bg-white rounded-lg card usersFound">
-                        {this.state.userSearchResults.map((res) => {
+                        {this.state.loading !== "searchUsers" ? this.state.userSearchResults.map((res) => {
                           return (
                             <div className="result" key={res._id} data-username={res.name} onClick={this.selectUser}>
                               {res.name}
                             </div>
                           )
-                        })}
+                        }) : (
+                            <div className="text-center px-2">
+                              <i className="fa fa-circle-notch loader"></i>
+                            </div>
+                          )}
                       </div>
                     )}
                     <input
