@@ -352,22 +352,22 @@ class Chat extends React.Component {
                     {this.state.chats.sort((a, b) => {
                       let lastA, lastB;
                       try {
-                        lastA = new Date(a.messages[a.messages.length - 1].timestamp).getTime() 
+                        lastA = new Date(a.messages[a.messages.length - 1].timestamp).getTime()
                       } catch (error) {
                         lastA = 0
                       }
 
                       try {
-                        lastB = new Date(b.messages[b.messages.length - 1].timestamp).getTime() 
+                        lastB = new Date(b.messages[b.messages.length - 1].timestamp).getTime()
                       } catch (error) {
                         lastB = 0
                       }
 
                       if (lastA > lastB) {
                         return -1
-                      } else if(lastA < lastB) {
+                      } else if (lastA < lastB) {
                         return 1
-                      } else{
+                      } else {
                         return 0
                       }
                     }).map((chat, i) => {
