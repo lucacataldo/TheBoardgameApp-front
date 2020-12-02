@@ -34,26 +34,13 @@ class Home extends React.Component {
     return (
       <div className="container-fluid">
         <div className="row homeOne align-items-center">
-          <div className="col-12 col-lg-4 offset-lg-2 d-flex justify-content-center align-items-end align-items-lg-center">
+          <div className="col-12 col-lg-4 offset-lg-2 d-flex justify-content-center align-items-end align-items-lg-center mb-4 mb-lg-0">
             <svg
               className="homeSplash animator"
               width="552.661"
               height="86.798"
               viewBox="0 0 552.661 86.798"
             >
-              <defs>
-                <linearGradient
-                  id="linear-gradient"
-                  x1="0.24"
-                  y1="1.915"
-                  x2="0.839"
-                  y2="-2.286"
-                  gradientUnits="objectBoundingBox"
-                >
-                  <stop offset="0" stopColor="#3d82ac" />
-                  <stop offset="1" stopColor="#b343bf" />
-                </linearGradient>
-              </defs>
               <g id="Splash_Logo" transform="translate(-683.88 -513.418)">
                 <path
                   id="tag"
@@ -70,7 +57,7 @@ class Home extends React.Component {
               </g>
             </svg>
           </div>
-          <div className="col-10 offset-1 col-lg-4 px-5 py-2 d-flex justify-content-center align-items-start align-items-lg-center">
+          <div className="animator col-12 col-lg-4 px-5 py-2 d-flex justify-content-center align-items-start align-items-lg-center">
             <img src="/board.svg" alt="" />
             <NavLink to="/signup" className="btn btn-primary ctaButton">
               Get Started <i className="fa fa-arrow-right"></i>

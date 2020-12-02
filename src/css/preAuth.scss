@@ -74,16 +74,18 @@
 }
 
 .homeOne {
-  top: 0px;
+  margin-top: -50px;
   display: flex;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-top: 50px;
+  padding-bottom: 100px;
   z-index: -1;
 }
 
 .ctaButton {
   font-size: 2vw;
-  font-weight: bold;
   letter-spacing: 1px;
   position: absolute;
   bottom: unset;
@@ -100,31 +102,28 @@
     7px 7px 0px var(--info);
   transform: rotate(30deg) skew(-30deg);
   z-index: 10;
-  animation: cta 1s ease alternate infinite;
   transition: all 0.4s ease;
-}
-
-@keyframes cta{
-  from{
-    transform: rotate(30deg) skew(-30deg) translateX(0px);
-  }
-
-  to{
-    transform: rotate(30deg) skew(-30deg) translateX(5px);
-  }
 }
 
 .ctaButton:hover {
   border-color: lighten($primary, 5%);
   background: lighten($primary, 5%);
+  transform: rotate(30deg) skew(-30deg) translateX(3px);
 }
 
 .ctaButton i{
   transition: all 0.3s ease;
+  animation: cta 1s ease alternate infinite;
 }
 
-.ctaButton:hover i{
-  transform: translateX(5px);
+@keyframes cta{
+  from{
+    transform: translateX(0px);
+  }
+
+  to{
+    transform: translateX(5px);
+  }
 }
 
 @media (min-width: 992px) { 
@@ -140,12 +139,12 @@
 .scrollIndicator{
   text-align: center;
   position: absolute;
-  bottom: 20px;
+  bottom: 15px;
   width: 100%;
-  font-size: 18px;
+  font-size: 1.2em;
   color: var(--info);
   line-height: 20px;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .scrollIndicator i{
