@@ -77,9 +77,9 @@ const EventForm = (props) => {
   };
   const formatOptionLabel = ({ boardgame }) => {
     return (
-      <div class="row justify-content-between">
-        <div class="col text-left">{boardgame.title}</div>
-        <div class="col col-sm-auto text-right">
+      <div className="row justify-content-between">
+        <div className="col text-left">{boardgame.title}</div>
+        <div className="col col-sm-auto text-right">
           {boardgame.minPlayers === boardgame.maxPlayers ? (
             boardgame.minPlayers
           ) : (
