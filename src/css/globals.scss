@@ -42,3 +42,7 @@ body{
 
 :focus {outline:none;}
 ::-moz-focus-inner {border:0;}
+
+.fullHeight{
+    min-height: 100vh;
+}

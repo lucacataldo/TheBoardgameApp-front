@@ -75,13 +75,13 @@
 
 .homeOne {
   margin-top: -50px;
+  position: relative;
   display: flex;
   width: 100vw;
   min-height: 100vh;
   box-sizing: border-box;
   padding-top: 50px;
   padding-bottom: 100px;
-  z-index: -1;
 }
 
 .ctaButton {
@@ -92,6 +92,7 @@
   left: unset;
   right: 50px;
   top: 0;
+  transform: rotate(30deg) skew(-30deg);
   box-shadow: 
     1px 1px 0px var(--info), 
     2px 2px 0px var(--info), 
@@ -99,16 +100,54 @@
     4px 4px 0px var(--info),
     5px 5px 0px var(--info),
     6px 6px 0px var(--info), 
-    7px 7px 0px var(--info);
-  transform: rotate(30deg) skew(-30deg);
+    7px 7px 0px var(--info),
+    10px 3px 0px rgba($color: #000000, $alpha: 0.2);
   z-index: 10;
-  transition: all 0.4s ease;
+  animation: ctaShow 1s ease ;
+  transition: all 0.4s ease !important;
+}
+
+@keyframes ctaShow{
+  from{
+    transform: translateY(-20px) rotate(30deg) skew(-30deg);
+    box-shadow: 
+      1px 1px 0px var(--info), 
+      2px 2px 0px var(--info), 
+      3px 3px 0px var(--info), 
+      4px 4px 0px var(--info),
+      5px 5px 0px var(--info),
+      6px 6px 0px var(--info), 
+      7px 7px 0px var(--info),
+      15px 12px 5px rgba($color: #000000, $alpha: 0.2);
+  }
+
+  to{
+    box-shadow: 
+      1px 1px 0px var(--info), 
+      2px 2px 0px var(--info), 
+      3px 3px 0px var(--info), 
+      4px 4px 0px var(--info),
+      5px 5px 0px var(--info),
+      6px 6px 0px var(--info), 
+      7px 7px 0px var(--info),
+      10px 3px 0px rgba($color: #000000, $alpha: 0.2);
+    transform: rotate(30deg) skew(-30deg);
+  }
 }
 
 .ctaButton:hover {
   border-color: lighten($primary, 5%);
   background: lighten($primary, 5%);
-  transform: rotate(30deg) skew(-30deg) translateX(3px);
+  transform: translateY(-5px) rotate(30deg) skew(-30deg);
+  box-shadow: 
+    1px 1px 0px var(--info), 
+    2px 2px 0px var(--info), 
+    3px 3px 0px var(--info), 
+    4px 4px 0px var(--info),
+    5px 5px 0px var(--info),
+    6px 6px 0px var(--info), 
+    7px 7px 0px var(--info),
+    15px 12px 5px rgba($color: #000000, $alpha: 0.2);
 }
 
 .ctaButton i{
@@ -205,4 +244,78 @@
 
 .cls-1 {
   fill: #4d4d4d;
+}
+
+.spinTrade{
+  animation: spinTrade 2s ease infinite;
+}
+
+@keyframes spinTrade{
+  from{
+    transform: rotate(0deg);
+  }
+
+  to{
+    transform: rotate(360deg);
+  }
+}
+
+.collectAni{
+  animation: collectAni 2s ease infinite;
+}
+
+@keyframes collectAni{
+  0%{
+    transform: rotate(0deg);
+  }
+
+  10%{
+    transform: rotate(5deg);
+  }
+
+  20%{
+    transform: rotate(-5deg);
+  }
+
+  30%{
+    transform: rotate(5deg);
+  }
+
+  40%{
+    transform: rotate(-5deg);
+  }
+
+  50%{
+    transform: rotate(0deg);
+  }
+
+  100%{
+    transform: rotate(0deg);
+  }
+}
+
+.connectAni{
+  animation: connectAni 2s ease infinite;
+}
+
+@keyframes connectAni{
+  0%{
+    transform: scale(1);
+  }
+
+  30%{
+    transform: scale(1.2);
+  }
+
+  50%{
+    transform: scale(1);
+  }
+
+  100%{
+    transform: scale(1);
+  }
+}
+
+.inView{
+  opacity: 0;
 }

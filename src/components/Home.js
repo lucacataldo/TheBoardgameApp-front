@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, withRouter } from "react-router-dom";
 import gsap from "gsap";
+import inView from "in-view";
 
 class Home extends React.Component {
   componentDidMount() {
@@ -29,6 +30,25 @@ class Home extends React.Component {
       fill: "#3D82AC",
       duration: 0.5,
     });
+
+    tl = gsap.timeline()
+
+    inView.threshold(0.4);
+
+    inView(".inView")
+      .on("enter", el => {
+        tl.to(el, {
+          opacity: 1,
+          duration: 0.3,
+          stagger: 0.2,
+        })
+      })
+      .on("exit", el => {
+        tl.set(el, {
+          opacity: 0,
+        })
+      })
+
   }
   render() {
     return (
@@ -57,7 +77,7 @@ class Home extends React.Component {
               </g>
             </svg>
           </div>
-          <div className="animator col-12 col-lg-4 px-5 py-2 d-flex justify-content-center align-items-start align-items-lg-center">
+          <div className="col-12 col-lg-4 px-5 py-2 d-flex justify-content-center align-items-start align-items-lg-center">
             <img src="/board.svg" alt="" />
             <NavLink to="/signup" className="btn btn-primary ctaButton">
               Get Started <i className="fa fa-arrow-right"></i>
@@ -68,33 +88,54 @@ class Home extends React.Component {
             <i className="fa fa-chevron-down"></i>
           </div>
         </div>
-        <div className="row bg-white shadow-lg p-5">
-          <div className="col-3 col-md-10 offset-md-1">
-            <div className="row">
-              <h1 className="text-primary font-weight-bold">Trade</h1>
-            </div>
-            <div className="row">
-              <p>trade games and whatnot</p>
-            </div>
-          </div>
-        </div>
-        <div className="row bg-primary p-5">
-          <div className="col-12 col-md-10 offset-md-1">
-            <div className="row">
-              <h1 className="text-white font-weight-bold">Collect</h1>
-            </div>
-            <div className="row">
-              <p>collect games and whatnot</p>
+        <div className="row bg-white text-primary shadow-lg">
+          <div className="col-lg-10 offset-lg-1 fullHeight d-flex align-items-center">
+            <div className="row w-100 m-0 align-items-center justify-content-center">
+              <div className="col-lg-8 d-flex flex-column text-center align-items-center justify-content-center inView">
+                <h1 className="font-weight-bold">
+                  Trade
+                </h1>
+                <p className="w-50">
+                  Trade your boardgames with others to keep your collection fresh.
+                </p>
+              </div>
+              <div className="col-lg-4 mt-3 mt-lg-0 text-center animator">
+                <i className="fa fa-10x fa-sync-alt spinTrade inView"></i>
+              </div>
             </div>
           </div>
         </div>
-        <div className="row bg-light p-5">
-          <div className="col-12 col-md-10 offset-md-1">
-            <div className="row">
-              <h1 className="text-primary font-weight-bold">Connect</h1>
+        <div className="row bg-primary text-white p-5">
+          <div className="col-lg-10 offset-lg-1 fullHeight d-flex align-items-center">
+            <div className="row w-100 m-0 align-items-center justify-content-center">
+              <div className="col-lg-8 d-flex flex-column text-center align-items-center justify-content-center inView">
+                <h1 className=" font-weight-bold">
+                  Collect
+                </h1>
+                <p className="w-50">
+                  Grow and manage your boardgame collection all in one place.
+                </p>
+              </div>
+              <div className="col-lg-4 text-center animator">
+                <i className="fa fa-10x fa-chess collectAni inView"></i>
+              </div>
             </div>
-            <div className="row">
-              <p>Connect with the community</p>
+          </div>
+        </div>
+        <div className="row bg-light text-primary p-5">
+          <div className="col-lg-10 offset-lg-1 fullHeight d-flex align-items-center">
+            <div className="row w-100 m-0 align-items-center justify-content-center">
+              <div className="col-lg-8 d-flex flex-column text-center align-items-center justify-content-center inView">
+                <h1 className="font-weight-bold">
+                  Connect
+                </h1>
+                <p className="w-50">
+                  Join the community and stay connected by following new people, creating events and chatting with others.
+                </p>
+              </div>
+              <div className="col-lg-4 text-center animator">
+                <i className="fa fa-10x fa-users connectAni inView"></i>
+              </div>
             </div>
           </div>
         </div>
