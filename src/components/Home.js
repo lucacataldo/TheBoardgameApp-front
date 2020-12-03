@@ -78,7 +78,7 @@ class Home extends React.Component {
             </svg>
           </div>
           <div className="col-12 col-lg-4 px-5 py-2 d-flex justify-content-center align-items-start align-items-lg-center">
-            <img src="/board.svg" alt="" />
+            <img className="w-100" src="/board.svg" alt="gameboard image" />
             <NavLink to="/signup" className="btn btn-primary ctaButton">
               Get Started <i className="fa fa-arrow-right"></i>
             </NavLink>
