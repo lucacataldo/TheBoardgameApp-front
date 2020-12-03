@@ -39,7 +39,7 @@ class Home extends React.Component {
       .on("enter", el => {
         tl.to(el, {
           opacity: 1,
-          duration: 0.3,
+          duration: 0.6,
           stagger: 0.2,
         })
       })
@@ -52,7 +52,7 @@ class Home extends React.Component {
   }
   render() {
     return (
-      <div className="container-fluid">
+      <div className="container-fluid home">
         <div className="row homeOne align-items-center">
           <div className="col-12 col-lg-4 offset-lg-2 d-flex justify-content-center align-items-end align-items-lg-center mb-4 mb-lg-0">
             <svg
@@ -89,30 +89,30 @@ class Home extends React.Component {
           </div>
         </div>
         <div className="row bg-white text-primary shadow-lg">
-          <div className="col-lg-10 offset-lg-1 fullHeight d-flex align-items-center">
+          <div className="col-12 fullHeight d-flex align-items-center">
             <div className="row w-100 m-0 align-items-center justify-content-center">
-              <div className="col-lg-8 d-flex flex-column text-center align-items-center justify-content-center inView">
+              <div className="col-lg-4 d-flex flex-column text-center align-items-center justify-content-center inView pb-5 pb-lg-0">
                 <h1 className="font-weight-bold">
                   Trade
                 </h1>
-                <p className="w-50">
+                <p >
                   Trade your boardgames with others to keep your collection fresh.
                 </p>
               </div>
               <div className="col-lg-4 mt-3 mt-lg-0 text-center animator">
-                <i className="fa fa-10x fa-sync-alt spinTrade inView"></i>
+                <i className="fa fa-10x fa-sync-alt graphic spinTrade inView"></i>
               </div>
             </div>
           </div>
         </div>
-        <div className="row bg-primary text-white p-5">
-          <div className="col-lg-10 offset-lg-1 fullHeight d-flex align-items-center">
+        <div className="row bg-primary text-white ">
+          <div className="col-12 fullHeight d-flex align-items-center">
             <div className="row w-100 m-0 align-items-center justify-content-center">
-              <div className="col-lg-8 d-flex flex-column text-center align-items-center justify-content-center inView">
+              <div className="col-lg-4 d-flex flex-column text-center align-items-center justify-content-center inView pb-5 pb-lg-0">
                 <h1 className=" font-weight-bold">
                   Collect
                 </h1>
-                <p className="w-50">
+                <p >
                   Grow and manage your boardgame collection all in one place.
                 </p>
               </div>
@@ -122,14 +122,14 @@ class Home extends React.Component {
             </div>
           </div>
         </div>
-        <div className="row bg-light text-primary p-5">
-          <div className="col-lg-10 offset-lg-1 fullHeight d-flex align-items-center">
+        <div className="row bg-light text-primary ">
+          <div className="col-12 fullHeight d-flex align-items-center">
             <div className="row w-100 m-0 align-items-center justify-content-center">
-              <div className="col-lg-8 d-flex flex-column text-center align-items-center justify-content-center inView">
+              <div className="col-lg-4 d-flex flex-column text-center align-items-center justify-content-center inView pb-5 pb-lg-0">
                 <h1 className="font-weight-bold">
                   Connect
                 </h1>
-                <p className="w-50">
+                <p >
                   Join the community and stay connected by following new people, creating events and chatting with others.
                 </p>
               </div>
