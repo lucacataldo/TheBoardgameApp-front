@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, getIn } from "formik";
 import * as Yup from "yup";
 import { isAuthenticated } from "../auth";
-
+import { getGuruCollection} from "../boardgame/apiBoardgame";
 import {
   getUser,
   updateBggBoardgamesByUsername,
@@ -79,12 +79,15 @@ class SettingCollection extends Component {
                   alertMsg: "User information updated.",
                 });
               } else {
-                updateLocalStorUser(data, () => {
-                  this.setState({
-                    alertStatus: "success",
-                    alertMsg: "User information updated.",
+                getGuruCollection(isAuthenticated().user._id, token).then((collection) => {
+                  data.user.boardgames = collection;
+                   updateLocalStorUser(data, () => {
+                    this.setState({
+                      alertStatus: "success",
+                      alertMsg: "User information updated.",
+                    });
                   });
-                });
+                })
               }
 
               this.setState({ loading: false, alertVisible: true });
