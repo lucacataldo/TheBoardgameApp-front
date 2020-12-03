@@ -316,7 +316,7 @@ class Chat extends React.Component {
             {this.state.isOpen && (
               <div className="chatWindow bg-white p-3 rounded-lg border shadow-sm">
                 {this.state.toastMsg && (
-                  <div className={`d-flex justify-content-center align-items-center alert alert-${this.state.toastMsg.type}`}>
+                  <div className={`d-flex justify-content-center align-items-center alert alert-${this.state.toastMsg.type} chatAlert`}>
                     <span style={{ fontSize: "0.8em" }}>{this.state.toastMsg.message}</span>
                   </div>
                 )}
